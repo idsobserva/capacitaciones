@@ -829,15 +829,97 @@ const SEM_MAP = {
 
 <!-- ═══════════ FIREBASE + APP LOGIC ═══════════ -->
 <script type="module">
+// 🔹 IMPORTS
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
-  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-  signOut, onAuthStateChanged, sendPasswordResetEmail
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
-  getFirestore, collection, doc, addDoc, setDoc, updateDoc, deleteDoc,
-  getDocs, getDoc, query, where, orderBy, onSnapshot, serverTimestamp, writeBatch
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// 🔹 CONFIGURACIÓN FIREBASE (TUYA)
+const firebaseConfig = {
+  apiKey: "AIzaSyCZ5KZsb0CEVxQdR6To8RhjPdVHmPnm_Jw",
+  authDomain: "capacitacionesids.firebaseapp.com",
+  projectId: "capacitacionesids",
+  storageBucket: "capacitacionesids.firebasestorage.app",
+  messagingSenderId: "758439138023",
+  appId: "1:758439138023:web:58c5b801baf8bffe9c4842"
+};
+
+// 🔹 INICIALIZACIÓN
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+// 🔹 LOGIN
+function doLogin() {
+  const email = document.getElementById("login-email").value;
+  const password = document.getElementById("login-pass").value;
+
+  if (!email || !password) {
+    alert("Ingrese correo y contraseña");
+    return;
+  }
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      alert("Inicio de sesión exitoso");
+    })
+    .catch((error) => {
+      alert("Error: " + error.message);
+    });
+}
+
+// 🔹 REGISTRO
+function doRegister() {
+  const email = document.getElementById("reg-email").value;
+  const password = document.getElementById("reg-pass").value;
+
+  if (!email || !password) {
+    alert("Complete los campos");
+    return;
+  }
+
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(async (userCredential) => {
+
+      // Guardar usuario en Firestore
+      await setDoc(doc(db, "usuarios", userCredential.user.uid), {
+        email: email,
+        rol: "pendiente",
+        fecha: new Date()
+      });
+
+      alert("Usuario registrado, pendiente de aprobación");
+    })
+    .catch((error) => {
+      alert("Error: " + error.message);
+    });
+}
+
+// 🔹 CAMBIO DE SESIÓN
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log("Usuario activo:", user.email);
+  } else {
+    console.log("No hay sesión");
+  }
+});
+
+// 🔹 HACER FUNCIONES GLOBALES (CLAVE PARA HTML)
+window.doLogin = doLogin;
+window.doRegister = doRegister;
+
+</script>
 
 // ── FIREBASE CONFIG ───────────────────────────────────────────────────────────
 // ⚠️ Reemplace con los valores de su proyecto Firebase:
