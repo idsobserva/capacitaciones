@@ -286,7 +286,7 @@ textarea{resize:vertical;min-height:68px}
     <div id="tab-login" class="auth-form">
       <input type="email" id="login-email" placeholder="Correo institucional" autocomplete="email">
       <input type="password" id="login-pass" placeholder="Contraseña">
-      <button class="btn-primary" onclick="doLogin()">Ingresar</button>
+      <button class="btn-primary" id="btn-login">Ingresar</button>
       <div id="login-msg" class="auth-msg"></div>
     </div>
     <div id="tab-register" class="auth-form" style="display:none">
@@ -912,12 +912,22 @@ onAuthStateChanged(auth, (user) => {
     console.log("Usuario activo:", user.email);
   } else {
     console.log("No hay sesión");
-  };
+  }
+});
+  // 🔹 CONECTAR BOTÓN LOGIN
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("btn-login");
+  if (btn) {
+    btn.addEventListener("click", doLogin);
+  }
+});
 
 // 🔹 HACER FUNCIONES GLOBALES (CLAVE PARA HTML)
 window.doLogin = doLogin;
 window.doRegister = doRegister;
 
+
+  
 // ── FIREBASE CONFIG ───────────────────────────────────────────────────────────
 // ⚠️ Reemplace con los valores de su proyecto Firebase:
 // 1. Vaya a https://console.firebase.google.com
