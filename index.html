@@ -922,6 +922,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+// 🔹 FUNCIONES FALTANTES
+
+function renderInforme() {
+  alert("Función de informes en construcción");
+}
+window.renderInforme = renderInforme;
+
+function switchAuthTab(tab) {
+  document.getElementById("tab-login").style.display = tab === "login" ? "block" : "none";
+  document.getElementById("tab-register").style.display = tab === "register" ? "block" : "none";
+}
+window.switchAuthTab = switchAuthTab;
+  
 // 🔹 HACER FUNCIONES GLOBALES (CLAVE PARA HTML)
 window.doLogin = doLogin;
 window.doRegister = doRegister;
