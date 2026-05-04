@@ -854,15 +854,6 @@ const firebaseConfig = {
   measurementId: "G-16PTJ4FX2S"
 };
 
-// Credenciales del administrador inicial preconfigurado
-// ⚠️ Cámbielas después del primer acceso
-const ADMIN_EMAIL    = "idsobserva@gmail.com";
-const ADMIN_PASSWORD = "ODS.IDS2026!";
-const ADMIN_NAME     = "Administrador ODS";
-
-const fbApp = initializeApp(firebaseConfig);
-const auth  = getAuth(fbApp);
-const db    = getFirestore(fbApp);
 window.doLogin = async () => {
   const email = document.getElementById("login-email").value;
   const password = document.getElementById("login-pass").value;
@@ -871,6 +862,27 @@ window.doLogin = async () => {
     alert("Ingrese correo y contraseña");
     return;
   }
+
+  try {
+    // 🔹 INTENTA LOGIN NORMAL
+    await signInWithEmailAndPassword(auth, email, password);
+    alert("Inicio de sesión exitoso");
+
+  } catch (error) {
+
+    // 🔹 SI NO EXISTE Y ES EL ADMIN → LO CREA
+    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        alert("Administrador creado. Inicie sesión nuevamente.");
+      } catch (e) {
+        alert("Error creando admin: " + e.message);
+      }
+    } else {
+      alert("Credenciales inválidas");
+    }
+  }
+};
 
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
