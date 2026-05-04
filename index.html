@@ -926,22 +926,11 @@ document.addEventListener("DOMContentLoaded", () => {
 window.doLogin = doLogin;
 window.doRegister = doRegister;
 
-
-  
 // ── FIREBASE CONFIG ───────────────────────────────────────────────────────────
 // ⚠️ Reemplace con los valores de su proyecto Firebase:
 // 1. Vaya a https://console.firebase.google.com
 // 2. Cree un proyecto → Agregar app web → Copie firebaseConfig
 // 3. Habilite Authentication (correo/contraseña) y Firestore Database
-const firebaseConfig = {
-  apiKey: "AIzaSyCZ5KZsb0CEVxQdR6To8RhjPdVHmPnm_Jw",
-  authDomain: "capacitacionesids.firebaseapp.com",
-  projectId: "capacitacionesids",
-  storageBucket: "capacitacionesids.firebasestorage.app",
-  messagingSenderId: "758439138023",
-  appId: "1:758439138023:web:58c5b801baf8bffe9c4842",
-  measurementId: "G-16PTJ4FX2S"
-};
 
 window.doLogin = async () => {
   const email = document.getElementById("login-email").value;
