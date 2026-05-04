@@ -962,16 +962,6 @@ window.doLogin = async () => {
     }
   }
 };
-
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    alert("Inicio de sesión exitoso");
-    console.log(userCredential.user);
-  } catch (error) {
-    console.error(error);
-    alert("Error: " + error.message);
-  }
-};
   
 // Exponer db globalmente para seed scripts
 window._db = db;
