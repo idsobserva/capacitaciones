@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ODS · IDS</title>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCZ5KZsb0CEVxQdR6To8RhjPdVHmPnm_Jw",
+  authDomain: "capacitacionesids.firebaseapp.com",
+  projectId: "capacitacionesids"
+};
+
+const app = initializeApp(firebaseConfig);
+window.db = getFirestore(app);
+window.auth = getAuth(app);
+
+window.addDoc = addDoc;
+window.getDocs = getDocs;
+window.collection = collection;
+window.doc = doc;
+window.setDoc = setDoc;
+
+window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+window.onAuthStateChanged = onAuthStateChanged;
+window.signOut = signOut;
+</script>
+
+<style>
+body{font-family:'DM Sans';margin:0;background:#f4f4f4}
+.login{display:flex;justify-content:center;align-items:center;height:100vh;background:#8b1e1e}
+.box{background:white;padding:30px;border-radius:10px;width:300px}
+button{width:100%;margin-top:10px;padding:10px;border:none;border-radius:6px}
+.primary{background:#8b1e1e;color:white}
+.sidebar{width:200px;height:100vh;background:#8b1e1e;position:fixed;color:white;padding:10px}
+.main{margin-left:200px;padding:20px}
+.view{display:none}
+.active{display:block}
+.card{background:white;padding:10px;border-radius:8px;margin:10px 0}
+</style>
+
+</head>
+
+<body>
+
+<div id="loginView" class="login">
+  <div class="box">
+    <h3>ODS IDS</h3>
+    <input id="email" placeholder="Correo"><br><br>
+    <input id="pass" type="password" placeholder="Contraseña">
+    <button class="primary" onclick="login()">Ingresar</button>
+    <button onclick="registro()">Crear cuenta</button>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+
+<div class="sidebar">
+<button onclick="show('dash')">Dashboard</button>
+<button onclick="show('actas')">Actas</button>
+<button onclick="show('reportes')">Reportes</button>
+<button onclick="logout()">Salir</button>
+</div>
+
+<div class="main">
+
+<div id="dash" class="view active">
+<div class="card">Total: <span id="total"></span></div>
+<div class="card">Aprobadas: <span id="aprobadas"></span></div>
+<div class="card">Cumplimiento: <span id="cumplimiento"></span></div>
+<canvas id="chart"></canvas>
+</div>
+
+<div id="actas" class="view">
+<input id="nombreInput" placeholder="Nombre acta">
+<select id="grupoSelect"></select>
+<button onclick="guardarActa()">Guardar</button>
+<div id="listaActas"></div>
+</div>
+
+<div id="reportes" class="view">
+<div id="tablaGrupos"></div>
+<canvas id="chartGrupos"></canvas>
+<button onclick="exportarReporte()">PDF</button>
+</div>
+
+</div>
+</div>
+
+<script>
+
+function $(id){return document.getElementById(id)}
+
+async function login(){
+ await signInWithEmailAndPassword(auth,$('email').value,$('pass').value);
+}
+
+async function registro(){
+ const cred=await createUserWithEmailAndPassword(auth,$('email').value,$('pass').value);
+ await setDoc(doc(db,'users',cred.user.uid),{
+  email:$('email').value,
+  rol:'contratista'
+ });
+ alert("Usuario creado");
+}
+
+function logout(){signOut(auth)}
+
+onAuthStateChanged(auth, async user=>{
+ if(user){
+  $('loginView').style.display='none';
+  $('app').style.display='block';
+  await cargar();
+  await dashboard();
+ }else{
+  $('loginView').style.display='flex';
+  $('app').style.display='none';
+ }
+});
+
+function show(v){
+ document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+ $(v).classList.add('active');
+ if(v==='reportes') cargarReportes();
+}
+
+async function guardarActa(){
+ await addDoc(collection(db,'actas'),{
+  nombre:$('nombreInput').value,
+  grupo:$('grupoSelect').value,
+  estado:'Pendiente'
+ });
+ cargar();
+ dashboard();
+}
+
+async function cargar(){
+ const snap=await getDocs(collection(db,'actas'));
+ $('listaActas').innerHTML='';
+ snap.forEach(d=>{
+  $('listaActas').innerHTML+=`<div>${d.data().nombre}</div>`;
+ });
+}
+
+let chart;
+
+async function dashboard(){
+ const snap=await getDocs(collection(db,'actas'));
+ let total=0,aprobadas=0;
+
+ snap.forEach(d=>{
+  total++;
+  if(d.data().estado==='Aprobada') aprobadas++;
+ });
+
+ $('total').textContent=total;
+ $('aprobadas').textContent=aprobadas;
+ $('cumplimiento').textContent=total?Math.round(aprobadas/total*100)+"%":"0%";
+
+ if(chart) chart.destroy();
+
+ chart=new Chart($('chart'),{
+  type:'bar',
+  data:{labels:['Actas'],datasets:[{data:[total]}]}
+ });
+}
+
+let chart2;
+
+async function cargarReportes(){
+ const snap=await getDocs(collection(db,'actas'));
+ let g={};
+
+ snap.forEach(d=>{
+  let gr=d.data().grupo;
+  g[gr]=(g[gr]||0)+1;
+ });
+
+ if(chart2) chart2.destroy();
+
+ chart2=new Chart($('chartGrupos'),{
+  type:'doughnut',
+  data:{labels:Object.keys(g),datasets:[{data:Object.values(g)}]}
+ });
+}
+
+function exportarReporte(){
+ const { jsPDF } = window.jspdf;
+ const doc=new jsPDF();
+ doc.text("Reporte IDS",20,20);
+ doc.save("reporte.pdf");
+}
+
+</script>
+
+</body>
+</html>
