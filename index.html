@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ODS · IDS</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCZ5KZsb0CEVxQdR6To8RhjPdVHmPnm_Jw",
+  authDomain: "capacitacionesids.firebaseapp.com",
+  projectId: "capacitacionesids"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+window.db = db; window.auth = auth;
+window.addDoc = addDoc; window.getDocs = getDocs;
+window.updateDoc = updateDoc; window.doc = doc;
+window.getDoc = getDoc; window.setDoc = setDoc;
+window.collection = collection;
+window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+window.onAuthStateChanged = onAuthStateChanged;
+window.signOut = signOut;
+</script>
+
+<style>
+:root {
+  --crimson: #8b1e1e;
+  --crimson-dark: #6a1414;
+  --crimson-light: #c0392b;
+  --crimson-pale: #fdf2f2;
+  --gold: #c9963a;
+  --gold-light: #f0d48a;
+  --ink: #1a1212;
+  --muted: #7a6060;
+  --border: #e8dada;
+  --surface: #ffffff;
+  --bg: #f9f4f4;
+  --radius: 14px;
+  --shadow: 0 4px 24px rgba(139,30,30,0.08);
+  --shadow-lg: 0 12px 48px rgba(139,30,30,0.14);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+/* ─── LOGIN ─── */
+.login-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 30% 40%, #9e1c1c 0%, #5a0d0d 60%, #1a0606 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='1' fill='rgba(255,255,255,0.06)'/%3E%3C/svg%3E");
+  background-size: 60px 60px;
+}
+
+.login-box {
+  background: white;
+  border-radius: 20px;
+  padding: 44px 40px;
+  width: 360px;
+  position: relative;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.4);
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.login-logo {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.login-logo .brand {
+  font-family: 'DM Serif Display', serif;
+  font-size: 36px;
+  color: var(--crimson);
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.login-logo .sub {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.field {
+  position: relative;
+}
+
+.field input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  background: #fafafa;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.field input:focus {
+  border-color: var(--crimson);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(139,30,30,0.08);
+}
+
+.field input::placeholder { color: #b0a0a0; }
+
+.btn-primary {
+  width: 100%;
+  padding: 13px;
+  background: var(--crimson);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.3px;
+}
+
+.btn-primary:hover { background: var(--crimson-dark); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(139,30,30,0.3); }
+.btn-primary:active { transform: translateY(0); }
+
+.btn-secondary {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  color: var(--muted);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+
+.btn-secondary:hover { border-color: var(--crimson); color: var(--crimson); }
+
+.login-error {
+  background: #fff5f5;
+  border: 1px solid #fcc;
+  color: #c0392b;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 12px;
+  display: none;
+}
+
+/* ─── LAYOUT ─── */
+#app { display: none; }
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: 240px;
+  background: var(--crimson);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 100;
+}
+
+.sidebar::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 120px; height: 120px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+  transform: translate(30%, 30%);
+}
+
+.sidebar-header {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+
+.sidebar-brand {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px;
+  color: white;
+  letter-spacing: -0.5px;
+}
+
+.sidebar-tagline {
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-top: 2px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.65);
+  padding: 11px 14px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+.nav-btn.active { background: rgba(255,255,255,0.15); color: white; }
+
+.nav-btn svg { opacity: 0.7; flex-shrink: 0; }
+.nav-btn.active svg, .nav-btn:hover svg { opacity: 1; }
+
+.sidebar-footer {
+  padding: 16px 12px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logout-btn:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); }
+
+/* ─── MAIN ─── */
+.main {
+  margin-left: 240px;
+  flex: 1;
+  padding: 32px;
+  min-height: 100vh;
+}
+
+.page-header {
+  margin-bottom: 28px;
+}
+
+.page-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+}
+
+.page-subtitle {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* ─── VIEWS ─── */
+.view { display: none; }
+.view.active { display: block; animation: fadeIn 0.3s ease; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── CARDS ─── */
+.card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(139,30,30,0.06);
+}
+
+/* ─── KPI GRID ─── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.kpi-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.kpi-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+  background: var(--crimson);
+}
+
+.kpi-card:nth-child(2)::before { background: var(--gold); }
+.kpi-card:nth-child(3)::before { background: linear-gradient(90deg, var(--crimson), var(--gold)); }
+
+.kpi-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.kpi-value {
+  font-family: 'DM Serif Display', serif;
+  font-size: 40px;
+  color: var(--crimson);
+  line-height: 1;
+}
+
+.kpi-card:nth-child(2) .kpi-value { color: var(--gold); }
+.kpi-card:nth-child(3) .kpi-value { color: var(--crimson-dark); }
+
+/* ─── CHART ─── */
+.chart-card {
+  margin-bottom: 24px;
+  padding: 24px;
+}
+
+.chart-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+/* ─── FORM ─── */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 24px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.form-field input,
+.form-field select {
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  background: #fafafa;
+  transition: all 0.2s;
+  outline: none;
+  width: 100%;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  border-color: var(--crimson);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(139,30,30,0.07);
+}
+
+.btn-action {
+  padding: 10px 22px;
+  background: var(--crimson);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-action:hover { background: var(--crimson-dark); box-shadow: 0 4px 14px rgba(139,30,30,0.25); }
+
+/* ─── ACTAS LIST ─── */
+.acta-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: var(--crimson-pale);
+  border: 1px solid rgba(139,30,30,0.1);
+  margin-bottom: 8px;
+  transition: all 0.2s;
+}
+
+.acta-item:hover { border-color: rgba(139,30,30,0.2); box-shadow: 0 2px 12px rgba(139,30,30,0.07); }
+
+.acta-name { font-size: 14px; font-weight: 500; }
+.acta-grupo { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+.badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+.badge-pendiente { background: #fff3cd; color: #8a6000; }
+.badge-aprobada  { background: #d4edda; color: #155724; }
+
+/* ─── REPORTES ─── */
+.report-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-table th {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 2px solid var(--border);
+}
+
+.report-table td {
+  padding: 10px 12px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.report-table tr:last-child td { border-bottom: none; }
+.report-table tr:hover td { background: var(--crimson-pale); }
+
+.count-pill {
+  background: var(--crimson);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.btn-export {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 24px;
+  background: var(--ink);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-export:hover { background: #2d1a1a; }
+
+/* ─── EMPTY STATE ─── */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--muted);
+}
+
+.empty-state svg { opacity: 0.3; margin-bottom: 12px; }
+.empty-state p { font-size: 14px; }
+
+/* ─── TOAST ─── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--ink);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s;
+  z-index: 9999;
+}
+
+.toast.show { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .report-grid { grid-template-columns: 1fr; }
+  .sidebar { width: 200px; }
+  .main { margin-left: 200px; padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginView" class="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="brand">ODS · IDS</div>
+      <div class="sub">Sistema de Gestión</div>
+    </div>
+    <div id="loginError" class="login-error"></div>
+    <div class="field-group">
+      <div class="field">
+        <input id="emailInput" type="email" placeholder="Correo electrónico">
+      </div>
+      <div class="field">
+        <input id="passInput" type="password" placeholder="Contraseña">
+      </div>
+    </div>
+    <button class="btn-primary" onclick="login()">Ingresar</button>
+    <button class="btn-secondary" onclick="registro()">Crear cuenta</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">ODS·IDS</div>
+      <div class="sidebar-tagline">Gestión de Actas</div>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-btn active" id="nav-dash" onclick="show('dash')">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </button>
+      <button class="nav-btn" id="nav-actas" onclick="show('actas')">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Actas
+      </button>
+      <button class="nav-btn" id="nav-reportes" onclick="show('reportes')">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Reportes
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="logout()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Cerrar sesión
+      </button>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- DASHBOARD -->
+    <div id="dash" class="view active">
+      <div class="page-header">
+        <div class="page-title">Dashboard</div>
+        <div class="page-subtitle">Resumen general de actas registradas</div>
+      </div>
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Total de Actas</div>
+          <div id="totalKpi" class="kpi-value">—</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Aprobadas</div>
+          <div id="aprobadasKpi" class="kpi-value">—</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Cumplimiento</div>
+          <div id="cumplimientoKpi" class="kpi-value">—</div>
+        </div>
+      </div>
+      <div class="card chart-card">
+        <div class="chart-title">Estado de Actas</div>
+        <canvas id="chartDash" height="90"></canvas>
+      </div>
+    </div>
+
+    <!-- ACTAS -->
+    <div id="actas" class="view">
+      <div class="page-header">
+        <div class="page-title">Actas</div>
+        <div class="page-subtitle">Registra y gestiona las actas de capacitación</div>
+      </div>
+      <div class="card" style="margin-bottom:20px">
+        <div class="form-row">
+          <div class="form-field">
+            <label>Nombre del acta</label>
+            <input id="nombreInput" type="text" placeholder="Ej: Inducción Seguridad">
+          </div>
+          <div class="form-field">
+            <label>Grupo</label>
+            <select id="grupoSelect"></select>
+          </div>
+          <button class="btn-action" onclick="guardarActa()">+ Guardar</button>
+        </div>
+      </div>
+      <div id="listaActas"></div>
+    </div>
+
+    <!-- REPORTES -->
+    <div id="reportes" class="view">
+      <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div class="page-title">Reportes</div>
+          <div class="page-subtitle">Análisis por grupo y responsable</div>
+        </div>
+        <button class="btn-export" onclick="exportarReporte()">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Exportar PDF
+        </button>
+      </div>
+      <div class="report-grid">
+        <div class="card">
+          <div class="chart-title" style="margin-bottom:14px">Por Grupo</div>
+          <div id="tablaGrupos"></div>
+        </div>
+        <div class="card">
+          <div class="chart-title" style="margin-bottom:14px">Por Responsable</div>
+          <div id="tablaResponsables"></div>
+        </div>
+      </div>
+      <div class="card chart-card">
+        <div class="chart-title">Distribución por Grupo</div>
+        <canvas id="chartGrupos" height="90"></canvas>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+// ─── HELPERS ───
+function $(id) { return document.getElementById(id); }
+
+function toast(msg, isError = false) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.style.background = isError ? '#c0392b' : '#1a1212';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ─── AUTH ───
+async function login() {
+  const email = $('emailInput').value.trim();
+  const pass  = $('passInput').value;
+  const err   = $('loginError');
+  err.style.display = 'none';
+  if (!email || !pass) { err.textContent = 'Completa todos los campos.'; err.style.display = 'block'; return; }
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch(e) {
+    err.textContent = 'Correo o contraseña incorrectos.';
+    err.style.display = 'block';
+  }
+}
+
+async function registro() {
+  const email = $('emailInput').value.trim();
+  const pass  = $('passInput').value;
+  const err   = $('loginError');
+  err.style.display = 'none';
+  if (!email || !pass) { err.textContent = 'Completa todos los campos.'; err.style.display = 'block'; return; }
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    await setDoc(doc(db, 'users', cred.user.uid), { rol: 'contratista' });
+    toast('Cuenta creada correctamente.');
+  } catch(e) {
+    err.textContent = 'Error al crear cuenta: ' + (e.message || '');
+    err.style.display = 'block';
+  }
+}
+
+function logout() { signOut(auth); }
+
+onAuthStateChanged(auth, async u => {
+  if (u) {
+    $('loginView').style.display = 'none';
+    $('app').style.display = 'block';
+    await cargarGrupos();
+    await cargar();
+    await dashboard();
+  } else {
+    $('loginView').style.display = 'flex';
+    $('app').style.display = 'none';
+  }
+});
+
+// ─── NAVIGATION ───
+function show(v) {
+  document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
+  $(v).classList.add('active');
+  $('nav-' + v).classList.add('active');
+  if (v === 'reportes') cargarReportes();
+}
+
+// ─── ACTAS ───
+async function guardarActa() {
+  const nombre = $('nombreInput').value.trim();
+  const grupo  = $('grupoSelect').value;
+  if (!nombre) { toast('Ingresa un nombre para el acta.', true); return; }
+  if (!grupo)  { toast('Selecciona un grupo.', true); return; }
+  try {
+    await addDoc(collection(db, 'actas'), { nombre, grupo, estado: 'Pendiente', fecha: new Date().toISOString() });
+    $('nombreInput').value = '';
+    toast('Acta guardada correctamente.');
+    await cargar();
+    await dashboard();
+  } catch(e) {
+    toast('Error al guardar el acta.', true);
+  }
+}
+
+async function cargar() {
+  const snap = await getDocs(collection(db, 'actas'));
+  const lista = $('listaActas');
+  lista.innerHTML = '';
+  if (snap.empty) {
+    lista.innerHTML = `<div class="empty-state"><svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><p>No hay actas registradas aún.</p></div>`;
+    return;
+  }
+  snap.forEach(d => {
+    const data = d.data();
+    const badgeClass = data.estado === 'Aprobada' ? 'badge-aprobada' : 'badge-pendiente';
+    lista.innerHTML += `
+      <div class="acta-item">
+        <div>
+          <div class="acta-name">${data.nombre}</div>
+          <div class="acta-grupo">${data.grupo || 'Sin grupo'}</div>
+        </div>
+        <span class="badge ${badgeClass}">${data.estado || 'Pendiente'}</span>
+      </div>`;
+  });
+}
+
+async function cargarGrupos() {
+  const snap = await getDocs(collection(db, 'grupos'));
+  const sel = $('grupoSelect');
+  sel.innerHTML = '<option value="">— Seleccionar grupo —</option>';
+  snap.forEach(d => {
+    sel.innerHTML += `<option value="${d.data().nombre}">${d.data().nombre}</option>`;
+  });
+}
+
+// ─── DASHBOARD ───
+let chartDashInstance = null;
+
+async function dashboard() {
+  const snap = await getDocs(collection(db, 'actas'));
+  let total = 0, aprobadas = 0, pendientes = 0;
+  snap.forEach(d => {
+    total++;
+    if (d.data().estado === 'Aprobada') aprobadas++;
+    else pendientes++;
+  });
+
+  $('totalKpi').textContent = total;
+  $('aprobadasKpi').textContent = aprobadas;
+  $('cumplimientoKpi').textContent = total ? Math.round((aprobadas / total) * 100) + '%' : '0%';
+
+  // FIX: destroy previous chart instance to avoid canvas reuse error
+  if (chartDashInstance) { chartDashInstance.destroy(); chartDashInstance = null; }
+
+  chartDashInstance = new Chart($('chartDash'), {
+    type: 'bar',
+    data: {
+      labels: ['Pendientes', 'Aprobadas'],
+      datasets: [{
+        data: [pendientes, aprobadas],
+        backgroundColor: ['rgba(139,30,30,0.15)', 'rgba(139,30,30,0.75)'],
+        borderColor: ['#8b1e1e', '#8b1e1e'],
+        borderWidth: 2,
+        borderRadius: 8,
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { stepSize: 1 } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+// ─── REPORTES ───
+let chartGruposInstance = null;
+
+async function cargarReportes() {
+  const [actasSnap, gruposSnap] = await Promise.all([
+    getDocs(collection(db, 'actas')),
+    getDocs(collection(db, 'grupos'))
+  ]);
+
+  const mapR = {};
+  gruposSnap.forEach(d => { mapR[d.data().nombre] = d.data().responsable; });
+
+  const g = {}, r = {};
+  actasSnap.forEach(d => {
+    const grupo = d.data().grupo || 'Sin grupo';
+    const resp  = mapR[grupo] || 'Sin responsable';
+    g[grupo] = (g[grupo] || 0) + 1;
+    r[resp]  = (r[resp]  || 0) + 1;
+  });
+
+  // Tabla grupos
+  const tg = $('tablaGrupos');
+  if (Object.keys(g).length === 0) {
+    tg.innerHTML = '<p style="color:var(--muted);font-size:13px">Sin datos.</p>';
+  } else {
+    tg.innerHTML = `<table class="report-table"><thead><tr><th>Grupo</th><th>Actas</th></tr></thead><tbody>` +
+      Object.entries(g).map(([k,v]) => `<tr><td>${k}</td><td><span class="count-pill">${v}</span></td></tr>`).join('') +
+      `</tbody></table>`;
+  }
+
+  // Tabla responsables
+  const tr2 = $('tablaResponsables');
+  if (Object.keys(r).length === 0) {
+    tr2.innerHTML = '<p style="color:var(--muted);font-size:13px">Sin datos.</p>';
+  } else {
+    tr2.innerHTML = `<table class="report-table"><thead><tr><th>Responsable</th><th>Actas</th></tr></thead><tbody>` +
+      Object.entries(r).map(([k,v]) => `<tr><td>${k}</td><td><span class="count-pill">${v}</span></td></tr>`).join('') +
+      `</tbody></table>`;
+  }
+
+  // FIX: destroy chart before recreating
+  if (chartGruposInstance) { chartGruposInstance.destroy(); chartGruposInstance = null; }
+
+  const labels = Object.keys(g);
+  const vals   = Object.values(g);
+
+  if (labels.length > 0) {
+    chartGruposInstance = new Chart($('chartGrupos'), {
+      type: 'doughnut',
+      data: {
+        labels,
+        datasets: [{
+          data: vals,
+          backgroundColor: labels.map((_, i) => `hsl(${355 - i * 25}, 60%, ${40 + i * 8}%)`),
+          borderWidth: 0,
+        }]
+      },
+      options: {
+        plugins: { legend: { position: 'right', labels: { font: { family: 'DM Sans', size: 13 } } } },
+        cutout: '60%'
+      }
+    });
+  }
+}
+
+// ─── PDF ───
+function exportarReporte() {
+  const { jsPDF } = window.jspdf;
+  const d = new jsPDF();
+  d.setFont('helvetica', 'bold');
+  d.setFontSize(18);
+  d.setTextColor(139, 30, 30);
+  d.text('Reporte IDS - ODS', 20, 24);
+  d.setFont('helvetica', 'normal');
+  d.setFontSize(11);
+  d.setTextColor(80, 60, 60);
+  d.text(`Generado: ${new Date().toLocaleDateString('es-ES')}`, 20, 34);
+  d.text(`Total: ${$('totalKpi').textContent}   Aprobadas: ${$('aprobadasKpi').textContent}   Cumplimiento: ${$('cumplimientoKpi').textContent}`, 20, 46);
+  d.save('reporte_ids.pdf');
+  toast('PDF exportado.');
+}
+</script>
+</body>
+</html>
