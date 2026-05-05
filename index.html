@@ -766,7 +766,12 @@ async function registro() {
   if (!email || !pass) { err.textContent = 'Completa todos los campos.'; err.style.display = 'block'; return; }
   try {
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
-    await setDoc(doc(db, 'users', cred.user.uid), { rol: 'contratista' });
+    await setDoc(doc(db, 'users', cred.user.uid), {
+  email,
+  rol: 'contratista',
+  estado: 'activo',
+  fecha: new Date().toISOString()
+});
     toast('Cuenta creada correctamente.');
   } catch(e) {
     err.textContent = 'Error al crear cuenta: ' + (e.message || '');
