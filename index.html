@@ -1402,335 +1402,17 @@ textarea{resize:vertical;min-height:64px;line-height:1.5}
 <!-- ═══════ FIREBASE + LÓGICA ═══════ -->
 <script type="module">
 
-function authTab(tab) {
-  const loginTab = document.getElementById('at-in');
-  const regTab = document.getElementById('at-reg');
-  const loginBox = document.getElementById('tab-login');
-  const regBox = document.getElementById('tab-reg');
 
-  if (loginTab) loginTab.classList.toggle('active', tab === 'login');
-  if (regTab) regTab.classList.toggle('active', tab === 'register');
 
-  if (loginBox) loginBox.style.display = tab === 'login' ? 'flex' : 'none';
-  if (regBox) regBox.style.display = tab === 'register' ? 'flex' : 'none';
-}
 
-function doLogin() {
-  const emailEl = document.getElementById('li-email');
-  const passEl = document.getElementById('li-pass');
-  const msg = document.getElementById('li-msg');
 
-  const email = emailEl ? emailEl.value.trim() : '';
-  const pass = passEl ? passEl.value.trim() : '';
 
-  if (!email || !pass) {
-    if (msg) {
-      msg.className = 'auth-msg e';
-      msg.textContent = 'Complete todos los campos';
-    }
-    return;
-  }
 
-  localStorage.setItem('user', JSON.stringify({
-    email: email,
-    name: email.split('@')[0],
-    role: 'Operador',
-    loggedIn: true
-  }));
 
-  if (msg) {
-    msg.className = 'auth-msg s';
-    msg.textContent = 'Inicio de sesión exitoso';
-  }
 
-  setTimeout(initApp, 1000);
-}
 
-function doRegister() {
-  const nameEl = document.getElementById('rn');
-  const emailEl = document.getElementById('re');
-  const groupEl = document.getElementById('rg');
-  const areaEl = document.getElementById('ra');
-  const passEl = document.getElementById('rp');
-  const msg = document.getElementById('reg-msg');
 
-  const name = nameEl ? nameEl.value.trim() : '';
-  const email = emailEl ? emailEl.value.trim() : '';
-  const group = groupEl ? groupEl.value : '';
-  const area = areaEl ? areaEl.value : '';
-  const pass = passEl ? passEl.value.trim() : '';
 
-  if (!name || !email || !group || !area || !pass) {
-    if (msg) {
-      msg.className = 'auth-msg e';
-      msg.textContent = 'Complete todos los campos';
-    }
-    return;
-  }
-
-  if (msg) {
-    msg.className = 'auth-msg s';
-    msg.textContent = 'Solicitud enviada correctamente';
-  }
-
-  if (nameEl) nameEl.value = '';
-  if (emailEl) emailEl.value = '';
-  if (passEl) passEl.value = '';
-  if (areaEl) areaEl.value = '';
-
-  setTimeout(() => authTab('login'), 1200);
-}
-
-function doLogout() {
-  localStorage.removeItem('user');
-  location.reload();
-}
-
-function initApp() {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-
-  if (!user.loggedIn) return;
-
-  const auth = document.getElementById('auth-screen');
-  const app = document.getElementById('app');
-  const layout = document.getElementById('main-layout');
-
-  if (auth) auth.style.display = 'none';
-  if (app) app.style.display = 'flex';
-  if (layout) layout.style.display = 'flex';
-
-  const un = document.getElementById('un');
-  const ur = document.getElementById('ur');
-
-  if (un) un.textContent = user.name || 'Usuario';
-  if (ur) ur.textContent = user.role || 'Operador';
-
-  renderDash();
-  showView('dash');
-}
-
-function showView(viewName) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  const view = document.getElementById('view-' + viewName);
-  if (view) view.classList.add('active');
-
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const navItem = document.getElementById('nav-' + viewName);
-  if (navItem) navItem.classList.add('active');
-}
-
-function renderDash() {
-  const ids = ['ds-total', 'ds-exec', 'ds-plan', 'ds-part', 'ds-muni'];
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = '0';
-  });
-
-  const cumpl = document.getElementById('ds-cumpl');
-  const pre = document.getElementById('ds-pre');
-  const post = document.getElementById('ds-post');
-
-  if (cumpl) cumpl.textContent = '—';
-  if (pre) pre.textContent = '—';
-  if (post) post.textContent = '—';
-}
-
-function openPlanModal() {
-  console.log('Abrir planeación');
-}
-
-function openCapModal() {
-  console.log('Abrir ejecución');
-}
-
-function openCreateUserModal() {
-  console.log('Abrir usuarios');
-}
-
-function openChangePass() {
-  console.log('Abrir cambio de contraseña');
-}
-
-function exportCSV() {
-  console.log('Exportar CSV');
-}
-
-function switchTab(button, tabId) {
-  const container = button ? button.closest('.view, .card, .section-box, .sbox, .tc, .tab-row') : null;
-  const root = container || document;
-
-  root.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-  if (button) button.classList.add('active');
-
-  root.querySelectorAll('.tc').forEach(tab => tab.classList.remove('active'));
-  const tab = document.getElementById(tabId);
-  if (tab) tab.classList.add('active');
-}
-
-function onDashTipoChange() {
-  const periodo = document.getElementById('dash-periodo');
-  if (periodo && !periodo.value) {
-    periodo.innerHTML = '<option value="">Seleccione periodo</option>';
-  }
-}
-
-function updatePlanAreaFilter() {
-  const grupo = document.getElementById('fp-grupo');
-  const area = document.getElementById('fp-area');
-  if (!area) return;
-
-  const val = grupo ? grupo.value : '';
-  area.innerHTML = '<option value="">Todas las áreas</option>';
-
-  if (val === 'atencion') {
-    area.innerHTML += '<option>Enfermería</option><option>Medicina</option><option>Psicología</option>';
-  } else if (val === 'salud_publica') {
-    area.innerHTML += '<option>Epidemiología</option><option>Promoción</option><option>Vigilancia</option>';
-  }
-}
-
-function renderPlan() {
-  const tbody = document.getElementById('plan-table');
-  if (tbody) tbody.innerHTML = '<tr class="erow"><td colspan="9">Sin registros de planeación</td></tr>';
-}
-
-function updateCapAreaFilter() {
-  const grupo = document.getElementById('fc-grupo');
-  const area = document.getElementById('fc-area');
-  if (!area) return;
-
-  const val = grupo ? grupo.value : '';
-  area.innerHTML = '<option value="">Todas las áreas</option>';
-
-  if (val === 'atencion') {
-    area.innerHTML += '<option>Enfermería</option><option>Medicina</option><option>Psicología</option>';
-  } else if (val === 'salud_publica') {
-    area.innerHTML += '<option>Epidemiología</option><option>Promoción</option><option>Vigilancia</option>';
-  }
-}
-
-function renderCaps() {
-  const tbody = document.getElementById('caps-table');
-  if (tbody) tbody.innerHTML = '<tr class="erow"><td colspan="12">Sin capacitaciones registradas</td></tr>';
-}
-
-function markNotifRead() {
-  const badge = document.getElementById('badge-notif');
-  if (badge) badge.style.display = 'none';
-}
-
-function initInfPeriodo() {
-  const periodo = document.getElementById('inf-periodo');
-  if (periodo && !periodo.value) {
-    periodo.innerHTML = '<option value="">Seleccione periodo</option>';
-  }
-}
-
-function renderInformes() {
-  const areaTable = document.getElementById('inf-area-table');
-  const muniTable = document.getElementById('inf-muni-table');
-  const detailTable = document.getElementById('inf-detail-table');
-
-  if (areaTable) areaTable.innerHTML = '<tr class="erow"><td colspan="6">Sin datos</td></tr>';
-  if (muniTable) muniTable.innerHTML = '<tr class="erow"><td colspan="4">Sin datos</td></tr>';
-  if (detailTable) detailTable.innerHTML = '<tr class="erow"><td colspan="11">Sin datos</td></tr>';
-}
-
-function onUsersExcelChange() {
-  console.log('Carga masiva de usuarios');
-}
-
-function openModal(id) {
-  const el = document.getElementById(id);
-  if (el) el.style.display = 'block';
-}
-
-function loadPrestConfig() {
-  const tbody = document.getElementById('cfg-prest-table');
-  const sel = document.getElementById('cfg-mun-filter');
-  if (tbody) {
-    if (sel && !sel.value) {
-      tbody.innerHTML = '<tr class="erow"><td colspan="8">Seleccione un municipio</td></tr>';
-    } else {
-      tbody.innerHTML = '<tr class="erow"><td colspan="8">Sin registros</td></tr>';
-    }
-  }
-}
-
-function openPrestModal() {
-  console.log('Abrir prestador');
-}
-
-function addTipoCap() {
-  const input = document.getElementById('new-tipo-cap');
-  if (input) input.value = '';
-}
-
-function saveMetas() {
-  console.log('Guardar metas');
-}
-
-function seedMunicipios() {
-  console.log('Cargar municipios');
-}
-
-function seedPrestadores() {
-  console.log('Cargar prestadores');
-}
-
-function seedTiposCap() {
-  console.log('Cargar tipos de capacitación');
-}
-
-function onPrestExcelChange() {
-  console.log('Carga masiva de prestadores');
-}
-
-function renderCalendario() {
-  console.log('Render calendario');
-}
-
-window.authTab = authTab;
-window.doLogin = doLogin;
-window.doRegister = doRegister;
-window.doLogout = doLogout;
-window.initApp = initApp;
-window.showView = showView;
-window.renderDash = renderDash;
-window.openPlanModal = openPlanModal;
-window.openCapModal = openCapModal;
-window.openCreateUserModal = openCreateUserModal;
-window.openChangePass = openChangePass;
-window.exportCSV = exportCSV;
-window.switchTab = switchTab;
-window.onDashTipoChange = onDashTipoChange;
-window.updatePlanAreaFilter = updatePlanAreaFilter;
-window.renderPlan = renderPlan;
-window.updateCapAreaFilter = updateCapAreaFilter;
-window.renderCaps = renderCaps;
-window.markNotifRead = markNotifRead;
-window.initInfPeriodo = initInfPeriodo;
-window.renderInformes = renderInformes;
-window.onUsersExcelChange = onUsersExcelChange;
-window.openModal = openModal;
-window.loadPrestConfig = loadPrestConfig;
-window.openPrestModal = openPrestModal;
-window.addTipoCap = addTipoCap;
-window.saveMetas = saveMetas;
-window.seedMunicipios = seedMunicipios;
-window.seedPrestadores = seedPrestadores;
-window.seedTiposCap = seedTiposCap;
-window.onPrestExcelChange = onPrestExcelChange;
-window.renderCalendario = renderCalendario;
-
-document.addEventListener('DOMContentLoaded', () => {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  if (user.loggedIn) {
-    initApp();
-  } else {
-    authTab('login');
-  }
-});
 
 // ═══════════════════════════════════════════════════════════════════════════
 // IDS NORTE DE SANTANDER – SISTEMA DE SEGUIMIENTO DE CAPACITACIONES v2.0
@@ -4812,6 +4494,42 @@ window.postSetupInit = async () => {
 })();
 
 console.log('[IDS v4.0] Parche integral aplicado — roles, notificaciones, calendario, tipo entidad.');
+
+
+
+// ===== EXPOSICIÓN GLOBAL DE FUNCIONES =====
+window.authTab = authTab;
+window.doLogin = doLogin;
+window.doRegister = doRegister;
+window.doLogout = doLogout;
+window.initApp = initApp;
+window.showView = showView;
+window.renderDash = renderDash;
+window.openPlanModal = openPlanModal;
+window.openCapModal = openCapModal;
+window.openCreateUserModal = openCreateUserModal;
+window.openChangePass = openChangePass;
+window.exportCSV = exportCSV;
+window.switchTab = switchTab;
+window.onDashTipoChange = onDashTipoChange;
+window.updatePlanAreaFilter = updatePlanAreaFilter;
+window.renderPlan = renderPlan;
+window.updateCapAreaFilter = updateCapAreaFilter;
+window.renderCaps = renderCaps;
+window.markNotifRead = markNotifRead;
+window.initInfPeriodo = initInfPeriodo;
+window.renderInformes = renderInformes;
+window.onUsersExcelChange = onUsersExcelChange;
+window.openModal = openModal;
+window.loadPrestConfig = loadPrestConfig;
+window.openPrestModal = openPrestModal;
+window.addTipoCap = addTipoCap;
+window.saveMetas = saveMetas;
+window.seedMunicipios = seedMunicipios;
+window.seedPrestadores = seedPrestadores;
+window.seedTiposCap = seedTiposCap;
+window.onPrestExcelChange = onPrestExcelChange;
+window.renderCalendario = renderCalendario;
 
 </script>
 </body>
