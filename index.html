@@ -1873,7 +1873,7 @@ window.closeModal=id=>{ $(id).classList.remove('open'); };
 window.updatePlanModalAreas=()=>{ const el=$('pl-area'); if(el) el.innerHTML=areaOpts($('pl-grupo').value); };
 window.updateCapModalAreas=()=>{ const el=$('ca-area'); if(el) el.innerHTML=areaOpts($('ca-grupo').value); };
 window.updateRespSelector=updateRespSelector;
-window.verActa=id=>{ 
+window.verActa=id=>{
   currentActaId=id; const c=allCaps.find(x=>x.id===id); if(!c) return;
   var body =$('acta-content'); if(body) body.innerHTML=`<div class="acta-wrap"><h2>${esc(c.nombre)}</h2><p>Fecha: ${c.fecha}</p><p>Estado: ${badge(c.actaEstado)}</p></div>`;
   $('modal-acta').classList.add('open');
