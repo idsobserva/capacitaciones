@@ -1,1406 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>IDS Norte de Santander – Seguimiento de Capacitaciones</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-<style>
-/* ═══════════════════════════════════════════════════════════════
-   IDS NORTE DE SANTANDER — SISTEMA DE CAPACITACIONES
-   Diseño institucional corporativo · Versión 3.0
-   Paleta: plateado/gris corporativo · Rojo IDS como acento
-   ═══════════════════════════════════════════════════════════════ */
-:root {
-  /* Rojo institucional */
-  --red:#C0392B;--red-d:#8B1A0F;--red-l:#FADBD8;--red-m:#E74C3C;
 
-  /* Plateados y grises corporativos */
-  --slate-900:#0F172A;--slate-800:#1E293B;--slate-700:#334155;
-  --slate-600:#475569;--slate-500:#64748B;--slate-400:#94A3B8;
-  --slate-300:#CBD5E1;--slate-200:#E2E8F0;--slate-100:#F1F5F9;
-  --slate-50:#F8FAFC;
-
-  /* Colores de estado */
-  --green:#16A34A;--green-l:#DCFCE7;--green-d:#14532D;
-  --amber:#D97706;--amber-l:#FEF3C7;
-  --blue:#1D4ED8;--blue-l:#DBEAFE;
-  --purple:#7C3AED;--purple-l:#EDE9FE;
-  --teal:#0D9488;--teal-l:#CCFBF1;
-
-  /* Semánticos */
-  --white:#FFFFFF;--black:#0F172A;
-  --bg:#F1F5F9;--bg-card:#FFFFFF;--bg-sidebar:#1E293B;
-  --border:#E2E8F0;--border-strong:#CBD5E1;
-  --text-primary:#1E293B;--text-secondary:#475569;--text-muted:#94A3B8;
-
-  /* Sombras */
-  --sh-xs:0 1px 2px rgba(0,0,0,.06);
-  --sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06);
-  --sh-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);
-  --sh-lg:0 10px 15px rgba(0,0,0,.08),0 4px 6px rgba(0,0,0,.05);
-  --sh-xl:0 20px 25px rgba(0,0,0,.10),0 10px 10px rgba(0,0,0,.04);
-
-  /* Bordes */
-  --r-sm:4px;--r:8px;--r-md:10px;--r-lg:12px;--r-xl:16px;
-
-  /* Tipografía */
-  --font:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;
-  --font-mono:'Consolas','Courier New',monospace;
-}
-
-/* ── RESET ───────────────────────────────────────────────────── */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{font-size:14px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-body{font-family:var(--font);background:var(--bg);color:var(--text-primary);min-height:100vh;line-height:1.5}
-a{color:var(--red);text-decoration:none}a:hover{text-decoration:underline}
-
-/* ── AUTH ────────────────────────────────────────────────────── */
-#auth-screen{
-  min-height:100vh;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(135deg,var(--slate-900) 0%,var(--slate-800) 40%,#1a2535 100%);
-  position:relative;overflow:hidden;
-}
-#auth-screen::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 30% 50%,rgba(192,57,43,.12) 0%,transparent 60%);
-  pointer-events:none;
-}
-.auth-box{
-  background:var(--white);border-radius:var(--r-xl);
-  padding:40px 36px;width:440px;box-shadow:var(--sh-xl);
-  position:relative;z-index:1;border:1px solid var(--slate-200);
-}
-.auth-logo{text-align:center;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border)}
-.auth-logo-bar{
-  display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px;
-}
-.auth-logo-line{
-  width:40px;height:3px;background:var(--red);border-radius:2px;
-}
-.auth-logo h1{
-  font-size:11px;font-weight:800;letter-spacing:2px;
-  text-transform:uppercase;color:var(--slate-800);
-}
-.auth-logo p{color:var(--text-secondary);font-size:12px;margin-top:4px;line-height:1.6}
-.auth-logo .auth-system{
-  display:inline-block;margin-top:6px;padding:2px 10px;
-  background:var(--red-l);color:var(--red);font-size:10px;
-  font-weight:700;border-radius:20px;letter-spacing:.5px;text-transform:uppercase;
-}
-.auth-tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:22px;gap:0}
-.auth-tab{
-  flex:1;padding:10px;text-align:center;cursor:pointer;font-weight:600;font-size:13px;
-  color:var(--text-secondary);border-bottom:2px solid transparent;margin-bottom:-2px;
-  transition:all .2s;letter-spacing:.3px;
-}
-.auth-tab.active{color:var(--red);border-bottom-color:var(--red)}
-.af{display:flex;flex-direction:column;gap:12px}
-.af input,.af select{
-  width:100%;padding:10px 13px;border:1.5px solid var(--border-strong);
-  border-radius:var(--r-sm);font-size:13px;font-family:var(--font);
-  outline:none;transition:all .2s;color:var(--text-primary);background:var(--white);
-}
-.af input:focus,.af select:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(192,57,43,.08);}
-.btn-primary{
-  background:var(--red);color:var(--white);border:none;border-radius:var(--r-sm);
-  padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);
-  width:100%;transition:all .2s;letter-spacing:.5px;text-transform:uppercase;
-}
-.btn-primary:hover{background:var(--red-d);transform:translateY(-1px);box-shadow:var(--sh-md)}
-.btn-primary:active{transform:translateY(0)}
-.auth-msg{
-  font-size:12px;text-align:center;padding:9px 12px;border-radius:var(--r-sm);
-  display:none;margin-top:2px;font-weight:500;
-}
-.auth-msg.e{background:var(--red-l);color:var(--red);display:block;border:1px solid rgba(192,57,43,.2)}
-.auth-msg.s{background:var(--green-l);color:var(--green-d);display:block;border:1px solid rgba(22,163,74,.2)}
-.auth-msg.i{background:var(--blue-l);color:var(--blue);display:block}
-.auth-divider{text-align:center;color:var(--text-muted);font-size:11px;font-weight:600;
-  letter-spacing:.5px;text-transform:uppercase;position:relative;margin:4px 0}
-.auth-divider::before,.auth-divider::after{content:'';position:absolute;top:50%;
-  width:40%;height:1px;background:var(--border)}
-.auth-divider::before{left:0}.auth-divider::after{right:0}
-
-/* ── APP SHELL ───────────────────────────────────────────────── */
-#app{display:none;min-height:100vh;flex-direction:column}
-
-/* ── TOPBAR ──────────────────────────────────────────────────── */
-.topbar{
-  background:var(--slate-900);color:var(--white);
-  padding:0 24px;height:56px;
-  display:flex;align-items:center;justify-content:space-between;
-  box-shadow:0 1px 0 rgba(255,255,255,.05);
-  position:sticky;top:0;z-index:100;
-}
-.tb-brand{display:flex;align-items:center;gap:12px}
-.tb-logo-mark{
-  width:32px;height:32px;background:var(--red);border-radius:var(--r-sm);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-.tb-logo-mark svg{width:18px;height:18px;fill:none;stroke:white;stroke-width:2}
-.tb-logo{line-height:1.2}
-.tb-logo-title{font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--white)}
-.tb-logo-sub{font-size:10px;color:var(--slate-400);letter-spacing:.5px}
-.tb-right{display:flex;align-items:center;gap:8px}
-.tb-env-badge{
-  font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
-  padding:2px 8px;border-radius:20px;background:rgba(255,255,255,.08);color:var(--slate-400);
-}
-.user-badge{
-  display:flex;align-items:center;gap:8px;
-  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
-  padding:5px 12px 5px 8px;border-radius:var(--r);cursor:pointer;
-  transition:all .15s;
-}
-.user-badge:hover{background:rgba(255,255,255,.1)}
-.user-avatar{
-  width:28px;height:28px;border-radius:50%;
-  background:var(--red);display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:700;color:var(--white);flex-shrink:0;overflow:hidden;
-}
-.user-avatar img{width:100%;height:100%;object-fit:cover}
-.user-info{display:flex;flex-direction:column}
-.user-name{font-size:12px;font-weight:600;color:var(--white);line-height:1.2}
-.role-pill{
-  font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
-  color:var(--slate-400);
-}
-.btn-out{
-  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
-  color:var(--slate-300);padding:6px 14px;border-radius:var(--r-sm);
-  font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font);
-  transition:all .2s;letter-spacing:.5px;text-transform:uppercase;
-}
-.btn-out:hover{background:rgba(255,255,255,.12);color:var(--white)}
-
-/* ── SIDEBAR ─────────────────────────────────────────────────── */
-.layout{display:flex;flex:1;min-height:calc(100vh - 56px)}
-.sidebar{
-  width:220px;background:var(--slate-800);
-  padding:16px 0 24px;position:sticky;top:56px;
-  height:calc(100vh - 56px);overflow-y:auto;flex-shrink:0;
-  border-right:1px solid rgba(255,255,255,.04);
-}
-.sidebar::-webkit-scrollbar{width:3px}
-.sidebar::-webkit-scrollbar-track{background:transparent}
-.sidebar::-webkit-scrollbar-thumb{background:var(--slate-600);border-radius:3px}
-.sb-sec{
-  padding:14px 16px 6px;font-size:9px;font-weight:800;
-  color:var(--slate-500);text-transform:uppercase;letter-spacing:1.5px;
-  border-top:1px solid rgba(255,255,255,.04);margin-top:8px;
-}
-.sb-sec:first-child{border-top:none;margin-top:0;padding-top:6px}
-.nav-item{
-  display:flex;align-items:center;gap:10px;padding:9px 16px;
-  color:var(--slate-400);font-size:12px;font-weight:500;cursor:pointer;
-  transition:all .15s;border-left:2px solid transparent;
-  white-space:nowrap;margin:1px 0;position:relative;
-}
-.nav-item:hover{background:rgba(255,255,255,.04);color:var(--slate-200)}
-.nav-item.active{
-  background:rgba(192,57,43,.12);color:var(--white);
-  border-left-color:var(--red);font-weight:600;
-}
-.nav-item.active .nav-ico{color:var(--red)}
-.nav-ico{
-  width:16px;height:16px;flex-shrink:0;display:flex;
-  align-items:center;justify-content:center;color:var(--slate-500);
-}
-.nav-ico svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
-.nav-badge{
-  margin-left:auto;background:var(--red);color:var(--white);
-  font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;
-  min-width:18px;text-align:center;
-}
-.nav-badge.am{background:var(--amber)}
-
-/* ── MAIN ────────────────────────────────────────────────────── */
-.main{flex:1;padding:24px;overflow-y:auto;min-width:0;display:flex;flex-direction:column;gap:0}
-.view{display:none;flex-direction:column;gap:20px}
-.view.active{display:flex}
-
-/* ── PAGE HEADER ─────────────────────────────────────────────── */
-.page-hdr{
-  display:flex;align-items:flex-start;justify-content:space-between;
-  flex-wrap:wrap;gap:12px;padding-bottom:16px;
-  border-bottom:1px solid var(--border);margin-bottom:4px;
-}
-.page-hdr-left{}
-.page-title{font-size:18px;font-weight:700;color:var(--text-primary);letter-spacing:-.3px}
-.page-sub{font-size:12px;color:var(--text-secondary);margin-top:3px}
-.page-hdr-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-
-/* ── STAT CARDS ──────────────────────────────────────────────── */
-.stats-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:12px;
-}
-.stat-card{
-  background:var(--white);border-radius:var(--r-md);padding:16px;
-  box-shadow:var(--sh);border:1px solid var(--border);
-  position:relative;overflow:hidden;
-}
-.stat-card::before{
-  content:'';position:absolute;top:0;left:0;width:3px;height:100%;
-  background:var(--slate-300);border-radius:var(--r) 0 0 var(--r);
-}
-.stat-card.red::before{background:var(--red)}
-.stat-card.green::before{background:var(--green)}
-.stat-card.amber::before{background:var(--amber)}
-.stat-card.blue::before{background:var(--blue)}
-.stat-card.teal::before{background:var(--teal)}
-.stat-card.purple::before{background:var(--purple)}
-.stat-label{
-  font-size:10px;color:var(--text-secondary);font-weight:700;
-  text-transform:uppercase;letter-spacing:.7px;
-}
-.stat-val{font-size:28px;font-weight:800;line-height:1;margin-top:4px;color:var(--text-primary)}
-.stat-sub{font-size:10px;color:var(--text-muted);margin-top:2px}
-.alert-box{
-  background:var(--amber-l);border:1px solid rgba(217,119,6,.25);
-  border-radius:var(--r-md);padding:12px 16px;font-size:12px;color:#92400E;
-  display:none;font-weight:500;
-}
-
-/* ── CARD ────────────────────────────────────────────────────── */
-.card{
-  background:var(--white);border-radius:var(--r-md);
-  box-shadow:var(--sh);border:1px solid var(--border);overflow:hidden;
-}
-.card-hdr{
-  padding:14px 18px;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
-  background:var(--white);
-}
-.card-title{font-size:13px;font-weight:700;color:var(--text-primary)}
-.card-sub{font-size:11px;color:var(--text-secondary);margin-top:1px}
-
-/* ── TABLE ───────────────────────────────────────────────────── */
-.tw{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:12px}
-thead th{
-  background:var(--slate-50);border-bottom:2px solid var(--border-strong);
-  padding:10px 14px;text-align:left;font-weight:700;
-  font-size:10px;text-transform:uppercase;letter-spacing:.6px;
-  color:var(--text-secondary);white-space:nowrap;
-}
-tbody td{
-  padding:10px 14px;border-bottom:1px solid var(--border);
-  vertical-align:middle;color:var(--text-primary);
-}
-tbody tr:last-child td{border-bottom:none}
-tbody tr:hover td{background:var(--slate-50)}
-.erow td{
-  text-align:center;color:var(--text-muted);font-style:italic;
-  padding:28px;font-size:12px;
-}
-
-/* ── BADGES ──────────────────────────────────────────────────── */
-.badge{
-  display:inline-flex;align-items:center;padding:2px 8px;
-  border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.3px;
-  white-space:nowrap;
-}
-.bp{background:var(--amber-l);color:#92400E}
-.bpr{background:var(--blue-l);color:var(--blue)}
-.bd{background:var(--green-l);color:var(--green-d)}
-.bc{background:var(--red-l);color:var(--red-d)}
-.ba{background:var(--purple-l);color:var(--purple)}
-.bco{background:var(--blue-l);color:var(--blue)}
-.bg_{background:var(--teal-l);color:var(--teal)}
-.bct{background:var(--slate-100);color:var(--slate-600)}
-.chip{
-  display:inline-block;padding:1px 7px;border-radius:var(--r-sm);
-  font-size:10px;font-weight:600;
-}
-.chip-pub{background:var(--teal-l);color:var(--teal)}
-.chip-prv{background:var(--purple-l);color:var(--purple)}
-.chip-ese{background:var(--amber-l);color:var(--amber)}
-
-/* ── BUTTONS ─────────────────────────────────────────────────── */
-.btn{
-  padding:7px 14px;border-radius:var(--r-sm);font-size:11px;font-weight:700;
-  cursor:pointer;border:none;font-family:var(--font);transition:all .15s;
-  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
-  letter-spacing:.3px;text-transform:uppercase;
-}
-.btn-sm{padding:4px 10px;font-size:10px}
-.btn-xs{padding:3px 8px;font-size:10px}
-.btn-red{background:var(--red);color:var(--white)}
-.btn-red:hover{background:var(--red-d);box-shadow:var(--sh-md)}
-.btn-green{background:var(--green);color:var(--white)}
-.btn-green:hover{background:var(--green-d)}
-.btn-blue{background:var(--blue);color:var(--white)}
-.btn-blue:hover{background:#1E40AF}
-.btn-teal{background:var(--teal);color:var(--white)}
-.btn-teal:hover{background:#0F766E}
-.btn-amber{background:var(--amber);color:var(--white)}
-.btn-ghost{
-  background:var(--white);color:var(--text-secondary);
-  border:1px solid var(--border-strong);
-}
-.btn-ghost:hover{background:var(--slate-50);color:var(--text-primary)}
-.btn-outline{
-  background:transparent;color:var(--red);border:1.5px solid var(--red);
-}
-.btn-outline:hover{background:var(--red-l)}
-.btn-danger{
-  background:transparent;color:var(--red);border:1px solid var(--red-l);font-size:10px;
-}
-.btn-danger:hover{background:var(--red-l)}
-.btn-slate{background:var(--slate-700);color:var(--white)}
-.btn-slate:hover{background:var(--slate-800)}
-
-/* ── FILTERS BAR ─────────────────────────────────────────────── */
-.filters{
-  display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px;
-  border-bottom:1px solid var(--border);background:var(--slate-50);
-}
-.filters select,.filters input{
-  padding:6px 10px;font-size:11px;border:1.5px solid var(--border-strong);
-  border-radius:var(--r-sm);font-family:var(--font);outline:none;
-  background:var(--white);color:var(--text-primary);transition:border-color .2s;
-}
-.filters select:focus,.filters input:focus{border-color:var(--red)}
-
-/* ── MODAL ───────────────────────────────────────────────────── */
-.modal-ov{
-  position:fixed;inset:0;background:rgba(15,23,42,.6);
-  z-index:200;display:none;align-items:center;justify-content:center;
-  padding:16px;overflow-y:auto;backdrop-filter:blur(4px);
-}
-.modal-ov.open{display:flex}
-.modal{
-  background:var(--white);border-radius:var(--r-lg);width:100%;max-width:780px;
-  max-height:92vh;overflow-y:auto;box-shadow:var(--sh-xl);margin:auto;
-  border:1px solid var(--border);
-}
-.modal-lg{max-width:920px}.modal-xl{max-width:1060px}
-.modal-hdr{
-  padding:18px 22px 14px;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;background:var(--white);z-index:1;
-}
-.modal-ttl{font-size:15px;font-weight:700;color:var(--text-primary)}
-.modal-ttl-sub{font-size:11px;color:var(--text-secondary);margin-top:2px}
-.modal-x{
-  background:var(--slate-100);border:none;width:28px;height:28px;border-radius:50%;
-  cursor:pointer;color:var(--slate-600);font-size:16px;line-height:1;
-  display:flex;align-items:center;justify-content:center;transition:all .15s;
-}
-.modal-x:hover{background:var(--red-l);color:var(--red)}
-.modal-body{padding:20px 22px}
-.modal-foot{
-  padding:14px 22px;border-top:1px solid var(--border);
-  display:flex;gap:8px;justify-content:flex-end;
-  position:sticky;bottom:0;background:var(--white);z-index:1;
-}
-
-/* ── FORM ────────────────────────────────────────────────────── */
-.fg{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.fg.c1{grid-template-columns:1fr}.fg.c3{grid-template-columns:1fr 1fr 1fr}
-.fgroup{display:flex;flex-direction:column;gap:5px}
-.fgroup.s2{grid-column:span 2}.fgroup.s3{grid-column:span 3}
-label{font-size:11px;font-weight:700;color:var(--text-primary);letter-spacing:.3px}
-label .req{color:var(--red);margin-left:2px}
-input[type=text],input[type=email],input[type=date],input[type=number],
-input[type=url],input[type=password],input[type=search],select,textarea{
-  padding:8px 11px;border:1.5px solid var(--border-strong);border-radius:var(--r-sm);
-  font-size:12px;font-family:var(--font);outline:none;transition:all .2s;
-  background:var(--white);color:var(--text-primary);width:100%;
-}
-input:focus,select:focus,textarea:focus{
-  border-color:var(--red);box-shadow:0 0 0 3px rgba(192,57,43,.08);
-}
-.oblig{background:var(--amber-l)!important}
-textarea{resize:vertical;min-height:64px;line-height:1.5}
-.hint{font-size:10px;color:var(--text-muted);margin-top:1px}
-.sdiv{
-  grid-column:1/-1;padding:7px 12px;border-radius:var(--r-sm);
-  font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-top:6px;
-}
-.sdiv.red{background:var(--red);color:var(--white)}
-.sdiv.slate{background:var(--slate-700);color:var(--white)}
-.sdiv.teal{background:var(--teal);color:var(--white)}
-.sdiv.green{background:var(--green);color:var(--white)}
-.sdiv.blue{background:var(--blue);color:var(--white)}
-.sdiv.amber{background:var(--amber);color:var(--white)}
-.sdiv.purple{background:var(--purple);color:var(--white)}
-
-/* ── TABS ────────────────────────────────────────────────────── */
-.tab-row{
-  display:flex;flex-wrap:wrap;border-bottom:2px solid var(--border);
-  margin-bottom:16px;gap:0;
-}
-.tab-btn{
-  padding:9px 16px;font-size:11px;font-weight:700;color:var(--text-secondary);
-  cursor:pointer;border:none;background:none;font-family:var(--font);
-  border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;
-  white-space:nowrap;letter-spacing:.3px;text-transform:uppercase;
-}
-.tab-btn.active{color:var(--red);border-bottom-color:var(--red)}
-.tc{display:none}.tc.active{display:block}
-
-/* ── TYPEAHEAD ───────────────────────────────────────────────── */
-.ta-wrap{position:relative}
-.ta-inp{
-  width:100%;padding:8px 11px;border:1.5px solid var(--border-strong);
-  border-radius:var(--r-sm);font-size:12px;font-family:var(--font);
-  outline:none;transition:all .2s;background:var(--white);color:var(--text-primary);
-}
-.ta-inp:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(192,57,43,.08);}
-.ta-inp.oblig{background:var(--amber-l)!important}
-.ta-dd{
-  position:absolute;top:100%;left:0;right:0;background:var(--white);
-  border:1.5px solid var(--red);border-top:none;
-  border-radius:0 0 var(--r-sm) var(--r-sm);
-  max-height:210px;overflow-y:auto;z-index:500;display:none;
-  box-shadow:var(--sh-lg);
-}
-.ta-dd.open{display:block}
-.ta-item{
-  padding:8px 12px;cursor:pointer;font-size:12px;
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;transition:background .1s;
-}
-.ta-item:last-child{border-bottom:none}
-.ta-item:hover,.ta-item.sel{background:var(--red-l);color:var(--red)}
-.ta-item.sel{font-weight:600}
-.ta-empty{padding:10px 12px;color:var(--text-muted);font-size:12px;font-style:italic}
-
-/* ── TAGS ────────────────────────────────────────────────────── */
-.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
-.tag{
-  display:inline-flex;align-items:center;gap:4px;padding:3px 9px;
-  border-radius:20px;font-size:10px;font-weight:600;
-  background:var(--blue-l);color:var(--blue);
-}
-.tag.g{background:var(--green-l);color:var(--green-d)}
-.tag.p{background:var(--purple-l);color:var(--purple)}
-.tag.am{background:var(--amber-l);color:#92400E}
-.tag.slate{background:var(--slate-100);color:var(--slate-700)}
-.tag-x{cursor:pointer;font-size:12px;line-height:1;opacity:.6;transition:opacity .15s;margin-left:2px}
-.tag-x:hover{opacity:1}
-
-/* ── SECTION BOX ─────────────────────────────────────────────── */
-.sbox{
-  background:var(--white);border-radius:var(--r-md);border:1px solid var(--border);
-  padding:20px;
-}
-.sbox h3{
-  font-size:12px;font-weight:800;margin-bottom:14px;padding-bottom:10px;
-  border-bottom:2px solid var(--red);color:var(--text-primary);
-  text-transform:uppercase;letter-spacing:.5px;
-}
-
-/* ── PROGRESS ────────────────────────────────────────────────── */
-.prog{
-  height:4px;background:var(--slate-200);border-radius:2px;
-  overflow:hidden;display:inline-block;vertical-align:middle;width:64px;
-}
-.prog-f{height:100%;background:var(--green);border-radius:2px;transition:width .3s}
-.prog-f.a{background:var(--amber)}.prog-f.r{background:var(--red)}
-
-/* ── AREA CHIP ───────────────────────────────────────────────── */
-.area-chip{
-  display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;
-  font-weight:600;background:var(--slate-100);color:var(--slate-700);white-space:nowrap;
-}
-
-/* ── ACTA ────────────────────────────────────────────────────── */
-.acta-wrap{
-  background:var(--white);border:1px solid var(--border);
-  border-radius:var(--r-md);padding:32px;font-family:Georgia,serif;
-  font-size:12px;line-height:1.7;
-}
-.acta-wrap h2{color:var(--red);font-size:16px;text-align:center;margin-bottom:4px}
-
-/* ── TOAST ───────────────────────────────────────────────────── */
-#toast{
-  position:fixed;bottom:20px;right:20px;
-  background:var(--slate-900);color:var(--white);
-  padding:11px 18px;border-radius:var(--r-md);font-size:12px;font-weight:600;
-  box-shadow:var(--sh-xl);z-index:999;opacity:0;transform:translateY(10px);
-  transition:all .25s;pointer-events:none;max-width:300px;
-  border-left:3px solid var(--slate-500);
-}
-#toast.show{opacity:1;transform:translateY(0)}
-#toast.s{background:var(--green-d);border-left-color:var(--green)}
-#toast.e{background:#7F1D1D;border-left-color:var(--red)}
-#toast.w{background:#78350F;border-left-color:var(--amber)}
-
-/* ── PENDING SCREEN ──────────────────────────────────────────── */
-.pending-screen{
-  display:flex;flex-direction:column;align-items:center;
-  justify-content:center;min-height:calc(100vh - 56px);text-align:center;padding:40px;
-}
-.pending-ico{
-  width:64px;height:64px;border-radius:50%;background:var(--amber-l);
-  display:flex;align-items:center;justify-content:center;margin:0 auto 16px;
-}
-.pending-ico svg{width:32px;height:32px;stroke:var(--amber);fill:none;stroke-width:1.5}
-.pending-screen h2{font-size:18px;font-weight:700;margin-bottom:8px}
-.pending-screen p{color:var(--text-secondary);max-width:400px;line-height:1.6;font-size:13px}
-
-/* ── PROFILE VIEW ────────────────────────────────────────────── */
-.profile-header{
-  background:linear-gradient(135deg,var(--slate-800),var(--slate-900));
-  border-radius:var(--r-lg);padding:28px;color:var(--white);
-  display:flex;align-items:center;gap:20px;
-}
-.profile-avatar-lg{
-  width:72px;height:72px;border-radius:50%;background:var(--red);
-  display:flex;align-items:center;justify-content:center;
-  font-size:22px;font-weight:700;flex-shrink:0;overflow:hidden;
-  border:3px solid rgba(255,255,255,.2);
-}
-.profile-avatar-lg img{width:100%;height:100%;object-fit:cover}
-.profile-info h2{font-size:18px;font-weight:700;margin-bottom:2px}
-.profile-info p{font-size:12px;color:var(--slate-400)}
-.profile-badges{display:flex;gap:6px;margin-top:8px}
-.profile-badge{
-  padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;
-  background:rgba(255,255,255,.1);color:var(--slate-300);letter-spacing:.5px;
-  text-transform:uppercase;
-}
-.profile-badge.red{background:rgba(192,57,43,.3);color:#FCA5A5}
-
-/* ── FOOTER INSTITUCIONAL ────────────────────────────────────── */
-.inst-footer{
-  background:var(--slate-900);color:var(--slate-400);
-  padding:14px 24px;font-size:11px;
-  border-top:1px solid rgba(255,255,255,.06);
-  display:flex;align-items:center;justify-content:space-between;
-  flex-wrap:wrap;gap:8px;flex-shrink:0;
-}
-.inst-footer-left{display:flex;align-items:center;gap:16px}
-.inst-footer-brand{font-weight:700;color:var(--slate-300);font-size:11px;letter-spacing:.5px}
-.inst-footer-sep{color:var(--slate-700)}
-.inst-footer-right{display:flex;align-items:center;gap:14px}
-.inst-footer-link{color:var(--slate-500);transition:color .15s;cursor:pointer}
-.inst-footer-link:hover{color:var(--red)}
-.inst-footer-contact{display:flex;align-items:center;gap:5px}
-.inst-footer-contact svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.75}
-
-/* ── IMAGE UPLOAD ────────────────────────────────────────────── */
-.img-upload-area{
-  border:2px dashed var(--border-strong);border-radius:var(--r-md);
-  padding:24px;text-align:center;cursor:pointer;transition:all .2s;
-  background:var(--slate-50);
-}
-.img-upload-area:hover{border-color:var(--red);background:var(--red-l)}
-.img-upload-area input[type=file]{display:none}
-.img-upload-label{font-size:11px;color:var(--text-secondary);margin-top:6px}
-.img-preview{width:100%;max-height:120px;object-fit:contain;margin-top:8px;border-radius:var(--r-sm)}
-
-/* ── UTIL ────────────────────────────────────────────────────── */
-.flex{display:flex}.gap2{gap:8px}.ic{align-items:center}
-.jb{justify-content:space-between}.fw{flex-wrap:wrap}
-.tg{color:var(--text-secondary)}.tsm{font-size:11px}
-.tm{color:var(--text-muted)}.tc{color:var(--text-primary)}
-.ltxt{text-align:center;padding:20px;color:var(--text-muted);font-style:italic}
-.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}
-.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}
-.fw700{font-weight:700}.fw600{font-weight:600}
-.divider{border:none;border-top:1px solid var(--border);margin:14px 0}
-.info-row{display:flex;align-items:baseline;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)}
-.info-row:last-child{border-bottom:none}
-.info-label{font-size:11px;font-weight:700;color:var(--text-secondary);min-width:130px;text-transform:uppercase;letter-spacing:.3px}
-.info-val{font-size:13px;color:var(--text-primary)}
-.empty-state{
-  text-align:center;padding:48px 24px;color:var(--text-muted);
-}
-.empty-state-icon{
-  width:48px;height:48px;border-radius:50%;background:var(--slate-100);
-  display:flex;align-items:center;justify-content:center;margin:0 auto 12px;
-}
-.empty-state-icon svg{width:24px;height:24px;stroke:var(--slate-400);fill:none;stroke-width:1.5}
-.empty-state h3{font-size:14px;font-weight:600;color:var(--slate-600);margin-bottom:4px}
-.empty-state p{font-size:12px}
-
-/* ── PRINT ───────────────────────────────────────────────────── */
-@media print{body *{visibility:hidden}#print-zone,#print-zone *{visibility:visible}#print-zone{position:fixed;left:0;top:0;width:100%;padding:20px}}
-
-/* ── RESPONSIVE ──────────────────────────────────────────────── */
-@media(max-width:900px){
-  .sidebar{display:none}
-  .fg{grid-template-columns:1fr}
-  .fgroup.s2,.fgroup.s3{grid-column:span 1}
-  .stats-grid{grid-template-columns:1fr 1fr}
-  .inst-footer{flex-direction:column;gap:6px;text-align:center}
-}
-@media(max-width:480px){
-  .stats-grid{grid-template-columns:1fr}
-  .auth-box{width:100%;border-radius:var(--r-md);padding:28px 20px}
-  .modal{border-radius:var(--r-md)}
-}
-
-</style>
-</head>
-<body>
-
-<!-- ═══════ AUTH ═══════ -->
-<div id="auth-screen">
-  <div class="auth-box">
-    <div class="auth-logo">
-      <h1>IDS Norte de Santander</h1>
-      <p>Sistema de Seguimiento de Capacitaciones<br>Observatorio Departamental de Salud</p>
-    </div>
-    <div class="auth-tabs">
-      <div class="auth-tab active" id="at-in" onclick="authTab('login')">Ingresar</div>
-      <div class="auth-tab" id="at-reg" onclick="authTab('register')">Registrarse</div>
-    </div>
-    <!-- LOGIN -->
-    <div id="tab-login" class="af">
-      <input type="email" id="li-email" placeholder="Correo" autocomplete="email">
-      <input type="password" id="li-pass" placeholder="Contraseña" onkeydown="if(event.key==='Enter')doLogin()">
-      <button class="btn-primary" onclick="doLogin()">Ingresar</button>
-      <div id="li-msg" class="auth-msg"></div>
-    </div>
-    <!-- REGISTER -->
-    <div id="tab-reg" class="af" style="display:none">
-      <input type="text" id="rn" placeholder="Nombre completo">
-      <input type="email" id="re" placeholder="Correo institucional (@ids.gov.co)">
-      <select id="rg" onchange="updateRegAreas()">
-        <option value="">Seleccione grupo</option>
-        <option value="atencion">Grupo de Atención en Salud</option>
-        <option value="salud_publica">Grupo de Salud Pública</option>
-      </select>
-      <select id="ra"><option value="">Seleccione área (primero grupo)</option></select>
-      <input type="password" id="rp" placeholder="Contraseña (mín. 6 caracteres)">
-      <button class="btn-primary" onclick="doRegister()">Solicitar acceso</button>
-      <div id="reg-msg" class="auth-msg"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════ APP ═══════ -->
-<div id="app">
-  <!-- TOPBAR -->
-  <div class="topbar">
-    <div class="tb-logo">IDS – SISTEMA DE SEGUIMIENTO DE CAPACITACIONES<span>Instituto Departamental de Salud · Norte de Santander</span></div>
-    <div class="tb-right">
-      <div class="user-badge"><span id="un">Usuario</span><span class="role-pill" id="ur">—</span></div>
-      <button class="btn-out" onclick="doLogout()">Salir</button>
-    </div>
-  </div>
-
-  <!-- PENDING -->
-  <div id="pending-screen" class="pending-screen" style="display:none">
-    <div class="pending-ico">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-    </div>
-    <h2>Acceso pendiente de aprobación</h2>
-    <p>Su solicitud fue recibida. El administrador revisará su registro y asignará los permisos correspondientes.</p>
-  </div>
-
-  <!-- MAIN LAYOUT -->
-  <div class="layout" id="main-layout" style="display:none">
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-      <div class="sb-sec">Principal</div>
-      <div class="nav-item active" id="nav-dash" onclick="showView('dash')"><span class="nav-ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>Dashboard</div>
-      <div class="nav-item" id="nav-plan" onclick="showView('plan')"><span class="nav-ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>Planeación</div>
-      <div class="nav-item" id="nav-caps" onclick="showView('caps')"><span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span>Ejecución<span class="nav-badge" id="badge-exec" style="display:none">0</span></div>
-      <div class="nav-item" id="nav-actas" onclick="showView('actas')"><span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>Actas</div>
-      <div class="nav-item" id="nav-informes" onclick="showView('informes')"><span class="nav-ico"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>Informes</div>
-      <div class="nav-item" id="nav-calendario" onclick="showView('calendario')"><span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>Calendario</div>
-      <div class="nav-item" id="nav-notif" onclick="showView('notif');markNotifRead()"><span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>Notificaciones<span class="nav-badge" id="badge-notif" style="display:none">0</span></div>
-      <div class="nav-item" id="nav-perfil" onclick="showView('perfil')">
-        <span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>Mi perfil
-      </div>
-      <div class="sb-sec" id="adm-sec" style="display:none">Administración</div>
-      <div class="nav-item" id="nav-usuarios" onclick="showView('usuarios')" style="display:none"><span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span>Usuarios<span class="nav-badge am" id="badge-users">0</span></div>
-      <div class="nav-item" id="nav-config" onclick="showView('config')" style="display:none"><span class="nav-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>Configuración</div>
-    </div>
-
-    <!-- PAGES -->
-    <div class="main">
-
-      <!-- ─── DASHBOARD ─── -->
-      <div class="view active" id="view-dash">
-        <div class="page-hdr">
-          <div><div class="page-title">Dashboard</div><div class="page-sub" id="dash-sub">Vigencia 2026</div></div>
-          <div class="flex gap2 ic fw">
-            <select id="dash-tipo" onchange="onDashTipoChange()"><option value="mensual">Mensual</option><option value="trimestral">Trimestral</option><option value="semestral">Semestral</option></select>
-            <select id="dash-periodo" onchange="renderDash()"></select>
-          </div>
-        </div>
-        <div id="alert-box" class="alert-box">⚠️ <span id="alert-txt"></span></div>
-        <div class="stats-grid">
-          <div class="stat-card"><div class="stat-label">Capacitaciones</div><div class="stat-val" id="ds-total">0</div><div class="stat-sub">registradas</div></div>
-          <div class="stat-card green"><div class="stat-label">Ejecutadas</div><div class="stat-val" id="ds-exec">0</div></div>
-          <div class="stat-card amber"><div class="stat-label">Planeadas</div><div class="stat-val" id="ds-plan">0</div></div>
-          <div class="stat-card teal"><div class="stat-label">Participantes</div><div class="stat-val" id="ds-part">0</div></div>
-          <div class="stat-card blue"><div class="stat-label">Municipios</div><div class="stat-val" id="ds-muni">0</div></div>
-          <div class="stat-card"><div class="stat-label">% Cumplimiento</div><div class="stat-val" id="ds-cumpl">—</div></div>
-          <div class="stat-card green"><div class="stat-label">Prom. Pretest</div><div class="stat-val" id="ds-pre">—</div></div>
-          <div class="stat-card blue"><div class="stat-label">Prom. Postest</div><div class="stat-val" id="ds-post">—</div></div>
-        </div>
-        <div class="flex gap2 fw mb12" style="gap:14px">
-          <div class="card" style="flex:1;min-width:280px">
-            <div class="card-hdr"><div class="card-title">Cumplimiento por oficina</div></div>
-            <div class="tw"><table>
-              <thead><tr><th>Oficina</th><th>Ejec.</th><th>Plan.</th><th>%</th></tr></thead>
-              <tbody id="dash-oficinas"><tr class="erow"><td colspan="4">Sin datos</td></tr></tbody>
-            </table></div>
-          </div>
-          <div class="card" style="flex:1;min-width:280px">
-            <div class="card-hdr"><div class="card-title">Cobertura por municipio</div></div>
-            <div class="tw"><table>
-              <thead><tr><th>Municipio</th><th>Caps.</th><th>Partic.</th></tr></thead>
-              <tbody id="dash-munis"><tr class="erow"><td colspan="3">Sin datos</td></tr></tbody>
-            </table></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ─── PLANEACIÓN ─── -->
-      <div class="view" id="view-plan">
-        <div class="page-hdr">
-          <div><div class="page-title">Planeación de capacitaciones</div><div class="page-sub">Registre capacitaciones con fecha futura</div></div>
-          <button class="btn btn-red" id="btn-nueva-plan" onclick="openPlanModal()">+ Nueva planeación</button>
-        </div>
-        <div class="card">
-          <div class="filters">
-            <select id="fp-grupo" onchange="updatePlanAreaFilter();renderPlan()"><option value="">Todos los grupos</option><option value="atencion">Atención en Salud</option><option value="salud_publica">Salud Pública</option></select>
-            <select id="fp-area" onchange="renderPlan()"><option value="">Todas las áreas</option></select>
-            <select id="fp-mes" onchange="renderPlan()"><option value="">Todos los meses</option><option>Enero</option><option>Febrero</option><option>Marzo</option><option>Abril</option><option>Mayo</option><option>Junio</option><option>Julio</option><option>Agosto</option><option>Septiembre</option><option>Octubre</option><option>Noviembre</option><option>Diciembre</option></select>
-            <input type="text" id="fp-q" placeholder="Buscar..." oninput="renderPlan()" style="min-width:150px">
-          </div>
-          <div class="tw"><table>
-            <thead><tr><th>#</th><th>Capacitación</th><th>Grupo</th><th>Área</th><th>Mes</th><th>Tipo</th><th>Estado</th><th>Municipios</th><th>Acciones</th></tr></thead>
-            <tbody id="plan-table"><tr class="erow"><td colspan="9">Sin registros de planeación</td></tr></tbody>
-          </table></div>
-        </div>
-      </div>
-
-      <!-- ─── CAPACITACIONES ─── -->
-      <div class="view" id="view-caps">
-        <div class="page-hdr">
-          <div><div class="page-title">Ejecución</div><div class="page-sub">Registro y seguimiento de actividades ejecutadas</div></div>
-          <button class="btn btn-red" id="btn-nueva-cap" onclick="openCapModal()">+ Registrar ejecución</button>
-        </div>
-        <div class="card">
-          <div class="filters">
-            <select id="fc-grupo" onchange="updateCapAreaFilter();renderCaps()"><option value="">Todos los grupos</option><option value="atencion">Atención en Salud</option><option value="salud_publica">Salud Pública</option></select>
-            <select id="fc-area" onchange="renderCaps()"><option value="">Todas las áreas</option></select>
-            <select id="fc-mes" onchange="renderCaps()"><option value="">Todos los meses</option><option>Enero</option><option>Febrero</option><option>Marzo</option><option>Abril</option><option>Mayo</option><option>Junio</option><option>Julio</option><option>Agosto</option><option>Septiembre</option><option>Octubre</option><option>Noviembre</option><option>Diciembre</option></select>
-            <select id="fc-mun" onchange="renderCaps()"><option value="">Todos los municipios</option></select>
-            <input type="text" id="fc-q" placeholder="Buscar..." oninput="renderCaps()" style="min-width:150px">
-          </div>
-          <div class="tw"><table>
-            <thead><tr><th>#</th><th>Capacitación</th><th>Grupo</th><th>Área</th><th>Fecha</th><th>Tipo</th><th>Partic.</th><th>Pretest%</th><th>Postest%</th><th>Cambio</th><th>Estado acta</th><th>Acciones</th></tr></thead>
-            <tbody id="caps-table"><tr class="erow"><td colspan="12">Sin capacitaciones registradas</td></tr></tbody>
-          </table></div>
-        </div>
-      </div>
-
-      <!-- ─── ACTAS ─── -->
-      <div class="view" id="view-actas">
-        <div class="page-hdr">
-          <div><div class="page-title">Actas de capacitación</div><div class="page-sub">Gestión, aprobación y descarga de actas</div></div>
-        </div>
-        <div class="tab-row">
-          <button class="tab-btn active" data-tab="actas-pend" onclick="switchTab(this,'actas-pend')">Pendientes de aprobación</button>
-          <button class="tab-btn" data-tab="actas-apro" onclick="switchTab(this,'actas-apro')">Aprobadas</button>
-          <button class="tab-btn" data-tab="actas-todas" onclick="switchTab(this,'actas-todas')">Todas</button>
-        </div>
-        <div class="tc active" id="actas-pend">
-          <div class="card"><div class="tw"><table>
-            <thead><tr><th>Capacitación</th><th>Área</th><th>Fecha</th><th>Registrada por</th><th>Estado</th><th>Acciones</th></tr></thead>
-            <tbody id="actas-pend-table"><tr class="erow"><td colspan="6">Sin actas pendientes</td></tr></tbody>
-          </table></div></div>
-        </div>
-        <div class="tc" id="actas-apro">
-          <div class="card"><div class="tw"><table>
-            <thead><tr><th>Capacitación</th><th>Área</th><th>Fecha</th><th>Aprobada por</th><th>Acciones</th></tr></thead>
-            <tbody id="actas-apro-table"><tr class="erow"><td colspan="5">Sin actas aprobadas</td></tr></tbody>
-          </table></div></div>
-        </div>
-        <div class="tc" id="actas-todas">
-          <div class="card"><div class="tw"><table>
-            <thead><tr><th>Capacitación</th><th>Área</th><th>Fecha</th><th>Estado acta</th><th>Acciones</th></tr></thead>
-            <tbody id="actas-todas-table"><tr class="erow"><td colspan="5">Sin actas</td></tr></tbody>
-          </table></div></div>
-        </div>
-      </div>
-
-      <!-- ─── INFORMES ─── -->
-      <div class="view" id="view-informes">
-        <div class="page-hdr">
-          <div><div class="page-title">Informes y reportes</div><div class="page-sub">Indicadores consolidados y exportación de datos</div></div>
-          <button class="btn btn-ghost" onclick="exportCSV()">Exportar CSV</button>
-        </div>
-        <div class="card" style="padding:14px;margin-bottom:16px">
-          <div class="flex gap2 ic fw" style="gap:10px">
-            <label style="font-weight:600;font-size:12px">Periodo:</label>
-            <select id="inf-tipo" onchange="initInfPeriodo()"><option value="mensual">Mensual</option><option value="trimestral">Trimestral</option><option value="semestral">Semestral</option></select>
-            <select id="inf-periodo" onchange="renderInformes()"></select>
-            <select id="inf-grupo" onchange="renderInformes()"><option value="all">Todos los grupos</option><option value="atencion">Atención en Salud</option><option value="salud_publica">Salud Pública</option></select>
-            <select id="inf-mun" onchange="renderInformes()"><option value="">Todos los municipios</option></select>
-          </div>
-        </div>
-        <div class="stats-grid" id="inf-stats"></div>
-        <div class="flex gap2 fw mb12" style="gap:14px">
-          <div class="card" style="flex:1;min-width:260px">
-            <div class="card-hdr"><div class="card-title">Por área</div></div>
-            <div class="tw"><table>
-              <thead><tr><th>Grupo</th><th>Área</th><th>Ejec.</th><th>Partic.</th><th>Cambio</th><th>%</th></tr></thead>
-              <tbody id="inf-area-table"><tr class="erow"><td colspan="6">Sin datos</td></tr></tbody>
-            </table></div>
-          </div>
-          <div class="card" style="flex:1;min-width:240px">
-            <div class="card-hdr"><div class="card-title">Por municipio</div></div>
-            <div class="tw"><table>
-              <thead><tr><th>Municipio</th><th>Caps.</th><th>Partic.</th><th>IPS</th></tr></thead>
-              <tbody id="inf-muni-table"><tr class="erow"><td colspan="4">Sin datos</td></tr></tbody>
-            </table></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-hdr"><div class="card-title">Detalle de capacitaciones</div></div>
-          <div class="tw"><table>
-            <thead><tr><th>#</th><th>Capacitación</th><th>Grupo</th><th>Área</th><th>Fecha</th><th>Municipios</th><th>Partic.</th><th>Pretest%</th><th>Postest%</th><th>Cambio</th><th>Estado</th></tr></thead>
-            <tbody id="inf-detail-table"><tr class="erow"><td colspan="11">Sin datos</td></tr></tbody>
-          </table></div>
-        </div>
-      </div>
-
-      <!-- ─── USUARIOS ─── -->
-      <div class="view" id="view-usuarios">
-        <div class="page-hdr">
-          <div><div class="page-title">Gestión de usuarios</div><div class="page-sub">Aprobación de solicitudes y administración de roles</div></div>
-          <div class="flex gap2 ic fw">
-            <button class="btn btn-red" onclick="openCreateUserModal()">+ Crear usuario</button>
-            <label class="btn btn-ghost" style="cursor:pointer">
-              Carga masiva Excel
-              <input type="file" accept=".xlsx,.xls" onchange="onUsersExcelChange(event)" style="display:none">
-            </label>
-          </div>
-        </div>
-        <div id="users-bulk-log" style="display:none;font-size:11px;font-family:monospace;background:var(--gray-xl);padding:10px;border-radius:var(--rs);max-height:120px;overflow-y:auto;margin-bottom:12px"></div>
-        <div class="tab-row">
-          <button class="tab-btn active" data-tab="u-pend" onclick="switchTab(this,'u-pend')">Pendientes <span id="u-pend-cnt" class="nav-badge am" style="margin-left:4px">0</span></button>
-          <button class="tab-btn" data-tab="u-activ" onclick="switchTab(this,'u-activ')">Activos</button>
-          <button class="tab-btn" data-tab="u-inac" onclick="switchTab(this,'u-inac')">Inactivos</button>
-        </div>
-        <div class="tc active" id="u-pend">
-          <div class="card"><div class="tw"><table>
-            <thead><tr><th>Nombre</th><th>Correo</th><th>Grupo</th><th>Área</th><th>Fecha</th><th>Rol a asignar</th><th>Acciones</th></tr></thead>
-            <tbody id="u-pend-table"><tr class="erow"><td colspan="7">Sin solicitudes</td></tr></tbody>
-          </table></div></div>
-        </div>
-        <div class="tc" id="u-activ">
-          <div class="card"><div class="tw"><table>
-            <thead><tr><th>Nombre</th><th>Correo</th><th>Grupo</th><th>Área</th><th>Rol</th><th>Perfiles</th><th>Acciones</th></tr></thead>
-            <tbody id="u-activ-table"><tr class="erow"><td colspan="6">Sin usuarios activos</td></tr></tbody>
-          </table></div></div>
-        </div>
-        <div class="tc" id="u-inac">
-          <div class="card"><div class="tw"><table>
-            <thead><tr><th>Nombre</th><th>Correo</th><th>Grupo/Área</th><th>Rol</th><th>Acciones</th></tr></thead>
-            <tbody id="u-inac-table"><tr class="erow"><td colspan="4">Sin usuarios inactivos</td></tr></tbody>
-          </table></div></div>
-        </div>
-      </div>
-
-      <!-- ─── CONFIGURACIÓN ─── -->
-      <div class="view" id="view-config">
-        <div class="page-hdr">
-          <div class="page-hdr-left"><div class="page-title">Configuración del sistema</div><div class="page-sub">Administración — acceso restringido</div></div>
-          <div class="page-hdr-actions">
-            <button class="btn btn-ghost" onclick="openModal('modal-footer-config')">Banner institucional</button>
-          </div>
-        </div>
-        <div class="tab-row">
-          <button class="tab-btn active" data-tab="cfg-prest" onclick="switchTab(this,'cfg-prest')">Prestadores</button>
-          <button class="tab-btn" data-tab="cfg-cat" onclick="switchTab(this,'cfg-cat')">Catálogos</button>
-          <button class="tab-btn" data-tab="cfg-seed" onclick="switchTab(this,'cfg-seed')">Carga inicial</button>
-        </div>
-        <div class="tc active" id="cfg-prest">
-          <div class="section-box">
-            <h3>Administración de prestadores de salud</h3>
-            <div class="flex gap2 ic mb12 fw" style="gap:10px">
-              <select id="cfg-mun-filter" style="padding:6px 9px;font-size:12px;border:1.5px solid #ddd;border-radius:var(--rs)" onchange="loadPrestConfig()">
-                <option value="">Seleccione municipio...</option>
-              </select>
-              <button class="btn btn-red btn-sm" onclick="openPrestModal()">+ Nuevo prestador</button>
-            </div>
-            <div class="tw"><table>
-              <thead><tr><th>Prestador</th><th>Sede</th><th>Municipio</th><th>Naturaleza</th><th>Clase</th><th>ESE</th><th>Zona</th><th></th></tr></thead>
-              <tbody id="cfg-prest-table"><tr class="erow"><td colspan="8">Seleccione un municipio</td></tr></tbody>
-            </table></div>
-          </div>
-        </div>
-        <div class="tc" id="cfg-cat">
-          <div class="section-box">
-            <h3>Tipos de capacitación</h3>
-            <div class="flex gap2 ic mb12">
-              <input type="text" id="new-tipo-cap" placeholder="Nuevo tipo..." style="max-width:220px">
-              <button class="btn btn-red btn-sm" onclick="addTipoCap()">+ Agregar</button>
-            </div>
-            <div class="tw"><table>
-              <thead><tr><th>Tipo</th><th></th></tr></thead>
-              <tbody id="tipos-cap-table"></tbody>
-            </table></div>
-          </div>
-          <div class="section-box">
-            <h3>Parámetros de metas</h3>
-            <div class="fg c1" style="max-width:400px">
-              <div class="fgroup">
-                <label>Meta mensual de capacitaciones por oficina</label>
-                <input type="number" id="meta-mens" placeholder="2" min="1">
-              </div>
-              <div class="fgroup">
-                <label>Porcentaje mínimo de cumplimiento (%)</label>
-                <input type="number" id="meta-pct" placeholder="80" min="1" max="100">
-              </div>
-              <button class="btn btn-red" onclick="saveMetas()" style="margin-top:4px">Guardar metas</button>
-            </div>
-          </div>
-        </div>
-        <div class="tc" id="cfg-seed">
-          <div class="section-box">
-            <h3>Carga inicial de datos a Firestore</h3>
-            <p class="tg tsm" style="margin-bottom:14px">Ejecute <strong>una sola vez</strong> por botón. La carga de prestadores tarda varios minutos.</p>
-            <div class="flex gap2 fw">
-              <button class="btn btn-teal" onclick="seedMunicipios()">Cargar 40 municipios</button>
-              <button class="btn btn-blue" onclick="seedPrestadores()">Cargar 2.001 prestadores</button>
-              <label class="btn btn-ghost" style="cursor:pointer;margin-top:6px">Carga masiva Excel<input type="file" accept=".xlsx,.xls" onchange="onPrestExcelChange(event)" style="display:none"></label>
-              <div id="prest-bulk-log" style="display:none;font-size:11px;font-family:monospace;background:var(--gray-xl);padding:10px;border-radius:var(--rs);max-height:120px;overflow-y:auto;margin-top:8px"></div>
-              <button class="btn btn-ghost" onclick="seedTiposCap()">Cargar tipos de capacitación</button>
-            </div>
-            <div id="seed-log" style="margin-top:12px;font-size:11px;color:var(--gray);font-family:monospace;
-              background:var(--gray-xl);padding:10px;border-radius:var(--rs);max-height:160px;overflow-y:auto;display:none"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── PERFIL DE USUARIO ── -->
-      <div class="view" id="view-calendario">
-        <div class="page-hdr"><div class="page-hdr-left"><div class="page-title">Calendario Operativo</div><div class="page-sub">Actividades y capacitaciones programadas</div></div>
-        <div class="page-hdr-actions"><select id="cal-mes" onchange="renderCalendario()" style="padding:6px 10px;border:1.5px solid var(--border-strong);border-radius:var(--r-sm);font-size:12px;font-family:var(--font)"><option>Enero</option><option>Febrero</option><option>Marzo</option><option>Abril</option><option>Mayo</option><option>Junio</option><option>Julio</option><option>Agosto</option><option>Septiembre</option><option>Octubre</option><option>Noviembre</option><option>Diciembre</option></select></div></div>
-        <div id="calendario-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px"></div>
-        <div id="calendario-eventos" style="margin-top:16px"></div>
-      </div>
-      <div class="view" id="view-notif">
-        <div class="page-hdr"><div class="page-hdr-left"><div class="page-title">Notificaciones</div><div class="page-sub">Alertas y eventos del sistema</div></div>
-        <div class="page-hdr-actions"><button class="btn btn-ghost" onclick="markNotifRead()">Marcar todas como leídas</button></div></div>
-        <div id="notif-list" style="display:flex;flex-direction:column;gap:8px;margin-top:8px"></div>
-      </div>
-      <div class="view" id="view-perfil">
-        <div class="page-hdr">
-          <div class="page-hdr-left"><div class="page-title">Mi perfil</div><div class="page-sub">Información personal y configuración de cuenta</div></div>
-          <div class="page-hdr-actions">
-            <button class="btn btn-ghost" onclick="openChangePass()">Cambiar contraseña</button>
-          </div>
-        </div>
-        <div class="profile-header">
-          <div class="profile-avatar-lg" id="perfil-avatar-lg">A</div>
-          <div class="profile-info">
-            <h2 id="perfil-nombre">—</h2>
-            <p id="perfil-email">—</p>
-            <div class="profile-badges">
-              <span class="profile-badge red" id="perfil-rol">—</span>
-              <span class="profile-badge" id="perfil-grupo">—</span>
-            </div>
-          </div>
-          <div style="margin-left:auto">
-            <label class="btn btn-ghost" style="cursor:pointer;font-size:10px;border-color:rgba(255,255,255,.2);color:var(--slate-300)">
-              <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-              Cambiar foto
-              <input type="file" accept="image/*" onchange="uploadProfilePhoto(event)" style="display:none">
-            </label>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-          <div class="sbox">
-            <h3>Información personal</h3>
-            <div class="info-row"><span class="info-label">Nombre completo</span><span class="info-val" id="pi-nombre">—</span></div>
-            <div class="info-row"><span class="info-label">Correo electrónico</span><span class="info-val" id="pi-email">—</span></div>
-            <div class="info-row"><span class="info-label">Rol en el sistema</span><span class="info-val" id="pi-rol">—</span></div>
-            <div class="info-row"><span class="info-label">Grupo</span><span class="info-val" id="pi-grupo">—</span></div>
-            <div class="info-row"><span class="info-label">Área / Oficina</span><span class="info-val" id="pi-area">—</span></div>
-            <div class="info-row"><span class="info-label">Estado</span><span class="info-val" id="pi-estado">—</span></div>
-            <div class="mt12">
-              <button class="btn btn-ghost btn-sm" onclick="openEditPerfil()">Editar información</button>
-            </div>
-          </div>
-          <!-- FIRMA DIGITAL -->
-          <div class="sbox">
-            <h3>Firma digital</h3>
-            <p class="tg tsm" style="margin-bottom:12px">Su firma se adjuntará automáticamente a las actas que registre o apruebe.</p>
-            <div id="firma-preview-box">
-              <div id="firma-actual" style="min-height:80px;border:2px dashed var(--border-strong);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;background:var(--slate-50)">
-                <span class="tg tsm">Sin firma registrada</span>
-              </div>
-            </div>
-            <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-              <label class="btn btn-ghost btn-sm" style="cursor:pointer">
-                Subir firma (imagen)
-                <input type="file" accept="image/*" onchange="uploadFirma(event)" style="display:none">
-              </label>
-              <button class="btn btn-ghost btn-sm" onclick="openFirmaCanvas()">Dibujar firma</button>
-              <button class="btn btn-danger btn-sm" id="btn-clear-firma" onclick="clearFirma()" style="display:none">Eliminar firma</button>
-            </div>
-            <!-- Canvas para dibujar firma -->
-            <div id="firma-canvas-box" style="display:none;margin-top:12px">
-              <canvas id="firma-canvas" width="360" height="120"
-                style="border:1.5px solid var(--border-strong);border-radius:var(--r-sm);background:white;cursor:crosshair;touch-action:none;width:100%;max-width:360px">
-              </canvas>
-              <div style="margin-top:6px;display:flex;gap:8px">
-                <button class="btn btn-ghost btn-sm" onclick="clearFirmaCanvas()">Limpiar</button>
-                <button class="btn btn-red btn-sm" onclick="saveFirmaFromCanvas()">Guardar firma</button>
-              </div>
-            </div>
-          </div>
-          <div class="sbox">
-            <h3>Perfiles profesionales</h3>
-            <div id="pi-perfiles" class="tags" style="margin-bottom:8px"></div>
-            <div class="divider"></div>
-            <h3 style="margin-top:12px">Mis capacitaciones asignadas</h3>
-            <div id="pi-caps-list" style="font-size:12px;color:var(--text-secondary)">Cargando...</div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /main -->
-  </div><!-- /layout -->
-  <!-- FOOTER INSTITUCIONAL -->
-  <footer class="inst-footer" id="inst-footer">
-    <div class="inst-footer-left">
-      <span class="inst-footer-brand" id="footer-brand">IDS Norte de Santander</span>
-      <span class="inst-footer-sep">·</span>
-      <span id="footer-text">Observatorio Departamental de Salud</span>
-    </div>
-    <div class="inst-footer-right">
-      <span class="inst-footer-contact inst-footer-link" id="footer-phone">
-        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
-        <span id="footer-phone-txt">Línea de soporte</span>
-      </span>
-      <span class="inst-footer-contact inst-footer-link" id="footer-email-lnk">
-        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>
-        <span id="footer-email-txt">idsobserva@gmail.com</span>
-      </span>
-      <span class="inst-footer-link" id="footer-extra" style="font-size:10px;color:var(--slate-600)">v3.0 · 2026</span>
-    </div>
-  </footer>
-</div><!-- /app -->
-
-<!-- ═══════ PRINT ZONE ═══════ -->
-<div id="print-zone" style="display:none"></div>
-
-<!-- ═══════ MODAL: PLANEACIÓN ═══════ -->
-<div class="modal-ov" id="modal-plan">
-  <div class="modal modal-lg">
-    <div class="modal-hdr"><div class="modal-ttl" id="modal-plan-ttl">Nueva planeación</div><button class="modal-x" onclick="closeModal('modal-plan')">×</button></div>
-    <div class="modal-body">
-      <input type="hidden" id="plan-id">
-      <div class="fg">
-        <div class="sdiv red">Información general</div>
-        <div class="fgroup s2"><label>Nombre de la capacitación <span class="req">*</span></label><input type="text" id="pl-nom" class="oblig" placeholder="Nombre o tema de la capacitación"></div>
-        <div class="fgroup"><label>Grupo responsable <span class="req">*</span></label>
-          <select id="pl-grupo" class="oblig" onchange="onPlanAreaChange()">
-            <option value="">Seleccione grupo</option>
-            <option value="atencion">Grupo de Atención en Salud</option>
-            <option value="salud_publica">Grupo de Salud Pública</option>
-          </select></div>
-        <div class="fgroup"><label>Área responsable <span class="req">*</span></label><select id="pl-area" class="oblig"><option value="">Seleccione primero el grupo</option></select></div>
-        <div class="fgroup"><label>Tipo de capacitación <span class="req">*</span></label><select id="pl-tipo" class="oblig"><option value="">Cargando...</option></select></div>
-        <div class="fgroup"><label>Mes programado <span class="req">*</span></label>
-          <select id="pl-mes" class="oblig"><option value="">Seleccione</option><option>Enero</option><option>Febrero</option><option>Marzo</option><option>Abril</option><option>Mayo</option><option>Junio</option><option>Julio</option><option>Agosto</option><option>Septiembre</option><option>Octubre</option><option>Noviembre</option><option>Diciembre</option></select></div>
-        <div class="fgroup"><label>Fecha programada</label><input type="date" id="pl-fecha-prog"><div class="hint">Fecha exacta prevista para la actividad</div></div>
-        <div class="fgroup">
-          <label>Responsable técnico</label>
-          <select id="pl-resp-sel" onchange=""></select>
-          <input type="text" id="pl-resp" placeholder="O escriba el nombre..." style="margin-top:4px">
-          <div class="hint">Seleccione un usuario registrado o escriba manualmente</div>
-        </div>
-        <!-- pl-perfil eliminado: duplica la sección de perfiles profesionales de abajo -->
-        <div class="fgroup"><label>Presupuesto estimado ($)</label><input type="number" id="pl-presup" placeholder="0" min="0"></div>
-        <div class="fgroup"><label>Convocatoria (enlace)</label><input type="url" id="pl-conv" placeholder="https://drive.google.com/..."></div>
-        <div class="fgroup s2"><label>Objetivo</label><textarea id="pl-obj" placeholder="Objetivo de la capacitación"></textarea></div>
-        <div class="sdiv teal">Municipios objetivo</div>
-        <div class="fgroup s2">
-          <label>Municipios <span class="req">*</span> <span class="hint">— selección múltiple</span></label>
-          <div id="plan-mun-list"></div>
-          <div class="tags" id="mun-tags" style="margin-top:6px"></div>
-        </div>
-        <div class="fgroup s2" id="ips-grp" style="display:none">
-          <label>IPS / Prestadores <span class="hint">— filtradas por municipio seleccionado</span></label>
-          <div id="plan-ips-list"><div class="tg tsm" style="padding:8px">Seleccione municipio(s) para ver las IPS disponibles</div></div>
-          <div class="tags" id="ips-tags" style="margin-top:6px"></div>
-        </div>
-      </div>
-        <div class="sdiv amber" style="grid-column:1/-1;margin-top:8px">Perfil de la población objetivo</div>
-        <div class="fgroup s2">
-          <label>Perfiles profesionales esperados <span class="hint">— selección múltiple</span></label>
-          <div id="plan-perfiles-list"></div>
-          <div class="tags" id="plan-perfiles-tags" style="margin-top:6px"></div>
-        </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="closeModal('modal-plan')">Cancelar</button>
-      <button class="btn btn-red" onclick="savePlan()">Guardar planeación</button>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════ MODAL: CAPACITACIÓN ═══════ -->
-<div class="modal-ov" id="modal-cap">
-  <div class="modal modal-xl">
-    <div class="modal-hdr"><div class="modal-ttl" id="modal-cap-ttl">Registrar capacitación</div><button class="modal-x" onclick="closeModal('modal-cap')">×</button></div>
-    <div class="modal-body">
-      <input type="hidden" id="cap-id">
-      <div class="fg">
-        <div class="sdiv red">Información general</div>
-        <div class="fgroup s2">
-          <label>Capacitación planeada <span class="req">*</span></label>
-          <select id="ca-nom-sel" class="oblig" onchange="onCapNomSelect()">
-            <option value="">Seleccione capacitación planeada...</option>
-          </select>
-          <input type="hidden" id="plan-ref-id">
-          <div class="hint" style="margin-top:4px">Al seleccionar, los campos se autocompletarán desde la planeación</div>
-        </div>
-        <div class="fgroup"><label>Grupo <span class="req">*</span></label>
-          <select id="ca-grupo" class="oblig" onchange="updateCapModalAreas()">
-            <option value="">Seleccione grupo</option>
-            <option value="atencion">Grupo de Atención en Salud</option>
-            <option value="salud_publica">Grupo de Salud Pública</option>
-          </select></div>
-        <div class="fgroup"><label>Área <span class="req">*</span></label><select id="ca-area" class="oblig"><option value="">Seleccione primero el grupo</option></select></div>
-        <div class="fgroup"><label>Tipo <span class="req">*</span></label><select id="ca-tipo" class="oblig"><option value="">Cargando...</option></select></div>
-        <div class="fgroup"><label>Fecha de realización <span class="req">*</span></label><input type="date" id="ca-fecha" class="oblig"></div>
-        <div class="fgroup"><label>Responsable técnico</label><input type="text" id="ca-resp" placeholder="Nombre del ponente"></div>
-        <div class="fgroup"><label>Duración (horas)</label><input type="number" id="ca-dur" placeholder="0" min="0" step="0.5"></div>
-        <div class="fgroup"><label>Número de asistentes <span class="req">*</span></label><input type="number" id="ca-asist" class="oblig" placeholder="0" min="0"></div>
-
-        <div class="sdiv teal">Cobertura territorial</div>
-        <div class="fgroup s2">
-          <label>Municipios <span class="req">*</span> <span class="hint">— selección múltiple</span></label>
-          <div id="cap-mun-list"></div>
-          <div class="tags" id="cmun-tags" style="margin-top:6px"></div>
-        </div>
-        <div class="fgroup s2" id="cips-grp" style="display:none">
-          <label>IPS / Prestadores <span class="hint">— filtradas por municipio seleccionado</span></label>
-          <div id="cap-ips-list"><div class="tg tsm" style="padding:8px">Seleccione municipio(s) para ver las IPS disponibles</div></div>
-          <div class="tags" id="cips-tags" style="margin-top:6px"></div>
-        </div>
-
-        <div class="sdiv purple">Evaluación del aprendizaje</div>
-        <div class="fgroup"><label>Pretest — promedio (%)</label><input type="number" id="ca-pre" placeholder="0" min="0" max="100" step="0.1" oninput="calcCambio()"></div>
-        <div class="fgroup"><label>Postest — promedio (%)</label><input type="number" id="ca-post" placeholder="0" min="0" max="100" step="0.1" oninput="calcCambio()"></div>
-        <div class="fgroup"><label>Cambio de conocimiento (%)</label><input type="text" id="ca-cambio" readonly style="background:var(--gray-l)" placeholder="Automático"></div>
-        <div class="fgroup"><label>Resultado general</label>
-          <select id="ca-resultado"><option value="">Seleccione</option><option>Satisfactorio</option><option>Regular</option><option>No satisfactorio</option></select></div>
-
-        <div class="sdiv blue">Contenido del acta</div>
-        <div class="fgroup s2"><label>Objetivos de la capacitación</label><textarea id="ca-objetivos" placeholder="Objetivos que se plantearon"></textarea></div>
-        <div class="fgroup s2"><label>Desarrollo de la actividad</label><textarea id="ca-desarrollo" placeholder="Descripción del desarrollo de la jornada"></textarea></div>
-        <div class="fgroup s2"><label>Compromisos y conclusiones</label><textarea id="ca-compromisos" placeholder="Compromisos adquiridos y conclusiones"></textarea></div>
-        <div class="fgroup s2"><label>Observaciones generales</label><textarea id="ca-obs" placeholder="Observaciones relevantes"></textarea></div>
-
-        <div class="sdiv green">Evidencias y asistentes</div>
-        <div class="fgroup s2">
-          <label>Lista de asistencia</label>
-          <textarea id="ca-asistentes" placeholder="Juan Pérez - Cargo&#10;María López - Cargo&#10;..." style="min-height:64px"></textarea>
-          <div class="hint" style="margin-top:3px">Escriba los nombres o adjunte foto de la lista física</div>
-          <div style="margin-top:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-            <label class="btn btn-ghost btn-sm" style="cursor:pointer">
-              <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-              Adjuntar foto de lista
-              <input type="file" accept="image/*" onchange="onListaImageChange(event)" style="display:none">
-            </label>
-            <span id="lista-img-name" class="tg tsm"></span>
-          </div>
-          <div id="lista-img-preview" style="display:none;margin-top:8px">
-            <img id="lista-img-thumb" src="" style="max-width:100%;max-height:180px;border-radius:6px;border:1px solid var(--border);object-fit:contain">
-            <button class="btn btn-danger btn-xs" style="margin-top:4px" onclick="clearListaImage()">Eliminar imagen</button>
-          </div>
-        </div>
-        <div class="fgroup s2">
-          <label>Enlace a evidencias (Google Drive)</label>
-          <input type="url" id="ca-evidencias" placeholder="https://drive.google.com/...">
-        </div>
-        <div class="fgroup s2">
-          <label>Enlace al acta firmada (Google Drive)</label>
-          <input type="url" id="ca-acta-link" placeholder="https://drive.google.com/...">
-        </div>
-      </div>
-        <div class="sdiv amber" style="grid-column:1/-1;margin-top:8px">Perfil de los participantes</div>
-        <div class="fgroup s2">
-          <label>Perfiles profesionales <span class="hint">— selección múltiple</span></label>
-          <div id="cap-perfiles-list"></div>
-          <div class="tags" id="cap-perfiles-tags" style="margin-top:6px"></div>
-        </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="closeModal('modal-cap')">Cancelar</button>
-      <button class="btn btn-red" onclick="saveCap()">Guardar capacitación</button>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════ MODAL: VER ACTA ═══════ -->
-<div class="modal-ov" id="modal-acta">
-  <div class="modal modal-xl">
-    <div class="modal-hdr">
-      <div class="modal-ttl">Acta de capacitación</div>
-      <div class="flex gap2 ic">
-        <button class="btn btn-teal btn-sm" onclick="printActa()">Imprimir</button>
-        <button class="btn btn-blue btn-sm" onclick="downloadPDF()">Descargar PDF</button>
-        <button class="btn btn-ghost btn-sm" id="btn-aprobar-acta" onclick="aprobarActa()" style="display:none">Aprobar acta</button>
-        <button class="modal-x" onclick="closeModal('modal-acta')">×</button>
-      </div>
-    </div>
-    <div class="modal-body" id="acta-content"></div>
-  </div>
-</div>
-
-<!-- ═══════ MODAL: PRESTADOR ═══════ -->
-<div class="modal-ov" id="modal-prest">
-  <div class="modal">
-    <div class="modal-hdr"><div class="modal-ttl" id="prest-ttl">Nuevo prestador</div><button class="modal-x" onclick="closeModal('modal-prest')">×</button></div>
-    <div class="modal-body">
-      <input type="hidden" id="prest-id">
-      <div class="fg">
-        <div class="fgroup s2"><label>Nombre del prestador <span class="req">*</span></label><input type="text" id="pr-n" placeholder="Nombre de la IPS o profesional"></div>
-        <div class="fgroup"><label>Municipio <span class="req">*</span></label><select id="pr-m"></select></div>
-        <div class="fgroup"><label>Nombre de la sede</label><input type="text" id="pr-s" placeholder="Nombre de la sede (opcional)"></div>
-        <div class="fgroup"><label>Naturaleza</label><select id="pr-nat"><option value="Privada">Privada</option><option value="Pública">Pública</option></select></div>
-        <div class="fgroup"><label>Clase de prestador</label>
-          <select id="pr-clase">
-            <option value="Instituciones Prestadoras de Servicios de Salud - IPS">IPS</option>
-            <option value="Profesional Independiente">Profesional Independiente</option>
-            <option value="Objeto Social Diferente a la Prestación de Servicios de Salud">Objeto social diferente</option>
-          </select></div>
-        <div class="fgroup"><label>¿ESE?</label><select id="pr-ese"><option value="NO">No</option><option value="SI">Sí</option></select></div>
-        <div class="fgroup"><label>Tipo de zona</label><select id="pr-zona"><option value="URBANA">Urbana</option><option value="RURAL">Rural</option></select></div>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="closeModal('modal-prest')">Cancelar</button>
-      <button class="btn btn-red" onclick="savePrestador()">Guardar</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: CREAR USUARIO -->
-<div class="modal-ov" id="modal-create-user">
-  <div class="modal">
-    <div class="modal-hdr"><div class="modal-ttl" id="modal-create-user-ttl">Crear usuario</div><button class="modal-x" onclick="closeModal('modal-create-user')">×</button></div>
-    <div class="modal-body">
-      <div class="fg">
-        <div class="fgroup s2"><label>Nombre completo <span class="req">*</span></label><input type="text" id="cu-name" placeholder="Nombre completo"></div>
-        <div class="fgroup"><label>Correo electrónico <span class="req">*</span></label><input type="email" id="cu-email" placeholder="correo@ids.gov.co"></div>
-        <div class="fgroup"><label>Contraseña inicial <span class="req">*</span></label><input type="password" id="cu-pass" placeholder="Mín. 6 caracteres" value="IDS2026!"></div>
-        <div class="fgroup"><label>Rol</label>
-          <select id="cu-rol">
-            <option value="contratista">Contratista</option>
-            <option value="gestor">Gestor (líder de oficina)</option>
-            <option value="coordinador">Coordinador de grupo</option>
-            <option value="admin">Administrador</option>
-          </select></div>
-        <div class="fgroup"><label>Grupo</label>
-          <select id="cu-grupo" onchange="updateCUAreas()">
-            <option value="">Seleccione grupo</option>
-            <option value="atencion">Grupo de Atención en Salud</option>
-            <option value="salud_publica">Grupo de Salud Pública</option>
-          </select></div>
-        <div class="fgroup"><label>Área / Oficina</label>
-          <select id="cu-area"><option value="">Seleccione primero el grupo</option></select></div>
-        <div class="fgroup s2">
-          <label>Perfiles profesionales <span class="hint">— selección múltiple</span></label>
-          <div id="cu-perfiles-list"></div>
-          <div class="tags" id="cu-perfiles-tags" style="margin-top:6px"></div>
-        </div>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="closeModal('modal-create-user')">Cancelar</button>
-      <button class="btn btn-red" onclick="saveCreateUser()">Crear usuario</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: CAMBIAR CONTRASEÑA -->
-<div class="modal-ov" id="modal-change-pass">
-  <div class="modal">
-    <div class="modal-hdr">
-      <div><div class="modal-ttl">Cambiar contraseña</div></div>
-      <button class="modal-x" onclick="closeModal('modal-change-pass')">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="fg c1">
-        <div class="fgroup"><label>Contraseña actual <span class="req">*</span></label><input type="password" id="cp-current" placeholder="Su contraseña actual"></div>
-        <div class="fgroup"><label>Nueva contraseña <span class="req">*</span></label><input type="password" id="cp-new" placeholder="Mínimo 8 caracteres"></div>
-        <div class="fgroup"><label>Confirmar nueva contraseña <span class="req">*</span></label><input type="password" id="cp-confirm" placeholder="Repita la nueva contraseña"></div>
-        <div id="cp-msg" class="auth-msg"></div>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="closeModal('modal-change-pass')">Cancelar</button>
-      <button class="btn btn-red" onclick="changePassword()">Actualizar contraseña</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: EDITAR PERFIL -->
-<div class="modal-ov" id="modal-edit-perfil">
-  <div class="modal">
-    <div class="modal-hdr">
-      <div><div class="modal-ttl">Editar mi perfil</div></div>
-      <button class="modal-x" onclick="closeModal('modal-edit-perfil')">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="fg c1">
-        <div class="fgroup"><label>Nombre completo <span class="req">*</span></label><input type="text" id="ep-nombre" placeholder="Nombre completo"></div>
-        <div class="fgroup">
-          <label>Perfiles profesionales</label>
-          <div id="ep-perfiles-list"></div>
-          <div class="tags" id="ep-perfiles-tags" style="margin-top:6px"></div>
-        </div>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="closeModal('modal-edit-perfil')">Cancelar</button>
-      <button class="btn btn-red" onclick="saveEditPerfil()">Guardar cambios</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: CONFIGURAR FOOTER -->
-<div class="modal-ov" id="modal-footer-config">
-  <div class="modal">
-    <div class="modal-hdr">
-      <div><div class="modal-ttl">Banner institucional</div><div class="modal-ttl-sub">Los cambios se guardan en Firebase y se actualizan en tiempo real</div></div>
-      <button class="modal-x" onclick="closeModal('modal-footer-config')">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="fg c1">
-        <div class="fgroup"><label>Nombre de la institución</label><input type="text" id="fc-brand" placeholder="IDS Norte de Santander"></div>
-        <div class="fgroup"><label>Texto descriptivo</label><input type="text" id="fc-text" placeholder="Observatorio Departamental de Salud"></div>
-        <div class="fgroup"><label>Teléfono de soporte</label><input type="text" id="fc-phone" placeholder="(57) 7 123 4567"></div>
-        <div class="fgroup"><label>Correo de contacto</label><input type="email" id="fc-email" placeholder="contacto@ids.gov.co"></div>
-        <div class="fgroup"><label>Texto adicional</label><input type="text" id="fc-extra" placeholder="v3.0 · 2026"></div>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="closeModal('modal-footer-config')">Cancelar</button>
-      <button class="btn btn-red" onclick="saveFooterConfig()">Guardar</button>
-    </div>
-  </div>
-</div>
-
-<div id="toast"></div>
-
-<!-- ═══════ DATOS EMBEBIDOS ═══════ -->
-
-<!-- ═══════ FIREBASE + LÓGICA ═══════ -->
-<script type="module">
 
 
 
@@ -1531,7 +129,7 @@ let metas     = { mensual: 2, pct: 80 };
 let currentActaId  = null;
 let selPMuns = [], selPIPS = [];
 let selCMuns = [], selCIPS = [];
-
+let selPerfilesPlan_old_0 = [], selPerfilesCap = [];
 let _ddMouseDown = false;
 
 // ── HELPERS ───────────────────────────────────────────────────────────────────
@@ -1541,18 +139,19 @@ const GL  = g  => GRUPOS[g]    || g || '—';
 const esc = s  => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
 function toast(msg, type = '') {
-                        if (!t) return;
+  const t = $('toast'); if (!t) return;
   t.textContent = msg; t.className = 'show ' + type;
   clearTimeout(t._tid); t._tid = setTimeout(() => { t.className = ''; }, 3600);
 }
 window.toast = toast;
 
 function badge(e) {
-
+  const m = { Planeado:'bp', Ejecutado:'bd', Cancelado:'bc',
+    'Pendiente aprobación':'bp', 'Aprobada':'bd' };
   return `<span class="badge ${m[e]||'bp'}">${esc(e)||'—'}</span>`;
 }
 function roleBadge(r) {
-
+  const m = { admin:'ba', coordinador:'bco', gestor:'bg_', contratista:'bct' };
   return `<span class="badge ${m[r]||''}">${r||'—'}</span>`;
 }
 const munList  = c => (!c?.municipios?.length) ? '—' : c.municipios.map(m=>m.n||m).join(', ');
@@ -1593,7 +192,7 @@ const canEdit = c => {
 const canChangeRole = (u, newRole) => canManageUser(u) && assignableRoles().includes(newRole);
 function getAreas(g) { return g==='atencion'?AREAS_AT:g==='salud_publica'?AREAS_SP:{}; }
 function areaOpts(g, sel='') {
-
+  const a = getAreas(g);
   if (!Object.keys(a).length) return '<option value="">Seleccione primero el grupo</option>';
   return '<option value="">Seleccione área</option>'
     + Object.entries(a).map(([k,v])=>`<option value="${k}"${sel===k?' selected':''}>${v}</option>`).join('');
@@ -1603,13 +202,13 @@ function mesFromFecha(f) {
   catch { return ''; }
 }
 function inPeriod(c,tipo,p) {
-
+  const m=c.mes||mesFromFecha(c.fecha);
   if (tipo==='mensual') return m===p;
   if (tipo==='trimestral') return (TRIM[p]||[]).includes(m);
   return (SEM[p]||[]).includes(m);
 }
 function showAuthMsg(id,msg,type) {
-                  if(!el) return;
+  const el=$(id); if(!el) return;
   el.textContent=msg; el.className='auth-msg '+type; el.style.display='block';
 }
 function getUsersForArea(area) {
@@ -1636,7 +235,7 @@ onAuthStateChanged(auth, async user => {
   if (user) {
     CU = user;
     try {
-
+      let snap = await getDoc(doc(db,'users',user.uid));
       if (!snap.exists() && (user.email===ADMIN_EMAIL || user.email===TEST_EMAIL)) {
         const isMain = user.email===ADMIN_EMAIL;
         await setDoc(doc(db,'users',user.uid), {
@@ -1704,13 +303,19 @@ async function setupApp() {
 }
 
 // ── SUBSCRIPTIONS ─────────────────────────────────────────────────────────────
-
+function buildQ_old_0(col) {
+  const base=collection(db,col);
+  if(CUD.role==='contratista') return query(base,where('createdBy','==',CU.uid),orderBy('createdAt','desc'));
+  if(CUD.role==='gestor')      return query(base,where('area','==',CUD.area),orderBy('createdAt','desc'));
+  if(CUD.role==='coordinador') return query(base,where('grupo','==',CUD.grupo),orderBy('createdAt','desc'));
+  return query(base,orderBy('createdAt','desc'));
+}
 function subscribeCaps() {
   unsubCaps=onSnapshot(buildQ('capacitaciones'),snap=>{
     allCaps=snap.docs.map(d=>({id:d.id,...d.data()}));
     renderCaps();renderDash();renderInformes();renderActas();checkAlerts();
-
-                             if(be){be.textContent=n;be.style.display=n?'inline-block':'none';}
+    const n=allCaps.filter(c=>c.actaEstado!=='Aprobada').length;
+    const be=$('badge-exec');if(be){be.textContent=n;be.style.display=n?'inline-block':'none';}
   },e=>console.error('caps:',e));
 }
 function subscribePlans() {
@@ -1729,18 +334,18 @@ function subscribeUsers() {
 // ── CATÁLOGOS ─────────────────────────────────────────────────────────────────
 async function loadTiposCap() {
   try {
-
+    const snap=await getDocs(collection(db,'tiposCap'));
     if(snap.docs.length) tiposCap=snap.docs.map(d=>d.data().nombre).filter(Boolean);
   } catch(e){console.warn('loadTiposCap:',e.message);}
   refreshTipos(); renderTiposTable();
 }
 function refreshTipos() {
-
+  const opts='<option value="">Seleccione</option>'+tiposCap.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('');
   ['pl-tipo','ca-tipo'].forEach(id=>{const el=$(id);if(el)el.innerHTML=opts;});
 }
 async function loadMetas() {
   try {
-
+    const snap=await getDoc(doc(db,'config','metas'));
     if(snap.exists()){const d=snap.data();metas.mensual=d.mensual||2;metas.pct=d.pct||80;}
   } catch(e){console.warn('loadMetas:',e.message);}
   const em=$('meta-mens'),ep=$('meta-pct');
@@ -1749,11 +354,11 @@ async function loadMetas() {
 
 // ── TYPEAHEAD ─────────────────────────────────────────────────────────────────
 function buildMunDD(ddId,selArr,onSelectFn,q='') {
-                   if(!dd)return;
-
+  const dd=$(ddId);if(!dd)return;
+  const res=(q?MUN_LIST.filter(m=>m.n.toLowerCase().includes(q.toLowerCase())):MUN_LIST).slice(0,14);
   if(!res.length){dd.innerHTML='<div class="ta-empty">Sin resultados</div>';dd.classList.add('open');return;}
   dd.innerHTML=res.map(m=>{
-
+    const s=selArr.some(x=>x.n===m.n);
     return `<div class="ta-item${s?' sel':''}"
       onclick="${onSelectFn}(${JSON.stringify(m.n)},${JSON.stringify(m.id||'')})"
       >${esc(m.n)}${s?' ✓':''}</div>`;
@@ -1761,15 +366,15 @@ function buildMunDD(ddId,selArr,onSelectFn,q='') {
   dd.classList.add('open');
 }
 function buildIPSDD(ddId,selArr,munArr,onSelectFn,q='') {
-                   if(!dd)return;
-
-
+  const dd=$(ddId);if(!dd)return;
+  const all=munArr.flatMap(m=>PRES[m.n.normalize('NFC').trim()]||[]);
+  const res=(q?all.filter(p=>p.n.toLowerCase().includes(q.toLowerCase())):all).slice(0,20);
   if(!res.length){dd.innerHTML=`<div class="ta-empty">${all.length?'Sin resultados':'Seleccione municipio primero'}</div>`;dd.classList.add('open');return;}
   dd.innerHTML=res.map(p=>{
-
-
-
-
+    const s=selArr.some(x=>x.n===p.n);
+    const nc=p.nat?.includes('blica')?'chip-pub':'chip-prv';
+    const es=p.ese==='SI'?'<span class="chip chip-ese">ESE</span>':'';
+    const pj=JSON.stringify(JSON.stringify({n:p.n,nat:p.nat,ese:p.ese}));
     return `<div class="ta-item${s?' sel':''}"
       onclick="${onSelectFn}(${pj})">
       <span>${esc(p.n)}</span>
@@ -1779,7 +384,7 @@ function buildIPSDD(ddId,selArr,munArr,onSelectFn,q='') {
   dd.classList.add('open');
 }
 function renderTags(id,arr,removeFn) {
-                 if(!el)return;
+  const el=$(id);if(!el)return;
   el.innerHTML=arr.map(x=>`<span class="tag">${esc(x.n)}<span class="tag-x" onclick="${removeFn}(${JSON.stringify(x.n)})">×</span></span>`).join('');
 }
 
@@ -1828,18 +433,18 @@ function buildMunCheckboxHTML(selectedArr, listId, changeFn) {
 }
 
 window.filterMunCheckboxes = (inp, listId) => {
-
+  const q = inp.value.toLowerCase().normalize('NFC');
   const inner = document.getElementById(listId + '-inner');
   if (!inner) return;
   inner.querySelectorAll('label').forEach(l => {
-
+    const name = l.textContent.trim().toLowerCase().normalize('NFC');
     l.style.display = name.includes(q) ? '' : 'none';
   });
 };
 
 // Plan modal municipios
 window.onMunPlanChange = cb => {
-
+  const n = cb.value, id = cb.dataset.id || '';
   if (cb.checked) {
     if (!selPMuns.some(m => m.n === n)) selPMuns.push({n, id});
   } else {
@@ -1847,7 +452,7 @@ window.onMunPlanChange = cb => {
   }
   renderTags('mun-tags', selPMuns, 'rmPMun');
   // Show/hide IPS section
-
+  const ig = $('ips-grp');
   if (ig) ig.style.display = selPMuns.length ? 'block' : 'none';
   // Trigger IPS refresh
   if (selPMuns.length) window.filterIPS('');
@@ -1856,31 +461,31 @@ window.rmPMun = n => {
   selPMuns = selPMuns.filter(m => m.n !== n);
   renderTags('mun-tags', selPMuns, 'rmPMun');
   // Uncheck in list
-
+  const cb = document.querySelector('#plan-mun-list-inner input[value="' + CSS.escape(n) + '"]');
   if (cb) cb.checked = false;
-
+  const ig = $('ips-grp');
   if (ig) ig.style.display = selPMuns.length ? 'block' : 'none';
 };
 
 // Cap modal municipios
 window.onMunCapChange = cb => {
-
+  const n = cb.value, id = cb.dataset.id || '';
   if (cb.checked) {
     if (!selCMuns.some(m => m.n === n)) selCMuns.push({n, id});
   } else {
     selCMuns = selCMuns.filter(m => m.n !== n);
   }
   renderTags('cmun-tags', selCMuns, 'rmCMun');
-
+  const cg = $('cips-grp');
   if (cg) cg.style.display = selCMuns.length ? 'block' : 'none';
   if (selCMuns.length) window.filterCIPS('');
 };
 window.rmCMun = n => {
   selCMuns = selCMuns.filter(m => m.n !== n);
   renderTags('cmun-tags', selCMuns, 'rmCMun');
-
+  const cb = document.querySelector('#cap-mun-list-inner input[value="' + CSS.escape(n) + '"]');
   if (cb) cb.checked = false;
-
+  const cg = $('cips-grp');
   if (cg) cg.style.display = selCMuns.length ? 'block' : 'none';
 };
 
@@ -1890,7 +495,7 @@ window.onPerfilCapChange =cb=>{if(cb.checked)selPerfilesCap.push(cb.value);else 
 window.rmPerfilPlan=p=>{selPerfilesPlan=selPerfilesPlan.filter(x=>x!==p);document.querySelector(`#plan-perfiles-list input[value="${p}"]`)?.setAttribute('checked',false);const cb=document.querySelector(`#plan-perfiles-list input[value="${p}"]`);if(cb)cb.checked=false;renderPerfilesTags('plan-perfiles-tags',selPerfilesPlan,'rmPerfilPlan');};
 window.rmPerfilCap=p=>{selPerfilesCap=selPerfilesCap.filter(x=>x!==p);const cb=document.querySelector(`#cap-perfiles-list input[value="${p}"]`);if(cb)cb.checked=false;renderPerfilesTags('cap-perfiles-tags',selPerfilesCap,'rmPerfilCap');};
 function renderPerfilesTags(tagsId,arr,removeFn) {
-                     if(!el)return;
+  const el=$(tagsId);if(!el)return;
   el.innerHTML=arr.map(p=>`<span class="tag am">${esc(p)}<span class="tag-x" onclick="${removeFn}(${JSON.stringify(p)})">×</span></span>`).join('');
 }
 
@@ -1903,8 +508,8 @@ window.updateRegAreas=()=>{const el=$('ra');if(!el)return;el.innerHTML=areaOpts(
 
 // Responsable selector — populated from registered users of the area
 function updateRespSelector(selId, grupo, area) {
-                     if(!sel)return;
-
+  const sel=$(selId);if(!sel)return;
+  const users=area?getUsersForArea(area):allUsers.filter(u=>u.grupo===grupo&&u.status==='active');
   sel.innerHTML='<option value="">Seleccione responsable...</option>'
     +users.map(u=>`<option value="${esc(u.name)}">${esc(u.name)} — ${roleBadge(u.role).replace(/<[^>]+>/g,'')}</option>`).join('');
 }
@@ -1912,26 +517,26 @@ window.onPlanAreaChange=()=>{updatePlanModalAreas();updateRespSelector('pl-resp-
 
 // ── CAPACITACIÓN: autocompletar desde planeación ──────────────────────────────
 window.onCapNomSelect = () => {
-                                 if(!sel) return;
-
+  const sel   = $('ca-nom-sel'); if(!sel) return;
+  const planId = sel.value;
   if(!planId){resetCapFormFields();return;}
-
+  const plan = allPlans.find(p=>p.id===planId);
   if(!plan) return;
   // Autocompletar campos del plan
   const flds=[['ca-grupo','grupo'],['ca-area','area'],['ca-tipo','tipo'],['ca-resp','responsable']];
   flds.forEach(([eid,key])=>{const el=$(eid);if(el&&plan[key]!=null)el.value=plan[key];});
   updateCapModalAreas();
-                        if(ca)ca.value=plan.area||'';
+  const ca=$('ca-area');if(ca)ca.value=plan.area||'';
   // Municipios del plan — restaurar checkboxes
   selCMuns=plan.municipios||[];selCIPS=plan.ips||[];
   renderTags('cmun-tags',selCMuns,'rmCMun');
   renderTags('cips-tags',selCIPS,'rmCIPS');
-
+  const _cml=$('cap-mun-list');
   if(_cml)_cml.innerHTML=buildMunCheckboxHTML(selCMuns,'cap-mun-list','onMunCapChange');
   if(selCMuns.length){const g=$('cips-grp');if(g)g.style.display='block';}
   // Perfiles del plan
   selPerfilesCap=[...(plan.perfilesPoblacion||[])];
-
+  const pl=$('cap-perfiles-list');
   if(pl)pl.innerHTML=buildPerfilesHTML(selPerfilesCap,'cap-perfiles-tags','onPerfilCapChange');
   renderPerfilesTags('cap-perfiles-tags',selPerfilesCap,'rmPerfilCap');
   // Mostrar campos ligados al plan
@@ -1940,8 +545,8 @@ window.onCapNomSelect = () => {
 };
 
 function buildCapNomSelector(area) {
-
-                            if(!sel)return;
+  const plans=allPlans.filter(p=>!area||p.area===area);
+  const sel=$('ca-nom-sel');if(!sel)return;
   sel.innerHTML='<option value="">Seleccione capacitación planeada...</option>'
     +plans.map(p=>`<option value="${p.id}">${esc(p.nombre)} (${p.mes||'sin mes'})</option>`).join('');
 }
@@ -1950,8 +555,8 @@ function buildCapNomSelector(area) {
 function resetPlanForm() {
   ['pl-nom','pl-resp','pl-perfil','pl-presup','pl-conv','pl-obj'].forEach(id=>{const e=$(id);if(e)e.value='';});
   ['pl-grupo','pl-area','pl-tipo','pl-mes'].forEach(id=>{const e=$(id);if(e)e.value='';});
-                        if(pa)pa.innerHTML='<option value="">Seleccione primero el grupo</option>';
-                             if(prs)prs.innerHTML='<option value="">Seleccione responsable...</option>';
+  const pa=$('pl-area');if(pa)pa.innerHTML='<option value="">Seleccione primero el grupo</option>';
+  const prs=$('pl-resp-sel');if(prs)prs.innerHTML='<option value="">Seleccione responsable...</option>';
   $('plan-id').value='';
   selPMuns=[];selPIPS=[];selPerfilesPlan=[];
   renderTags('mun-tags',selPMuns,'rmPMun');
@@ -1960,8 +565,8 @@ function resetPlanForm() {
   if(_pml)_pml.innerHTML=buildMunCheckboxHTML([],'plan-mun-list','onMunPlanChange');
   renderTags('ips-tags',selPIPS,'rmPIPS');
   renderPerfilesTags('plan-perfiles-tags',selPerfilesPlan,'rmPerfilPlan');
-                        if(ig)ig.style.display='none';
-
+  const ig=$('ips-grp');if(ig)ig.style.display='none';
+  const pl=$('plan-perfiles-list');
   if(pl)pl.innerHTML=buildPerfilesHTML([],'plan-perfiles-tags','onPerfilPlanChange');
 }
 
@@ -1969,27 +574,27 @@ window.openPlanModal=()=>{
   $('modal-plan-ttl').textContent='Nueva planeación';
   resetPlanForm();
   if(['gestor','contratista'].includes(CUD?.role)&&CUD.grupo){
-                           if(pg){pg.value=CUD.grupo;pg.disabled=true;}
+    const pg=$('pl-grupo');if(pg){pg.value=CUD.grupo;pg.disabled=true;}
     updatePlanModalAreas();
-                          if(pa&&CUD.area){pa.value=CUD.area;pa.disabled=true;}
+    const pa=$('pl-area');if(pa&&CUD.area){pa.value=CUD.area;pa.disabled=true;}
     updateRespSelector('pl-resp-sel',CUD.grupo,CUD.area);
   } else {
-                           if(pg)pg.disabled=false;
-                          if(pa)pa.disabled=false;
+    const pg=$('pl-grupo');if(pg)pg.disabled=false;
+    const pa=$('pl-area');if(pa)pa.disabled=false;
   }
   refreshTipos();
   $('modal-plan').classList.add('open');
 };
 
 window.editPlan=id=>{
-                                      if(!p)return;
+  const p=allPlans.find(x=>x.id===id);if(!p)return;
   $('modal-plan-ttl').textContent='Editar planeación';
   resetPlanForm();
   $('plan-id').value=id;
   [['pl-nom','nombre'],['pl-resp','responsable'],['pl-perfil','perfil'],
    ['pl-presup','presupuesto'],['pl-conv','convocatoria'],['pl-obj','objetivo'],['pl-mes','mes']
   ].forEach(([eid,key])=>{const el=$(eid);if(el&&p[key]!=null)el.value=p[key];});
-                         if(pg){pg.value=p.grupo||'';pg.disabled=false;}
+  const pg=$('pl-grupo');if(pg){pg.value=p.grupo||'';pg.disabled=false;}
   updatePlanModalAreas();
   const pa=$('pl-area');if(pa){pa.value=p.area||'';pa.disabled=false;}
   const pt=$('pl-tipo');if(pt)pt.value=p.tipo||'';
@@ -2002,7 +607,7 @@ window.editPlan=id=>{
   const pml=$('plan-mun-list');
   if(pml)pml.innerHTML=buildMunCheckboxHTML(selPMuns,'plan-mun-list','onMunPlanChange');
   // Restore perfiles checkboxes
-
+  const pl=$('plan-perfiles-list');
   if(pl)pl.innerHTML=buildPerfilesHTML(selPerfilesPlan,'plan-perfiles-tags','onPerfilPlanChange');
   renderPerfilesTags('plan-perfiles-tags',selPerfilesPlan,'rmPerfilPlan');
   if(selPMuns.length){const ig=$('ips-grp');if(ig)ig.style.display='block';}
@@ -2011,10 +616,10 @@ window.editPlan=id=>{
 };
 
 window.savePlan=async()=>{
-
-
-
-
+  const nom   = $('pl-nom')?.value.trim();
+  const grupo = $('pl-grupo')?.value;
+  const area  = $('pl-area')?.value;
+  const tipo  = $('pl-tipo')?.value;
   const mes   = $('pl-mes')?.value;
   if(!nom)  {toast('El nombre es obligatorio','e');return;}
   if(!grupo){toast('Seleccione el grupo','e');return;}
@@ -2028,6 +633,17 @@ window.savePlan=async()=>{
   const respTxt=$('pl-resp')?.value.trim();
   const responsable=respSel||respTxt||'';
 
+  const data={
+    nombre:nom,grupo,area,tipo,mes,responsable,
+    perfil      :$('pl-perfil')?.value.trim()||'',
+    presupuesto :parseFloat($('pl-presup')?.value)||null,
+    convocatoria:$('pl-conv')?.value.trim()||'',
+    objetivo    :$('pl-obj')?.value.trim()||'',
+    municipios  :selPMuns,ips:selPIPS,
+    perfilesPoblacion:selPerfilesPlan,
+    estado:'Planeado',
+    updatedAt:serverTimestamp(),updatedBy:CU.uid,
+  };
   const pid=$('plan-id').value;
   try {
     if(pid){await updateDoc(doc(db,'planeaciones',pid),data);toast('Planeación actualizada','s');}
@@ -2043,17 +659,18 @@ window.deletePlan=async id=>{
 };
 
 window.renderPlan=()=>{
-
-
-
-
-
+  const gF=$('fp-grupo')?.value||'';
+  const aF=$('fp-area')?.value||'';
+  const mF=$('fp-mes')?.value||'';
+  const qF=($('fp-q')?.value||'').toLowerCase();
+  const list=allPlans.filter(p=>{
+    if(gF&&p.grupo!==gF)return false;
     if(aF&&p.area!==aF)return false;
     if(mF&&p.mes!==mF)return false;
     if(qF&&!p.nombre.toLowerCase().includes(qF))return false;
     return true;
   });
-                           if(!tb)return;
+  const tb=$('plan-table');if(!tb)return;
   if(!list.length){tb.innerHTML='<tr class="erow"><td colspan="9">Sin planeaciones registradas</td></tr>';return;}
   tb.innerHTML=list.map((p,i)=>`<tr>
     <td>${i+1}</td>
@@ -2087,7 +704,7 @@ function resetCapFormFields() {
   if(_cml)_cml.innerHTML=buildMunCheckboxHTML([],'cap-mun-list','onMunCapChange');
   renderTags('cips-tags',selCIPS,'rmCIPS');
   renderPerfilesTags('cap-perfiles-tags',selPerfilesCap,'rmPerfilCap');
-                         if(cg)cg.style.display='none';
+  const cg=$('cips-grp');if(cg)cg.style.display='none';
   const $prl=$('cap-perfiles-list');
   if($prl)$prl.innerHTML=buildPerfilesHTML([],'cap-perfiles-tags','onPerfilCapChange');
   $('plan-ref-id').value='';
@@ -2095,31 +712,31 @@ function resetCapFormFields() {
 
 function resetCapForm() {
   ['ca-grupo','ca-area','ca-tipo'].forEach(id=>{const e=$(id);if(e)e.value='';});
-                        if(ca)ca.innerHTML='<option value="">Seleccione primero el grupo</option>';
+  const ca=$('ca-area');if(ca)ca.innerHTML='<option value="">Seleccione primero el grupo</option>';
   $('cap-id').value='';
-                            if(cns)cns.innerHTML='<option value="">Seleccione capacitación planeada...</option>';
+  const cns=$('ca-nom-sel');if(cns)cns.innerHTML='<option value="">Seleccione capacitación planeada...</option>';
   resetCapFormFields();
 }
 
 window.openCapModal=()=>{
   $('modal-cap-ttl').textContent='Registrar capacitación';
   resetCapForm();
-
+  const area=(['gestor','contratista'].includes(CUD?.role)&&CUD.area)?CUD.area:null;
   buildCapNomSelector(area);
   if(['gestor','contratista'].includes(CUD?.role)&&CUD.grupo){
-                           if(cg){cg.value=CUD.grupo;cg.disabled=true;}
+    const cg=$('ca-grupo');if(cg){cg.value=CUD.grupo;cg.disabled=true;}
     updateCapModalAreas();
-                          if(ca&&CUD.area){ca.value=CUD.area;ca.disabled=true;}
+    const ca=$('ca-area');if(ca&&CUD.area){ca.value=CUD.area;ca.disabled=true;}
   } else {
-                           if(cg)cg.disabled=false;
-                          if(ca)ca.disabled=false;
+    const cg=$('ca-grupo');if(cg)cg.disabled=false;
+    const ca=$('ca-area');if(ca)ca.disabled=false;
   }
   refreshTipos();
   $('modal-cap').classList.add('open');
 };
 
 window.editCap=id=>{
-                                     if(!c)return;
+  const c=allCaps.find(x=>x.id===id);if(!c)return;
   $('modal-cap-ttl').textContent='Editar capacitación';
   resetCapForm();
   $('cap-id').value=id;
@@ -2133,9 +750,9 @@ window.editCap=id=>{
    ['ca-evidencias','evidencias'],['ca-acta-link','actaLink'],['ca-fecha','fecha']
   ].forEach(([eid,key])=>{const el=$(eid);if(el&&c[key]!=null)el.value=c[key];});
   const cl=$('ca-asistentes');if(cl)cl.value=(c.listaAsistentes||[]).join('\n');
-                         if(cg){cg.value=c.grupo||'';cg.disabled=false;}
+  const cg=$('ca-grupo');if(cg){cg.value=c.grupo||'';cg.disabled=false;}
   updateCapModalAreas();
-                        if(ca){ca.value=c.area||'';ca.disabled=false;}
+  const ca=$('ca-area');if(ca){ca.value=c.area||'';ca.disabled=false;}
   const ct=$('ca-tipo');if(ct)ct.value=c.tipo||'';
   selCMuns=c.municipios||[];selCIPS=c.ips||[];
   selPerfilesCap=c.perfilesPoblacion||[];
@@ -2150,7 +767,7 @@ window.editCap=id=>{
   renderPerfilesTags('cap-perfiles-tags',selPerfilesCap,'rmPerfilCap');
   if(selCMuns.length){const cig=$('cips-grp');if(cig)cig.style.display='block';}
   if(['gestor','contratista'].includes(CUD?.role)){
-                           if(cg)cg.disabled=true;
+    const cg=$('ca-grupo');if(cg)cg.disabled=true;
     const ca=$('ca-area');if(ca)ca.disabled=true;
   }
   refreshTipos();
@@ -2163,9 +780,9 @@ window.saveCap=async()=>{
   const planId=nomSel?.value||'';
   const plan=allPlans.find(p=>p.id===planId);
   const nom=plan?plan.nombre:(nomSel?.options[nomSel?.selectedIndex]?.text||'');
-
-
-
+  const grupo=$('ca-grupo')?.value;
+  const area=$('ca-area')?.value;
+  const tipo=$('ca-tipo')?.value;
   const fecha=$('ca-fecha')?.value;
   if(!nom)  {toast('Seleccione la capacitación planeada','e');return;}
   if(!grupo){toast('Seleccione el grupo','e');return;}
@@ -2174,9 +791,32 @@ window.saveCap=async()=>{
   if(!fecha){toast('Ingrese la fecha','e');return;}
   if(!selCMuns.length){toast('Seleccione al menos un municipio','e');return;}
 
-
+  const pre=parseFloat($('ca-pre')?.value);
+  const pos=parseFloat($('ca-post')?.value);
   const listaStr=$('ca-asistentes')?.value.trim()||'';
-
+  const data={
+    nombre:nom,grupo,area,tipo,fecha,planRefId:planId||null,
+    mes:MESES[new Date(fecha+'T12:00:00').getMonth()]||'',
+    responsable:$('ca-resp')?.value.trim()||'',
+    duracion:parseFloat($('ca-dur')?.value)||null,
+    asistentes:parseInt($('ca-asist')?.value)||0,
+    pretest:isNaN(pre)?null:pre,postest:isNaN(pos)?null:pos,
+    cambio:(!isNaN(pre)&&!isNaN(pos))?(pos-pre).toFixed(1)+'%':null,
+    resultado:$('ca-resultado')?.value||'',
+    observaciones:$('ca-obs')?.value.trim()||'',
+    objetivos:$('ca-objetivos')?.value.trim()||'',
+    desarrollo:$('ca-desarrollo')?.value.trim()||'',
+    compromisos:$('ca-compromisos')?.value.trim()||'',
+    listaAsistentes:listaStr?listaStr.split('\n').map(s=>s.trim()).filter(Boolean):[],
+    evidencias:$('ca-evidencias')?.value.trim()||'',
+    actaLink:$('ca-acta-link')?.value.trim()||'',
+    municipios:selCMuns,ips:selCIPS,
+    perfilesPoblacion:selPerfilesCap,
+    estado:'Ejecutado',actaEstado:'Pendiente aprobación',
+    firmaContratista : CUD.firma || null,
+    nombreContratista: CUD.name || CU.email || '',
+    updatedAt:serverTimestamp(),updatedBy:CU.uid,
+  };
 
   // Marcar la planeación como ejecutada si viene de una
   const cid=$('cap-id').value;
@@ -2204,7 +844,7 @@ window.deleteCap=async id=>{
 window.calcCambio=()=>{
   const pre=parseFloat($('ca-pre')?.value);
   const pos=parseFloat($('ca-post')?.value);
-                          if(!el)return;
+  const el=$('ca-cambio');if(!el)return;
   el.value=(!isNaN(pre)&&!isNaN(pos))?(pos-pre).toFixed(1)+'%':'';
 };
 
@@ -2212,16 +852,17 @@ window.renderCaps=()=>{
   const gF=$('fc-grupo')?.value||'';
   const aF=$('fc-area')?.value||'';
   const mF=$('fc-mes')?.value||'';
-
+  const munF=$('fc-mun')?.value||'';
   const qF=($('fc-q')?.value||'').toLowerCase();
-
+  const list=allCaps.filter(c=>{
+    if(gF&&c.grupo!==gF)return false;
     if(aF&&c.area!==aF)return false;
     if(mF&&c.mes!==mF)return false;
     if(munF&&!(c.municipios||[]).some(m=>m.n===munF))return false;
     if(qF&&!(c.nombre||'').toLowerCase().includes(qF))return false;
     return true;
   });
-                           if(!tb)return;
+  const tb=$('caps-table');if(!tb)return;
   if(!list.length){tb.innerHTML='<tr class="erow"><td colspan="12">Sin capacitaciones registradas</td></tr>';return;}
   tb.innerHTML=list.map((c,i)=>`<tr>
     <td>${i+1}</td>
@@ -2243,11 +884,31 @@ window.renderCaps=()=>{
 };
 
 // ── ACTAS ─────────────────────────────────────────────────────────────────────
-
+function renderActas_old_0() {
+  const row=(c,showApr)=>`<tr>
+    <td><strong>${esc(c.nombre)}</strong></td>
+    <td><span class="area-chip">${AL(c.area)}</span></td>
+    <td>${c.fecha||'—'}</td>
+    <td>${showApr?esc(c.aprobadaPor||'—'):badge(c.actaEstado||'Pendiente aprobación')}</td>
+    <td style="white-space:nowrap">
+      <button class="btn btn-sm btn-blue" onclick="verActa('${c.id}')">Ver acta</button>
+      ${!showApr&&canApprove()?`<button class="btn btn-sm btn-green" onclick="aprobarActaDirect('${c.id}')">Aprobar</button>`:''}
+    </td>
+  </tr>`;
+  const pend=allCaps.filter(c=>c.actaEstado!=='Aprobada');
+  const apro=allCaps.filter(c=>c.actaEstado==='Aprobada');
+  const tp=$('actas-pend-table');if(tp)tp.innerHTML=pend.length?pend.map(c=>row(c,false)).join(''):'<tr class="erow"><td colspan="5">Sin actas pendientes</td></tr>';
+  const ta=$('actas-apro-table');if(ta)ta.innerHTML=apro.length?apro.map(c=>row(c,true)).join(''):'<tr class="erow"><td colspan="5">Sin actas aprobadas</td></tr>';
+  const tt=$('actas-todas-table');if(tt)tt.innerHTML=allCaps.length?allCaps.map(c=>`<tr>
+    <td><strong>${esc(c.nombre)}</strong></td><td><span class="area-chip">${AL(c.area)}</span></td>
+    <td>${c.fecha||'—'}</td><td>${badge(c.actaEstado||'Pendiente aprobación')}</td>
+    <td><button class="btn btn-sm btn-blue" onclick="verActa('${c.id}')">Ver</button></td>
+  </tr>`).join(''):'<tr class="erow"><td colspan="5">Sin actas</td></tr>';
+}
 
 window.verActa=id=>{
   currentActaId=id;
-                                     if(!c)return;
+  const c=allCaps.find(x=>x.id===id);if(!c)return;
   const canAprob=canApprove()&&c.actaEstado!=='Aprobada';
   const btn=$('btn-aprobar-acta');if(btn)btn.style.display=canAprob?'inline-flex':'none';
   const asist=(c.listaAsistentes||[]).map((a,i)=>`<tr><td>${i+1}</td><td>${esc(a)}</td></tr>`).join('');
@@ -2341,7 +1002,7 @@ window.aprobarActaDirect=async id=>{
   }catch(e){toast('Error: '+e.message,'e');}
 };
 window.printActa=()=>{
-                                  const pz=$('print-zone');if(!c||!pz)return;
+  const c=$('acta-print-content');const pz=$('print-zone');if(!c||!pz)return;
   pz.innerHTML=c.outerHTML;pz.style.display='block';
   window.print();
   setTimeout(()=>{pz.style.display='none';pz.innerHTML='';},1200);
@@ -2360,7 +1021,14 @@ window.downloadPDF=()=>{
   pdf.setFontSize(8);pdf.setFont('helvetica','normal');
   pdf.text('Observatorio Departamental de Salud · Vigencia 2026',W/2,25,{align:'center'});
   let y=38;pdf.setTextColor(0,0,0);
-
+  const rows=[['Capacitación',c.nombre||''],['Fecha',c.fecha||'—'],['Grupo',GL(c.grupo)],
+    ['Área',AL(c.area)],['Tipo',c.tipo||'—'],['Responsable',c.responsable||'—'],
+    ['Duración (h)',String(c.duracion||'—')],['Municipios',munList(c)],
+    ['IPS',ipsList(c,5)],['Asistentes',String(c.asistentes||0)],
+    ['Pretest',c.pretest!=null?c.pretest+'%':'—'],['Postest',c.postest!=null?c.postest+'%':'—'],
+    ['Cambio',c.cambio||'—'],['Resultado',c.resultado||'—'],['Estado acta',c.actaEstado||'Pendiente'],
+    ...(c.perfilesPoblacion?.length?[['Perfiles',(c.perfilesPoblacion||[]).join(', ')]]:[] ),
+  ];
   if(pdf.autoTable){pdf.autoTable({startY:y,head:[['Campo','Valor']],body:rows,theme:'grid',headStyles:{fillColor:[192,57,43],fontSize:8},bodyStyles:{fontSize:8},columnStyles:{0:{fontStyle:'bold',cellWidth:50}},margin:{left:14,right:14}});y=pdf.lastAutoTable.finalY+8;}
   for(const[t,v]of[['Objetivos',c.objetivos],['Desarrollo',c.desarrollo],['Compromisos',c.compromisos],['Observaciones',c.observaciones]]){
     if(!v)continue;if(y>260){pdf.addPage();y=15;}
@@ -2391,13 +1059,13 @@ window.downloadPDF=()=>{
 
 // ── DASHBOARD ─────────────────────────────────────────────────────────────────
 function initDashPeriodo(){
-                             if(!dp)return;
+  const dp=$('dash-periodo');if(!dp)return;
   dp.innerHTML=MESES.map(m=>`<option value="${m}">${m}</option>`).join('');
   dp.value=MESES[new Date().getMonth()];
   renderDash();
 }
 window.onDashTipoChange=()=>{
-
+  const tipo=$('dash-tipo')?.value||'mensual';
   const dp=$('dash-periodo');if(!dp)return;
   if(tipo==='mensual'){dp.innerHTML=MESES.map(m=>`<option value="${m}">${m}</option>`).join('');dp.value=MESES[new Date().getMonth()];}
   else if(tipo==='trimestral'){dp.innerHTML=Object.keys(TRIM).map(t=>`<option value="${t}">${t}</option>`).join('');dp.value=dp.options[0]?.value||'';}
@@ -2405,15 +1073,15 @@ window.onDashTipoChange=()=>{
   renderDash();
 };
 window.renderDash=()=>{
-
-
+  const tipo=$('dash-tipo')?.value||'mensual';
+  const p=$('dash-periodo')?.value||'';
   if(!p)return;
-
-
-
+  const caps=allCaps.filter(c=>inPeriod(c,tipo,p));
+  const plans=allPlans.filter(pl=>inPeriod(pl,tipo,p));
+  const total=caps.length+plans.length;
   const exec=caps.length;
-
-
+  const part=caps.reduce((a,c)=>a+(parseInt(c.asistentes)||0),0);
+  const munis=new Set(caps.flatMap(c=>(c.municipios||[]).map(m=>m.n||m)));
   const pres=caps.filter(c=>c.pretest!=null).map(c=>c.pretest);
   const pos2=caps.filter(c=>c.postest!=null).map(c=>c.postest);
   const cumpl=total?Math.round(exec/total*100):0;
@@ -2424,28 +1092,28 @@ window.renderDash=()=>{
   sv('ds-post',pos2.length?(pos2.reduce((a,b)=>a+b,0)/pos2.length).toFixed(1)+'%':'—');
   const amap={};
   [...allCaps,...allPlans].forEach(c=>{const k=c.area;if(!k)return;if(!amap[k])amap[k]={exec:0,plan:0};if(allCaps.includes(c))amap[k].exec++;else amap[k].plan++;});
-
+  const tb1=$('dash-oficinas');
   if(tb1){
-
+    const rows=Object.entries(amap).filter(([k])=>k).sort((a,b)=>b[1].exec-a[1].exec).slice(0,10);
     tb1.innerHTML=rows.length?rows.map(([k,v])=>{const tot=v.exec+v.plan;const pct=tot?Math.round(v.exec/tot*100):0;return`<tr><td><span class="area-chip" style="font-size:10px">${AL(k)}</span></td><td>${v.exec}</td><td>${v.plan}</td><td><div class="prog"><div class="prog-f ${pct>=metas.pct?'':'a'}" style="width:${pct}%"></div></div> ${pct}%</td></tr>`;}).join(''):'<tr class="erow"><td colspan="4">Sin datos</td></tr>';
   }
-
+  const mmap={};
   caps.forEach(c=>(c.municipios||[]).forEach(m=>{const k=m.n||m;if(!mmap[k])mmap[k]={caps:0,part:0};mmap[k].caps++;mmap[k].part+=parseInt(c.asistentes)||0;}));
-
+  const tb2=$('dash-munis');
   if(tb2){tb2.innerHTML=Object.entries(mmap).sort((a,b)=>b[1].caps-a[1].caps).slice(0,10).map(([m,v])=>`<tr><td>${m}</td><td>${v.caps}</td><td>${v.part}</td></tr>`).join('')||'<tr class="erow"><td colspan="3">Sin datos</td></tr>';}
 };
 
 function checkAlerts(){
-                           const txt=$('alert-txt');if(!box||!txt)return;
+  const box=$('alert-box');const txt=$('alert-txt');if(!box||!txt)return;
   const mesAct=MESES[new Date().getMonth()];
-
+  const n=allCaps.filter(c=>c.mes===mesAct).length;
   if(n<metas.mensual){txt.textContent=`Solo ${n} capacitación(es) ejecutada(s) en ${mesAct}. Meta: ${metas.mensual}.`;box.style.display='block';}
   else box.style.display='none';
 }
 
 // ── INFORMES ──────────────────────────────────────────────────────────────────
 function initInfPeriodo(){
-
+  const tipo=$('inf-tipo')?.value||'mensual';
   const sel=$('inf-periodo');if(!sel)return;
   if(tipo==='mensual')sel.innerHTML=MESES.map(m=>`<option value="${m}">${m}</option>`).join('');
   else if(tipo==='trimestral')sel.innerHTML=Object.keys(TRIM).map(t=>`<option>${t}</option>`).join('');
@@ -2456,12 +1124,12 @@ function initInfPeriodo(){
 window.initInfPeriodo=initInfPeriodo;
 
 window.renderInformes=()=>{
-
-
-
+  const tipo=$('inf-tipo')?.value||'mensual';
+  const p=$('inf-periodo')?.value||'';
+  const grupo=$('inf-grupo')?.value||'all';
   const munF=$('inf-mun')?.value||'';
   if(!p)return;
-
+  let caps=allCaps.filter(c=>inPeriod(c,tipo,p));
   if(grupo!=='all')caps=caps.filter(c=>c.grupo===grupo);
   if(munF)caps=caps.filter(c=>(c.municipios||[]).some(m=>m.n===munF));
   const total=caps.length;
@@ -2495,10 +1163,10 @@ window.renderInformes=()=>{
 
 window.exportCSV=()=>{
   const tipo=$('inf-tipo')?.value||'mensual';
-
-
+  const p=$('inf-periodo')?.value||'';
+  const caps=allCaps.filter(c=>inPeriod(c,tipo,p));
   const cols=['Nombre','Grupo','Área','Tipo','Fecha','Municipios','IPS','Asistentes','Pretest%','Postest%','Cambio%','Resultado','Estado acta','Perfiles','Observaciones'];
-                                                                                                                                                                                                                                     '),c.observaciones||''].map(v=>`"${String(v||'').replace(/"/g,'""')}"`));
+  const rows=caps.map(c=>[c.nombre,GL(c.grupo),AL(c.area),c.tipo||'',c.fecha||'',munList(c),ipsList(c,5),c.asistentes||0,c.pretest||'',c.postest||'',c.cambio||'',c.resultado||'',c.actaEstado||'',(c.perfilesPoblacion||[]).join('; '),c.observaciones||''].map(v=>`"${String(v||'').replace(/"/g,'""')}"`));
   const csv=[cols.join(','),...rows.map(r=>r.join(','))].join('\n');
   const a=document.createElement('a');
   a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
@@ -2511,7 +1179,7 @@ function loadUsersAdmin() {
   // ── Queries SIN orderBy (evita índice compuesto en Firestore) ────────────
   // Se ordena en cliente por createdAt descendente
   function usersQuery(status) {
-
+    const base = collection(db,'users');
     if (CUD.role === 'admin')
       return query(base, where('status','==',status));
     if (CUD.role === 'coordinador')
@@ -2529,17 +1197,17 @@ function loadUsersAdmin() {
   const qPend = usersQuery('pending');
   if (qPend) {
     onSnapshot(qPend, snap => {
-
+      const users = sortU(snap.docs.map(d => ({id:d.id,...d.data()})));
       const cnt = users.length;
       const uc=$('u-pend-cnt'); if(uc) uc.textContent=cnt;
       const bu=$('badge-users'); if(bu) bu.textContent=cnt;
-                                  if(!tb) return;
+      const tb=$('u-pend-table'); if(!tb) return;
       if (!users.length) {
         tb.innerHTML='<tr class="erow"><td colspan="7">Sin solicitudes pendientes</td></tr>';
         return;
       }
       tb.innerHTML = users.map(u => {
-
+        const roles = assignableRoles();
         const roleOpts = roles.map(r =>
           `<option value="${r}">${{admin:'Administrador',coordinador:'Coordinador',gestor:'Gestor',contratista:'Contratista'}[r]||r}</option>`
         ).join('');
@@ -2565,14 +1233,14 @@ function loadUsersAdmin() {
   const qAct = usersQuery('active');
   if (qAct) {
     onSnapshot(qAct, snap => {
-
-                                   if(!tb) return;
+      const users = sortU(snap.docs.map(d => ({id:d.id,...d.data()})));
+      const tb=$('u-activ-table'); if(!tb) return;
       if (!users.length) {
         tb.innerHTML='<tr class="erow"><td colspan="7">Sin usuarios activos</td></tr>';
         return;
       }
       tb.innerHTML = users.map(u => {
-
+        const editable = canManageUser({...u, uid:u.id});
         const isSelf   = u.id === CU?.uid;
         return `<tr>
           <td><strong>${esc(u.name||'—')}</strong>${isSelf?'<span class="chip" style="margin-left:4px;background:#e8f8e8;color:#1E8449;font-size:9px">Yo</span>':''}</td>
@@ -2597,7 +1265,7 @@ function loadUsersAdmin() {
   if (qInac) {
     onSnapshot(qInac, snap => {
       const users = sortU(snap.docs.map(d => ({id:d.id,...d.data()})));
-                                  if(!tb) return;
+      const tb=$('u-inac-table'); if(!tb) return;
       if (!users.length) {
         tb.innerHTML='<tr class="erow"><td colspan="4">Sin usuarios inactivos</td></tr>';
         return;
@@ -2623,7 +1291,7 @@ function loadUsersAdmin() {
 
 // ── USER CRUD with RBAC validation ───────────────────────────────────────────
 async function fetchUser(uid) {
-
+  const snap = await getDoc(doc(db,'users',uid));
   return snap.exists() ? {id:snap.id,...snap.data()} : null;
 }
 
@@ -2633,7 +1301,7 @@ window.approveUser = async uid => {
   if (!assignableRoles().includes(role)) {
     toast('No tiene permiso para asignar el rol "' + role + '"', 'e'); return;
   }
-
+  const target = await fetchUser(uid);
   if (!target) { toast('Usuario no encontrado', 'e'); return; }
   if (!canManageUser({...target, uid, role:'pending'})) {
     toast('No tiene permiso para aprobar este usuario', 'e'); return;
@@ -2649,7 +1317,7 @@ window.approveUser = async uid => {
 };
 
 window.rejectUser = async uid => {
-
+  const target = await fetchUser(uid);
   if (target && !canManageUser({...target, uid})) {
     toast('No tiene permiso para rechazar este usuario', 'e'); return;
   }
@@ -2660,7 +1328,7 @@ window.rejectUser = async uid => {
 
 window.deactivateUser = async uid => {
   if (uid === CU?.uid) { toast('No puede desactivar su propia cuenta', 'e'); return; }
-
+  const target = await fetchUser(uid);
   if (!target) { toast('Usuario no encontrado', 'e'); return; }
   if (!canManageUser({...target, uid})) {
     toast('No tiene permiso para desactivar este usuario', 'e'); return;
@@ -2673,7 +1341,7 @@ window.deactivateUser = async uid => {
 };
 
 window.reactivateUser = async uid => {
-
+  const target = await fetchUser(uid);
   if (!target) { toast('Usuario no encontrado', 'e'); return; }
   if (!canManageUser({...target, uid})) {
     toast('No tiene permiso para reactivar este usuario', 'e'); return;
@@ -2687,7 +1355,7 @@ window.reactivateUser = async uid => {
 window.deleteUserPermanent = async uid => {
   if (CUD.role !== 'admin') { toast('Solo el administrador puede eliminar usuarios permanentemente', 'e'); return; }
   if (uid === CU?.uid) { toast('No puede eliminarse a sí mismo', 'e'); return; }
-
+  const target = await fetchUser(uid);
   if (!confirm('¿ELIMINAR PERMANENTEMENTE a ' + (target?.name||uid) + '?\nEsta acción no se puede deshacer.')) return;
   try { await deleteDoc(doc(db,'users',uid)); toast('Usuario eliminado permanentemente'); }
   catch(e) { toast('Error: '+e.message, 'e'); }
@@ -2697,12 +1365,12 @@ window.deleteUserPermanent = async uid => {
 // ── CREAR USUARIO (admin, coordinador, gestor según permisos) ────────────────
 window.openCreateUserModal = () => {
   if (!canCreate()) { toast('No tiene permiso para crear usuarios', 'e'); return; }
-                                  if(!m) return;
+  const m=$('modal-create-user'); if(!m) return;
   ['cu-name','cu-email','cu-pass'].forEach(id=>{const e=$(id);if(e)e.value='';});
   ['cu-rol','cu-grupo','cu-area'].forEach(id=>{const e=$(id);if(e)e.value='';});
 
   // Restrict grupo/area based on role
-
+  const grupoEl = $('cu-grupo');
   if (grupoEl) {
     if (CUD.role === 'admin') {
       grupoEl.innerHTML = '<option value="">Seleccione grupo</option>'
@@ -2717,7 +1385,7 @@ window.openCreateUserModal = () => {
       updateCUAreas();
       // Si es gestor, también fija el área
       if (CUD.role === 'gestor') {
-
+        const areaEl = $('cu-area');
         if (areaEl) {
           areaEl.innerHTML = `<option value="${CUD.area}">${AL(CUD.area)}</option>`;
           areaEl.disabled = true;
@@ -2728,23 +1396,23 @@ window.openCreateUserModal = () => {
   }
 
   // Restrict rol selector
-
+  const rolEl = $('cu-rol');
   if (rolEl) {
-
-
+    const roles = assignableRoles();
+    const labels = {admin:'Administrador',coordinador:'Coordinador',gestor:'Gestor (líder)',contratista:'Contratista'};
     rolEl.innerHTML = roles.map(r => `<option value="${r}">${labels[r]||r}</option>`).join('');
     rolEl.value = roles[0] || 'contratista';
   }
 
   window._cuPerfiles = [];
-
+  const cup=$('cu-perfiles-list');
   if(cup) cup.innerHTML = buildPerfilesHTML([], 'cu-perfiles-tags', 'onCUPerfilChange');
   const cupt=$('cu-perfiles-tags'); if(cupt) cupt.innerHTML='';
   m.classList.add('open');
 };
 
 window.updateCUAreas = () => {
-                         if(!el) return;
+  const el=$('cu-area'); if(!el) return;
   const g = $('cu-grupo')?.value || CUD.grupo || '';
   if (CUD.role === 'gestor') {
     el.innerHTML = `<option value="${CUD.area}">${AL(CUD.area)}</option>`;
@@ -2763,19 +1431,19 @@ window.onCUPerfilChange = cb => {
 };
 window.rmCUPerfil = p => {
   window._cuPerfiles = (window._cuPerfiles||[]).filter(x => x !== p);
-
+  const cb = document.querySelector(`#cu-perfiles-list input[value="${CSS.escape(p)}"]`);
   if(cb) cb.checked = false;
   renderPerfilesTags('cu-perfiles-tags', window._cuPerfiles||[], 'rmCUPerfil');
 };
 
 window.saveCreateUser = async () => {
   if (!canCreate()) { toast('Sin permiso para crear usuarios', 'e'); return; }
-
-
-
-
-
-
+  const name  = $('cu-name')?.value.trim();
+  const email = $('cu-email')?.value.trim();
+  const pass  = $('cu-pass')?.value;
+  const rol   = $('cu-rol')?.value || 'contratista';
+  const grupo = $('cu-grupo')?.value || CUD.grupo || '';
+  const area  = $('cu-area')?.value  || (CUD.role==='gestor'?CUD.area:'');
 
   // Validaciones
   if (!name)  { toast('El nombre es obligatorio', 'e'); return; }
@@ -2799,7 +1467,7 @@ window.saveCreateUser = async () => {
   }
 
   try {
-
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
     await setDoc(doc(db,'users',cred.user.uid), {
       name, email, role:rol, grupo, area,
       perfilesProfesionales: window._cuPerfiles || [],
@@ -2811,23 +1479,27 @@ window.saveCreateUser = async () => {
     toast('Usuario creado: ' + name + ' (' + rol + ')', 's');
     closeModal('modal-create-user');
   } catch(e) {
-
+    const msgs = {
+      'auth/email-already-in-use': 'Este correo ya está registrado en el sistema.',
+      'auth/weak-password': 'Contraseña demasiado débil.',
+      'auth/invalid-email': 'Formato de correo inválido.',
+    };
     toast(msgs[e.code] || 'Error: ' + e.message, 'e');
   }
 };
 
 // ── EDITAR USUARIO (modal reutilizado) ────────────────────────────────────────
 window.editUserModal = async uid => {
-
+  const target = await fetchUser(uid);
   if (!target) { toast('Usuario no encontrado', 'e'); return; }
   if (!canManageUser({...target, uid})) {
     toast('No tiene permiso para editar este usuario', 'e'); return;
   }
-                                  if(!m) return;
+  const m=$('modal-create-user'); if(!m) return;
 
   // Fill form
-                           if(en) en.value=target.name||'';
-                           if(ee){ee.value=target.email||'';ee.disabled=true;}
+  const en=$('cu-name');   if(en) en.value=target.name||'';
+  const ee=$('cu-email');  if(ee){ee.value=target.email||'';ee.disabled=true;}
   const ep=$('cu-pass');   if(ep){ep.value='';ep.placeholder='Dejar vacío = sin cambio';}
   const ttl=$('modal-create-user-ttl');
   if(ttl) ttl.textContent='Editar usuario';
@@ -2861,7 +1533,7 @@ window.editUserModal = async uid => {
   renderPerfilesTags('cu-perfiles-tags',window._cuPerfiles,'rmCUPerfil');
 
   // Change save button to update
-
+  const saveBtn=m.querySelector('.modal-foot .btn-red');
   if(saveBtn){
     saveBtn.textContent='Actualizar usuario';
     saveBtn.onclick=()=>updateUser(uid);
@@ -2872,11 +1544,11 @@ window.editUserModal = async uid => {
 window.updateUser = async uid => {
   const target = await fetchUser(uid);
   if(!target||!canManageUser({...target,uid})){toast('Sin permiso','e');return;}
-
-
-
-
-
+  const name  = $('cu-name')?.value.trim();
+  const pass  = $('cu-pass')?.value;
+  const rol   = $('cu-rol')?.value||target.role;
+  const grupo = $('cu-grupo')?.value||target.grupo;
+  const area  = $('cu-area')?.value||target.area;
   if(!name){toast('El nombre es obligatorio','e');return;}
   if(!assignableRoles().includes(rol)){toast('No puede asignar ese rol','e');return;}
   if(CUD.role==='coordinador'&&grupo!==CUD.grupo){toast('Solo puede editar usuarios de su grupo','e');return;}
@@ -2902,26 +1574,26 @@ window.updateUser = async uid => {
 // ── CARGA MASIVA USUARIOS (Excel) ──────────────────────────────────────────────
 window.onUsersExcelChange = async e => {
   if (!canCreate()) { toast('Sin permiso para crear usuarios', 'e'); return; }
-                                  if(!file) return;
-
+  const file = e.target.files[0]; if(!file) return;
+  const log=$('users-bulk-log');
   if(log){log.style.display='block';log.innerHTML='Leyendo archivo...<br>';}
   try {
-
+    const data = await file.arrayBuffer();
     if(!window.XLSX){toast('SheetJS no está cargado. Recargue la página.','e');return;}
-
-
-
+    const wb = window.XLSX.read(data);
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    const rows = window.XLSX.utils.sheet_to_json(ws,{defval:''});
     if(log) log.innerHTML+=`Filas encontradas: ${rows.length}<br>`;
-
+    let ok=0, errs=0, skipped=0;
     const myRoles = assignableRoles();
 
     for (const row of rows) {
-
-
-
-
-
-
+      const name   = (row['nombre_completo']||row['Nombre']||'').trim();
+      const email  = (row['correo']||row['Email']||'').trim();
+      const pass   = (row['contrasena']||row['contraseña']||row['Contraseña']||'IDS2026!').trim();
+      const rol    = (row['rol']||'contratista').toLowerCase().trim();
+      const grupo  = (row['grupo']||CUD.grupo||'').trim();
+      const area   = (row['area']||row['oficina']||CUD.area||'').trim();
       const perfil = String(row['perfil_profesional']||'').trim();
       const estado = (row['estado']||'active').toLowerCase().trim();
 
@@ -2951,7 +1623,7 @@ window.onUsersExcelChange = async e => {
 
       const finalPass = pass.length>=6 ? pass : 'IDS2026!';
       try {
-
+        const cred = await createUserWithEmailAndPassword(auth, email, finalPass);
         await setDoc(doc(db,'users',cred.user.uid), {
           name, email, role:rol, grupo, area,
           perfilesProfesionales: perfil ? [perfil] : [],
@@ -2978,7 +1650,7 @@ window.onUsersExcelChange = async e => {
 // ── CONFIGURACIÓN ─────────────────────────────────────────────────────────────
 function populateAdminSelects(){
   const munOpts='<option value="">Seleccione municipio...</option>'+MUN_LIST.map(m=>`<option value="${m.n}">${m.n}</option>`).join('');
-                               if(cm)cm.innerHTML=munOpts;
+  const cm=$('cfg-mun-filter');if(cm)cm.innerHTML=munOpts;
   const pm=$('pr-m');if(pm)pm.innerHTML=munOpts;
 }
 function populateMunFilters(){
@@ -2988,12 +1660,12 @@ function populateMunFilters(){
 
 window.loadPrestConfig=async()=>{
   const mun=$('cfg-mun-filter')?.value||'';
-                                if(!tb)return;
+  const tb=$('cfg-prest-table');if(!tb)return;
   if(!mun){tb.innerHTML='<tr class="erow"><td colspan="8">Seleccione un municipio</td></tr>';return;}
   tb.innerHTML='<tr><td colspan="8" class="ltxt">Cargando...</td></tr>';
   try{
-
-
+    const snap=await getDocs(query(collection(db,'prestadores'),where('municipio','==',mun)));
+    const list=snap.docs.map(d=>({id:d.id,...d.data()}));
     if(!list.length){tb.innerHTML='<tr class="erow"><td colspan="8">Sin prestadores</td></tr>';return;}
     tb.innerHTML=list.map(p=>`<tr>
       <td><strong>${esc(p.nombre_prestador||'')}</strong></td><td>${esc(p.nombre_sede||'—')}</td>
@@ -3013,7 +1685,7 @@ window.openPrestModal=()=>{
   $('modal-prest').classList.add('open');
 };
 window.savePrestador=async()=>{
-                                  const m=$('pr-m')?.value;
+  const n=$('pr-n')?.value.trim();const m=$('pr-m')?.value;
   if(!n||!m){toast('Complete nombre y municipio','e');return;}
   try{
     await addDoc(collection(db,'prestadores'),{
@@ -3035,21 +1707,21 @@ window.delPrestador=async id=>{
 
 // ── CARGA MASIVA PRESTADORES (Excel) ──────────────────────────────────────────
 window.onPrestExcelChange=async e=>{
-                               if(!file)return;
-
+  const file=e.target.files[0];if(!file)return;
+  const log=$('prest-bulk-log');
   if(log){log.style.display='block';log.innerHTML='Leyendo archivo...<br>';}
   try{
-
+    const data=await file.arrayBuffer();
     if(!window.XLSX){toast('SheetJS no está cargado','e');return;}
     const wb=window.XLSX.read(data);
     const ws=wb.Sheets[wb.SheetNames[0]];
     const rows=window.XLSX.utils.sheet_to_json(ws,{defval:''});
     if(log)log.innerHTML+=`Filas: ${rows.length}<br>`;
     // Dedup: check existing by nombre+municipio
-
+    let ok=0,dup=0,err=0;
     const CHUNK=400;
     for(let i=0;i<rows.length;i+=CHUNK){
-
+      const batch=writeBatch(db);
       const chunk=rows.slice(i,i+CHUNK);
       for(const row of chunk){
         const nombre=(row['nombre_prestador']||row['Nombre']||'').trim();
@@ -3083,7 +1755,7 @@ function renderTiposTable(){
   tb.innerHTML=tiposCap.map((t,i)=>`<tr><td>${esc(t)}</td><td><button class="btn btn-sm btn-danger" onclick="delTipoCap(${i})">×</button></td></tr>`).join('');
 }
 window.addTipoCap=async()=>{
-                                          if(!v){toast('Ingrese el tipo','e');return;}
+  const v=$('new-tipo-cap')?.value.trim();if(!v){toast('Ingrese el tipo','e');return;}
   if(tiposCap.includes(v)){toast('Ya existe','w');return;}
   tiposCap.push(v);
   try{await setDoc(doc(db,'tiposCap',encodeURIComponent(v)),{nombre:v});const nt=$('new-tipo-cap');if(nt)nt.value='';refreshTipos();renderTiposTable();toast('Tipo agregado','s');}
@@ -3095,8 +1767,8 @@ window.delTipoCap=async idx=>{
   refreshTipos();renderTiposTable();
 };
 window.saveMetas=async()=>{
-
-
+  const m=parseInt($('meta-mens')?.value)||2;
+  const p=parseInt($('meta-pct')?.value)||80;
   metas={mensual:m,pct:p};
   try{await setDoc(doc(db,'config','metas'),{mensual:m,pct:p,updatedAt:serverTimestamp()});toast('Metas guardadas','s');}
   catch(e){toast('Error: '+e.message,'e');}
@@ -3104,8 +1776,8 @@ window.saveMetas=async()=>{
 
 // ── SEED ──────────────────────────────────────────────────────────────────────
 window.seedMunicipios=async()=>{
-                          if(log){log.style.display='block';log.innerHTML='Iniciando...<br>';}
-
+  const log=$('seed-log');if(log){log.style.display='block';log.innerHTML='Iniciando...<br>';}
+  let n=0;
   for(const m of MUN_LIST){
     try{await setDoc(doc(db,'municipios',m.id||m.n),{nombre:m.n,codigo:m.id||'',createdAt:serverTimestamp()});n++;if(log){log.innerHTML+=`✓ ${esc(m.n)}<br>`;log.scrollTop=log.scrollHeight;}}
     catch(e){if(log){log.innerHTML+=`✗ ${esc(m.n)}: ${esc(e.message)}<br>`;log.scrollTop=log.scrollHeight;}}
@@ -3132,8 +1804,8 @@ window.seedTiposCap=async()=>{
 
 // ── AUTH ──────────────────────────────────────────────────────────────────────
 window.doLogin=async()=>{
-
-
+  const email=$('li-email')?.value.trim()||'';
+  const pass=$('li-pass')?.value||'';
   if(!email){showAuthMsg('li-msg','Ingrese su correo electrónico.','e');return;}
   if(!pass){showAuthMsg('li-msg','Ingrese su contraseña.','e');return;}
   if(email===ADMIN_EMAIL||email===TEST_EMAIL){
@@ -3142,16 +1814,16 @@ window.doLogin=async()=>{
   }
   try{await signInWithEmailAndPassword(auth,email,pass);}
   catch(e){
-
+    const msgs={'auth/invalid-credential':'Correo o contraseña incorrectos.','auth/user-not-found':'No existe cuenta con este correo.','auth/wrong-password':'Contraseña incorrecta.','auth/too-many-requests':'Demasiados intentos. Espere unos minutos.','auth/network-request-failed':'Error de red. Verifique su conexión.'};
     showAuthMsg('li-msg',msgs[e.code]||'Error: '+e.message,'e');
   }
 };
 window.doRegister=async()=>{
-
-
-
-
-
+  const name=$('rn')?.value.trim()||'';
+  const email=$('re')?.value.trim()||'';
+  const grupo=$('rg')?.value||'';
+  const area=$('ra')?.value||'';
+  const pass=$('rp')?.value||'';
   if(!name){showAuthMsg('reg-msg','Ingrese su nombre completo.','e');return;}
   if(!email){showAuthMsg('reg-msg','Ingrese su correo.','e');return;}
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showAuthMsg('reg-msg','Formato de correo inválido.','e');return;}
@@ -3159,7 +1831,7 @@ window.doRegister=async()=>{
   if(!area){showAuthMsg('reg-msg','Seleccione el área.','e');return;}
   if(pass.length<6){showAuthMsg('reg-msg','Mínimo 6 caracteres.','e');return;}
   try{
-
+    const cred=await createUserWithEmailAndPassword(auth,email,pass);
     await setDoc(doc(db,'users',cred.user.uid),{
       name,email,grupo,area,role:'contratista',
       perfilesProfesionales:[],
@@ -3168,10 +1840,10 @@ window.doRegister=async()=>{
     await signOut(auth);
     showAuthMsg('reg-msg','Solicitud enviada. Espere aprobación del administrador.','s');
     ['rn','re','rp'].forEach(id=>{const e=$(id);if(e)e.value='';});
-                     if(rg)rg.value='';
-                     if(ra)ra.innerHTML='<option value="">Seleccione área</option>';
+    const rg=$('rg');if(rg)rg.value='';
+    const ra=$('ra');if(ra)ra.innerHTML='<option value="">Seleccione área</option>';
   }catch(e){
-
+    const msgs={'auth/email-already-in-use':'Correo ya registrado.','auth/weak-password':'Contraseña muy débil.'};
     showAuthMsg('reg-msg',msgs[e.code]||'Error: '+e.message,'e');
   }
 };
@@ -3207,19 +1879,92 @@ window.switchTab=(btn,id)=>{
 // ══════════════════════════════════════════════════════════════════════════════
 
 // ── IMAGEN: base64 fallback (compatible con GitHub Pages) ────────────────────
-
-
+function imageToBase64_old_0(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result);
+    reader.onerror = () => reject(new Error('Error leyendo archivo'));
+    reader.readAsDataURL(file);
+  });
+}
+async function uploadImage_old_0(file, maxMB) {
+  if (!file) return null;
+  const max = (maxMB || 5) * 1024 * 1024;
+  if (file.size > max) { toast('Imagen máximo ' + (maxMB||5) + 'MB', 'e'); return null; }
+  const ok = ['image/jpeg','image/png','image/webp','image/gif'];
+  if (!ok.includes(file.type)) { toast('Formato no válido. Use JPG, PNG o WebP', 'e'); return null; }
+  return imageToBase64(file);
+}
 
 // ── PERFIL: actualizar topbar avatar ─────────────────────────────────────────
-
+function updateTopbarAvatar_old_0() {
+  if (!CUD || !CU) return;
+  const name = CUD.name || CU.email || 'U';
+  const initials = name.trim().split(/\s+/).map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
+  const tba = $('tb-avatar');
+  if (!tba) return;
+  if (CUD.photoURL) {
+    tba.innerHTML = `<img src="${CUD.photoURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+  } else {
+    tba.textContent = initials;
+  }
+}
 
 // ── PERFIL VIEW ───────────────────────────────────────────────────────────────
+let _epPerfiles_old_0 = [];
 
+function renderPerfilView_old_0() {
+  if (!CUD || !CU) return;
+  updateTopbarAvatar();
+  const name = CUD.name || CU.email || '—';
+  const initials = name.trim().split(/\s+/).map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
 
+  const pla = $('perfil-avatar-lg');
+  if (pla) {
+    if (CUD.photoURL) pla.innerHTML = `<img src="${CUD.photoURL}">`;
+    else pla.textContent = initials;
+  }
+  const pn=$('perfil-nombre'); if(pn) pn.textContent = name;
+  const pe=$('perfil-email');  if(pe) pe.textContent = CU.email || '—';
+  const pr=$('perfil-rol');    if(pr) pr.textContent = CUD.role  || '—';
+  const pg=$('perfil-grupo');  if(pg) pg.textContent = GL(CUD.grupo) || '—';
+
+  const piMap = {
+    'pi-nombre': name,
+    'pi-email' : CU.email || '—',
+    'pi-rol'   : CUD.role  || '—',
+    'pi-grupo' : GL(CUD.grupo) || '—',
+    'pi-area'  : AL(CUD.area)  || '—',
+    'pi-estado': CUD.status    || '—',
+  };
+  Object.entries(piMap).forEach(([id,val])=>{const el=$(id);if(el)el.textContent=val;});
+
+  const pp=$('pi-perfiles');
+  if (pp) {
+    const perfs = CUD.perfilesProfesionales || [];
+    pp.innerHTML = perfs.length
+      ? perfs.map(p=>`<span class="tag am">${esc(p)}</span>`).join('')
+      : '<span class="tg tsm">Sin perfiles asignados</span>';
+  }
+
+  const pcl=$('pi-caps-list');
+  if (pcl) {
+    const myCaps = allCaps.filter(c=>c.responsable===name||c.createdBy===CU.uid).slice(0,5);
+    if (myCaps.length) {
+      pcl.innerHTML = myCaps.map(c=>`<div style="padding:7px 0;border-bottom:1px solid var(--border)">
+        <strong style="font-size:12px">${esc(c.nombre)}</strong>
+        <span class="tg tsm"> · ${c.fecha||'—'}</span>
+        <span class="badge ${c.actaEstado==='Aprobada'?'bd':'bp'}" style="margin-left:6px">${c.actaEstado||'Pendiente'}</span>
+      </div>`).join('');
+    } else {
+      pcl.innerHTML = '<span class="tg tsm">No hay capacitaciones asignadas aún</span>';
+    }
+  }
+}
 
 window.uploadProfilePhoto = async e => {
-                                  if (!file) return;
-
+  const file = e.target.files[0]; if (!file) return;
+  const url = await uploadImage(file, 2);
   if (!url) return;
   try {
     await updateDoc(doc(db,'users',CU.uid), { photoURL:url, updatedAt:serverTimestamp() });
@@ -3231,9 +1976,9 @@ window.uploadProfilePhoto = async e => {
 };
 
 window.openEditPerfil = () => {
-                           if(en) en.value = CUD.name || '';
+  const en=$('ep-nombre'); if(en) en.value = CUD.name || '';
   _epPerfiles = [...(CUD.perfilesProfesionales||[])];
-
+  const pl=$('ep-perfiles-list');
   if (pl) pl.innerHTML = buildPerfilesHTML(_epPerfiles,'ep-perfiles-tags','onEpPerfilChange');
   renderPerfilesTags('ep-perfiles-tags', _epPerfiles, 'rmEpPerfil');
   $('modal-edit-perfil')?.classList.add('open');
@@ -3245,19 +1990,19 @@ window.onEpPerfilChange = cb => {
 };
 window.rmEpPerfil = p => {
   _epPerfiles = _epPerfiles.filter(x=>x!==p);
-
+  const cb = document.querySelector(`#ep-perfiles-list input[value="${CSS.escape(p)}"]`);
   if (cb) cb.checked = false;
   renderPerfilesTags('ep-perfiles-tags', _epPerfiles, 'rmEpPerfil');
 };
 window.saveEditPerfil = async () => {
-
+  const name = $('ep-nombre')?.value.trim();
   if (!name) { toast('El nombre es obligatorio','e'); return; }
   try {
     await updateDoc(doc(db,'users',CU.uid), {
       name, perfilesProfesionales:_epPerfiles, updatedAt:serverTimestamp()
     });
     CUD.name = name; CUD.perfilesProfesionales = _epPerfiles;
-                      if(un) un.textContent = name;
+    const un=$('un'); if(un) un.textContent = name;
     renderPerfilView();
     toast('Perfil actualizado', 's');
     closeModal('modal-edit-perfil');
@@ -3267,7 +2012,7 @@ window.saveEditPerfil = async () => {
 // ── CAMBIAR CONTRASEÑA ────────────────────────────────────────────────────────
 window.openChangePass = () => {
   ['cp-current','cp-new','cp-confirm'].forEach(id=>{ const e=$(id); if(e) e.value=''; });
-                       if(m){ m.className='auth-msg'; m.style.display='none'; }
+  const m=$('cp-msg'); if(m){ m.className='auth-msg'; m.style.display='none'; }
   $('modal-change-pass')?.classList.add('open');
 };
 
@@ -3276,7 +2021,7 @@ window.changePassword = async () => {
   const newpass  = $('cp-new')?.value     || '';
   const confirm  = $('cp-confirm')?.value || '';
   const showCpMsg = (msg,type) => {
-                          if(!el) return;
+    const el=$('cp-msg'); if(!el) return;
     el.textContent=msg; el.className='auth-msg '+type; el.style.display='block';
   };
   if (!current) { showCpMsg('Ingrese su contraseña actual','e'); return; }
@@ -3292,15 +2037,41 @@ window.changePassword = async () => {
     toast('Contraseña actualizada correctamente','s');
     closeModal('modal-change-pass');
   } catch(e) {
-
+    const msgs = {
+      'auth/wrong-password' :'Contraseña actual incorrecta.',
+      'auth/invalid-credential':'Contraseña actual incorrecta.',
+      'auth/too-many-requests':'Demasiados intentos. Espere.',
+      'auth/requires-recent-login':'Sesión expirada. Vuelva a iniciar sesión.',
+    };
     showCpMsg(msgs[e.code]||'Error: '+e.message, 'e');
   }
 };
 
 // ── FOOTER INSTITUCIONAL ──────────────────────────────────────────────────────
-
-
-
+async function loadFooterConfig_old_0() {
+  try {
+    const snap = await getDoc(doc(db,'config','footer'));
+    if (snap.exists()) applyFooterConfig(snap.data());
+  } catch(e) { console.warn('Footer config:', e.message); }
+}
+function applyFooterConfig_old_0(d) {
+  const map = {
+    'footer-brand'    : d.brand,
+    'footer-text'     : d.text,
+    'footer-phone-txt': d.phone,
+    'footer-email-txt': d.email,
+    'footer-extra'    : d.extra,
+  };
+  Object.entries(map).forEach(([id,val])=>{ const el=$(id); if(el&&val) el.textContent=val; });
+}
+function prefillFooterModal_old_0() {
+  [['fc-brand','footer-brand'],['fc-text','footer-text'],
+   ['fc-phone','footer-phone-txt'],['fc-email','footer-email-txt'],['fc-extra','footer-extra']
+  ].forEach(([inp,src])=>{
+    const el=$(inp), src_el=$(src);
+    if(el && src_el) el.value = src_el.textContent || '';
+  });
+}
 
 window.openModal = id => {
   if (id === 'modal-footer-config') prefillFooterModal();
@@ -3308,7 +2079,14 @@ window.openModal = id => {
 };
 
 window.saveFooterConfig = async () => {
-
+  const data = {
+    brand: $('fc-brand')?.value.trim() || 'IDS Norte de Santander',
+    text : $('fc-text')?.value.trim()  || 'Observatorio Departamental de Salud',
+    phone: $('fc-phone')?.value.trim() || '',
+    email: $('fc-email')?.value.trim() || '',
+    extra: $('fc-extra')?.value.trim() || 'v3.0 · 2026',
+    updatedAt: serverTimestamp()
+  };
   try {
     await setDoc(doc(db,'config','footer'), data);
     applyFooterConfig(data);
@@ -3327,12 +2105,12 @@ window.saveCreateUser = async function() {
   // We call the same validation logic but intercept the auth call
 
   if (!canCreate()) { toast('Sin permiso para crear usuarios','e'); return; }
-
-
-
+  const name  = $('cu-name')?.value.trim();
+  const email = $('cu-email')?.value.trim();
+  const pass  = $('cu-pass')?.value || '';
   const rol   = $('cu-rol')?.value  || 'contratista';
-
-
+  const grupo = $('cu-grupo')?.value || CUD.grupo || '';
+  const area  = $('cu-area')?.value  || (CUD.role==='gestor'?CUD.area:'');
 
   if (!name)  { toast('El nombre es obligatorio','e'); return; }
   if (!email) { toast('El correo es obligatorio','e'); return; }
@@ -3351,7 +2129,7 @@ window.saveCreateUser = async function() {
       = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
     const _app2  = _initApp(FB_CONFIG, 'cu_' + Date.now());
     const _auth2 = _getAuth(_app2);
-
+    const cred   = await _createUser(_auth2, email, pass);
     await setDoc(doc(db,'users',cred.user.uid), {
       name, email, role:rol, grupo, area,
       perfilesProfesionales: window._cuPerfiles || [],
@@ -3364,7 +2142,10 @@ window.saveCreateUser = async function() {
     toast('Usuario creado: '+name+' ('+rol+')', 's');
     closeModal('modal-create-user');
   } catch(e) {
-
+    const msgs = {
+      'auth/email-already-in-use': 'Este correo ya está registrado.',
+      'auth/weak-password': 'Contraseña muy débil.',
+    };
     toast(msgs[e.code] || 'Error: '+e.message, 'e');
   }
 };
@@ -3372,7 +2153,7 @@ window.saveCreateUser = async function() {
 // ── doRegister: también usa app secundaria ────────────────────────────────────
 const __origDoRegister = window.doRegister;
 window.doRegister = async function() {
-
+  const name  = $('rn')?.value.trim() || '';
   const email = $('re')?.value.trim() || '';
   const grupo = $('rg')?.value || '';
   const area  = $('ra')?.value || '';
@@ -3389,7 +2170,7 @@ window.doRegister = async function() {
       = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
     const _app = _ia(FB_CONFIG, 'reg_' + Date.now());
     const _ath = _ga(_app);
-
+    const cred = await _cu(_ath, email, pass);
     await setDoc(doc(db,'users',cred.user.uid), {
       name, email, grupo, area, role:'contratista',
       perfilesProfesionales:[], status:'pending', createdAt:serverTimestamp()
@@ -3400,20 +2181,41 @@ window.doRegister = async function() {
     const rg=$('rg'); if(rg) rg.value='';
     const ra=$('ra'); if(ra) ra.innerHTML='<option value="">Seleccione área</option>';
   } catch(e) {
-
+    const msgs = {'auth/email-already-in-use':'Correo ya registrado.','auth/weak-password':'Contraseña débil.'};
     showAuthMsg('reg-msg', msgs[e.code]||'Error: '+e.message, 'e');
   }
 };
 
 // ── IPS desde Firestore (con cache) ──────────────────────────────────────────
-
-
+const _ipsCache_old_0 = {};
+async function getIPSForMun_old_0(munName) {
+  if (_ipsCache[munName]) return _ipsCache[munName];
+  try {
+    const q = query(collection(db,'prestadores'), where('municipio','==',munName));
+    const snap = await getDocs(q);
+    const list = snap.docs.map(d => ({
+      n: d.data().nombre_prestador || '',
+      nat: d.data().naturaleza || '',
+      ese: d.data().ese || 'NO',
+    })).filter(p=>p.n);
+    // Merge with embedded data
+    const embedded = PRES[munName.normalize('NFC').trim()] || [];
+    const seen = new Set();
+    const merged = [...list, ...embedded].filter(p=>{ if(!p.n||seen.has(p.n))return false;seen.add(p.n);return true; });
+    _ipsCache[munName] = merged;
+    return merged;
+  } catch(e) {
+    const embedded = PRES[munName.normalize('NFC').trim()] || [];
+    _ipsCache[munName] = embedded;
+    return embedded;
+  }
+}
 
 async function buildIPSDDAsync(ddId, selArr, munArr, onSelectFn, q='') {
   const dd=$(ddId); if(!dd) return;
   const allProm = munArr.map(m => getIPSForMun(m.n||m));
   const allLists = await Promise.all(allProm);
-
+  const all = allLists.flat();
   const res = (q ? all.filter(p=>p.n.toLowerCase().includes(q.toLowerCase())) : all).slice(0,30);
   if (!res.length) {
     dd.innerHTML=`<div class="ta-empty">${all.length?'Sin resultados':'Seleccione municipio primero'}</div>`;
@@ -3445,7 +2247,11 @@ window.showView = v => {
 };
 
 // ── INIT: called after setupApp ───────────────────────────────────────────────
-
+async function postSetupInit_old_0() {
+  await loadFooterConfig();
+  updateTopbarAvatar();
+  renderPerfilView();
+}
 
 
 
@@ -3476,8 +2282,8 @@ async function uploadImage(file,maxMB){
 // ── PERFIL avatar topbar ──────────────────────────────────────────────────────
 function updateTopbarAvatar(){
   if(!CUD||!CU)return;
-
-
+  const name=CUD.name||CU.email||'U';
+  const ini=name.trim().split(/\s+/).map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
   const tba=$('tb-avatar');if(!tba)return;
   if(CUD.photoURL)tba.innerHTML=`<img src="${CUD.photoURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
   else tba.textContent=ini;
@@ -3488,7 +2294,7 @@ let _epPerfiles=[];
 function renderPerfilView(){
   if(!CUD||!CU)return;
   updateTopbarAvatar();
-
+  const name=CUD.name||CU.email||'—';
   const ini=name.trim().split(/\s+/).map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
   const pla=$('perfil-avatar-lg');
   if(pla){if(CUD.photoURL)pla.innerHTML=`<img src="${CUD.photoURL}">`;else pla.textContent=ini;}
@@ -3513,7 +2319,7 @@ function renderPerfilView(){
   renderFirmaActual();
 }
 window.uploadProfilePhoto=async e=>{
-                               if(!file)return;
+  const file=e.target.files[0];if(!file)return;
   const url=await uploadImage(file,2);if(!url)return;
   try{await updateDoc(doc(db,'users',CU.uid),{photoURL:url,updatedAt:serverTimestamp()});CUD.photoURL=url;renderPerfilView();toast('Foto actualizada','s');}
   catch(ex){toast('Error: '+ex.message,'e');}
@@ -3565,7 +2371,7 @@ window.changePassword=async()=>{
 // ── FIRMA DIGITAL ─────────────────────────────────────────────────────────────
 let _firmaDraw=false,_firmaCtx=null;
 function renderFirmaActual(){
-                                                       if(!box)return;
+  const box=$('firma-actual'),btn=$('btn-clear-firma');if(!box)return;
   if(CUD?.firma){
     box.innerHTML=`<img src="${CUD.firma}" style="max-width:100%;max-height:80px;object-fit:contain;padding:6px">`;
     if(btn)btn.style.display='inline-flex';
@@ -3578,7 +2384,7 @@ async function saveFirmaDB(b64){
   try{
     await updateDoc(doc(db,'users',CU.uid),{firma:b64,updatedAt:serverTimestamp()});
     CUD.firma=b64;renderFirmaActual();toast('Firma guardada','s');
-                                   if(cb)cb.style.display='none';
+    const cb=$('firma-canvas-box');if(cb)cb.style.display='none';
   }catch(e){toast('Error: '+e.message,'e');}
 }
 window.uploadFirma=async e=>{const f=e.target.files[0];if(!f)return;const b=await uploadImage(f,2);if(b)await saveFirmaDB(b);e.target.value='';};
@@ -3613,7 +2419,7 @@ window.onListaImageChange=async e=>{
 window.clearListaImage=()=>{
   _listaImg64=null;
   const p=$('lista-img-preview');if(p)p.style.display='none';
-                              if(n)n.textContent='';
+  const n=$('lista-img-name');if(n)n.textContent='';
 };
 
 // Patch saveCap para incluir listaImg
@@ -3634,8 +2440,8 @@ async function getIPSForMun(munName){
   try{
     const q2=query(collection(db,'prestadores'),where('municipio','==',munName));
     const snap=await getDocs(q2);
-
-
+    const list=snap.docs.map(d=>({n:d.data().nombre_prestador||'',nat:d.data().naturaleza||'',ese:d.data().ese||'NO'})).filter(p=>p.n);
+    const emb=PRES[munName.normalize('NFC').trim()]||[];
     const seen=new Set();
     const merged=[...list,...emb].filter(p=>{if(!p.n||seen.has(p.n))return false;seen.add(p.n);return true;});
     _ipsCache[munName]=merged;return merged;
@@ -3671,7 +2477,7 @@ window.filterIPSCheckboxes=(inp,listId)=>{
   });
 };
 window.onIPSPlanChange=cb=>{
-
+  const n=cb.value,nat=cb.dataset.nat||'',ese=cb.dataset.ese||'NO';
   if(cb.checked){if(!selPIPS.some(x=>x.n===n))selPIPS.push({n,nat,ese});}
   else selPIPS=selPIPS.filter(x=>x.n!==n);
   renderTags('ips-tags',selPIPS,'rmPIPS');
@@ -3679,11 +2485,11 @@ window.onIPSPlanChange=cb=>{
 window.rmPIPS=n=>{
   selPIPS=selPIPS.filter(x=>x.n!==n);
   renderTags('ips-tags',selPIPS,'rmPIPS');
-
+  const cb=document.querySelector('#plan-ips-list-inner input[value="'+CSS.escape(n)+'"]');
   if(cb)cb.checked=false;
 };
 window.onIPSCapChange=cb=>{
-
+  const n=cb.value,nat=cb.dataset.nat||'',ese=cb.dataset.ese||'NO';
   if(cb.checked){if(!selCIPS.some(x=>x.n===n))selCIPS.push({n,nat,ese});}
   else selCIPS=selCIPS.filter(x=>x.n!==n);
   renderTags('cips-tags',selCIPS,'rmCIPS');
@@ -3691,17 +2497,17 @@ window.onIPSCapChange=cb=>{
 window.rmCIPS=n=>{
   selCIPS=selCIPS.filter(x=>x.n!==n);
   renderTags('cips-tags',selCIPS,'rmCIPS');
-
+  const cb=document.querySelector('#cap-ips-list-inner input[value="'+CSS.escape(n)+'"]');
   if(cb)cb.checked=false;
 };
 async function refreshPlanIPSList(){
-                              if(!el)return;
+  const el=$('plan-ips-list');if(!el)return;
   el.innerHTML='<div class="tg tsm" style="padding:8px">Cargando...</div>';
   el.innerHTML=await buildIPSCheckboxHTML(selPIPS,'plan-ips-list','onIPSPlanChange',selPMuns);
   selPIPS.forEach(p=>{const cb=document.querySelector('#plan-ips-list-inner input[value="'+CSS.escape(p.n)+'"]');if(cb)cb.checked=true;});
 }
 async function refreshCapIPSList(){
-                             if(!el)return;
+  const el=$('cap-ips-list');if(!el)return;
   el.innerHTML='<div class="tg tsm" style="padding:8px">Cargando...</div>';
   el.innerHTML=await buildIPSCheckboxHTML(selCIPS,'cap-ips-list','onIPSCapChange',selCMuns);
   selCIPS.forEach(p=>{const cb=document.querySelector('#cap-ips-list-inner input[value="'+CSS.escape(p.n)+'"]');if(cb)cb.checked=true;});
@@ -3717,7 +2523,7 @@ window.onMunPlanChange=cb=>{
     refreshPlanIPSList();
   }else{
     if(ig)ig.style.display='none';
-                                if(el)el.innerHTML='<div class="tg tsm" style="padding:8px">Seleccione municipio(s)</div>';
+    const el=$('plan-ips-list');if(el)el.innerHTML='<div class="tg tsm" style="padding:8px">Seleccione municipio(s)</div>';
   }
 };
 const __omcOrig=window.onMunCapChange;
@@ -3729,7 +2535,7 @@ window.onMunCapChange=cb=>{
     refreshCapIPSList();
   }else{
     if(cg)cg.style.display='none';
-                               if(el)el.innerHTML='<div class="tg tsm" style="padding:8px">Seleccione municipio(s)</div>';
+    const el=$('cap-ips-list');if(el)el.innerHTML='<div class="tg tsm" style="padding:8px">Seleccione municipio(s)</div>';
   }
 };
 
@@ -3800,7 +2606,7 @@ function canSeeRecord(rec) {
 // Reemplaza buildQ para garantizar filtros correctos
 const _buildQOrig = window.buildQ || function(){};
 function buildQ(col) {
-
+  const base = collection(db, col);
   if (CUD.role === 'contratista') {
     return query(base, where('createdBy','==',CU.uid), orderBy('createdAt','desc'));
   }
@@ -3816,95 +2622,540 @@ function buildQ(col) {
 // Patch subscribeCaps con la nueva buildQ
 const _origUnsubCaps = window.unsubCaps;
 function subscribeCapsPatched() {
-  if (window.unsubCaps) {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  if (window.unsubCaps) { try { window.unsubCaps(); } catch {} }
+  window.unsubCaps = onSnapshot(buildQ('capacitaciones'), snap => {
+    allCaps = snap.docs.map(d => ({id:d.id,...d.data()}));
+    renderCaps(); renderDash(); renderInformes(); renderActas(); checkAlerts();
+    renderCalendario();
+    const n = allCaps.filter(c => c.actaEstado !== 'Aprobada').length;
+    const be = $('badge-exec'); if (be) { be.textContent = n; be.style.display = n ? 'inline-block' : 'none'; }
+    checkNewNotifications();
+  }, e => console.error('caps:', e));
+}
+
+function subscribePlansPatched() {
+  if (window.unsubPlans) { try { window.unsubPlans(); } catch {} }
+  window.unsubPlans = onSnapshot(buildQ('planeaciones'), snap => {
+    allPlans = snap.docs.map(d => ({id:d.id,...d.data()}));
+    renderPlan(); renderDash(); renderCalendario();
+    checkNewNotifications();
+  }, e => console.error('plans:', e));
+}
+
+// subscribeUsers: filtrado por rol también
+function subscribeUsersPatched() {
+  let q;
+  const base = collection(db,'users');
+  if (CUD.role === 'admin') {
+    q = query(base, where('status','==','active'));
+  } else if (CUD.role === 'coordinador') {
+    q = query(base, where('status','==','active'), where('grupo','==',CUD.grupo));
+  } else if (CUD.role === 'gestor') {
+    q = query(base, where('status','==','active'), where('area','==',CUD.area));
+  } else {
+    // contratista: solo si mismo
+    allUsers = CUD ? [CUD] : [];
+    return;
+  }
+  onSnapshot(q, snap => {
+    allUsers = snap.docs.map(d => ({id:d.id,...d.data()}));
+  }, e => console.error('users:', e));
+}
+
+// ── 2. FILTROS EN DASHBOARDS POR ROL ─────────────────────────────────────────
+// Ocultar filtros de grupo/área para roles no-admin
+function applyRoleFiltersUI() {
+  if (!CUD) return;
+  // Filtros de grupo: solo admin los ve completos
+  const fcGrupo = $('fc-grupo');
+  if (fcGrupo) {
+    if (CUD.role === 'admin') {
+      fcGrupo.disabled = false;
+    } else if (CUD.role === 'coordinador') {
+      fcGrupo.value = CUD.grupo; fcGrupo.disabled = true;
+    } else if (CUD.role === 'gestor') {
+      fcGrupo.value = CUD.grupo; fcGrupo.disabled = true;
+    } else {
+      fcGrupo.value = CUD.grupo; fcGrupo.disabled = true;
+    }
+  }
+  const fcArea = $('fc-area');
+  if (fcArea) {
+    if (CUD.role === 'gestor') {
+      // filter to just their area
+    } else if (CUD.role === 'contratista') {
+      // no cross-area
+    }
+  }
+  // Informes
+  const infGrupo = $('inf-grupo');
+  if (infGrupo && CUD.role !== 'admin') {
+    if (CUD.role === 'coordinador') {
+      infGrupo.value = CUD.grupo === 'atencion' ? 'atencion' : 'salud_publica';
+      infGrupo.disabled = true;
+    } else if (['gestor','contratista'].includes(CUD.role)) {
+      infGrupo.value = CUD.grupo === 'atencion' ? 'atencion' : 'salud_publica';
+      infGrupo.disabled = true;
+    }
+  }
+}
+
+// ── 3. TIPO DE ENTIDAD / POBLACIÓN OBJETIVO ───────────────────────────────────
+const TIPO_ENTIDAD_OPTS = [
+  { v:'entidad_municipal',    l:'Entidad municipal (Alcaldía, Secretaría de Salud, etc.)' },
+  { v:'red_prestadora',       l:'Red prestadora de servicios (IPS)' },
+  { v:'otra_entidad',         l:'Otro tipo de entidad (ONG, Universidad, Fundación, etc.)' },
+  { v:'comunidad_general',    l:'Comunidad general' },
+];
+
+// Perfiles disponibles según tipo de entidad
+const PERFILES_POR_ENTIDAD = {
+  entidad_municipal: [
+    'Alcalde/Secretario de Salud','Funcionario municipal','Técnico en salud pública',
+    'Gestor administrativo','Inspector sanitario',
+  ],
+  red_prestadora: [
+    'Médico','Enfermero/a','Bacteriólogo/a','Odontólogo/a','Nutricionista',
+    'Fisioterapeuta','Auxiliar de enfermería','Regente de farmacia','Director IPS',
+    'Coordinador de calidad',
+  ],
+  otra_entidad: [
+    'Docente universitario','Investigador','Líder comunitario','Gestor ONG',
+    'Representante de fundación','Profesional universitario',
+  ],
+  comunidad_general: [
+    'Paciente','Cuidador familiar','Comunidad rural','Comunidad urbana',
+    'Representante de veeduría','Líder de JAC',
+  ],
+};
+
+function buildTipoEntidadHTML(selectedVal) {
+  return `<div class="fgroup" id="tipo-entidad-grp">
+    <label>Tipo de entidad / Población objetivo <span class="req">*</span>
+      <span class="hint">— Seleccione para filtrar perfiles disponibles</span>
+    </label>
+    <select id="tipo-entidad-sel" onchange="onTipoEntidadChange(this.value,'${selectedVal?'plan':'cap'}')"
+      style="width:100%;padding:9px 12px;border:1.5px solid var(--border-strong);border-radius:var(--r-sm);font-size:13px;font-family:var(--font)">
+      <option value="">Seleccione tipo de entidad...</option>
+      ${TIPO_ENTIDAD_OPTS.map(o=>`<option value="${o.v}"${o.v===selectedVal?' selected':''}>${o.l}</option>`).join('')}
+    </select>
+  </div>`;
+}
+
+window.onTipoEntidadChange = (val, ctx) => {
+  const perfiles = PERFILES_POR_ENTIDAD[val] || [];
+  // Update perfiles list in plan or cap modal
+  const listId  = ctx === 'plan' ? 'perfiles-plan-list' : 'perfiles-cap-list';
+  const tagsId  = ctx === 'plan' ? 'perfiles-plan-tags' : 'perfiles-cap-tags';
+  const changeFn= ctx === 'plan' ? 'onPerfilPlanChange'  : 'onPerfilCapChange';
+  const el = $(listId);
+  if (!el) return;
+  // Show IPS section only for red_prestadora
+  const ipsGrp = ctx === 'plan' ? $('ips-grp') : $('cips-grp');
+  if (ipsGrp) ipsGrp.style.display = val === 'red_prestadora' ? 'block' : 'none';
+  // Build dynamic perfiles
+  if (!perfiles.length) { el.innerHTML = '<span class="tg tsm">Seleccione tipo de entidad para ver perfiles</span>'; return; }
+  el.innerHTML = `<div style="border:1.5px solid var(--border-strong);border-radius:var(--r-sm);background:var(--white);max-height:140px;overflow-y:auto;padding:4px 8px">
+    ${perfiles.map(p => {
+      const checked = (ctx==='plan'?selPerfilesPlan:selPerfilesCap||[]).includes(p);
+      return `<label style="display:flex;align-items:center;gap:6px;padding:2px 0;cursor:pointer;font-size:12px">
+        <input type="checkbox" value="${esc(p)}" ${checked?'checked':''} onchange="${changeFn}(this)">
+        <span>${esc(p)}</span>
+      </label>`;
+    }).join('')}
+  </div>`;
+};
+
+// Variables globales de perfiles
+let selPerfilesPlan = [];
+let selPerfilesCap  = [];
+
+window.onPerfilPlanChange = cb => {
+  if (cb.checked) { if (!selPerfilesPlan.includes(cb.value)) selPerfilesPlan.push(cb.value); }
+  else selPerfilesPlan = selPerfilesPlan.filter(p => p !== cb.value);
+  renderPerfilesTags('perfiles-plan-tags', selPerfilesPlan, 'rmPerfilPlan');
+};
+window.rmPerfilPlan = p => {
+  selPerfilesPlan = selPerfilesPlan.filter(x => x !== p);
+  const cb = document.querySelector(`#perfiles-plan-list input[value="${CSS.escape(p)}"]`);
+  if (cb) cb.checked = false;
+  renderPerfilesTags('perfiles-plan-tags', selPerfilesPlan, 'rmPerfilPlan');
+};
+window.onPerfilCapChange = cb => {
+  if (cb.checked) { if (!selPerfilesCap.includes(cb.value)) selPerfilesCap.push(cb.value); }
+  else selPerfilesCap = selPerfilesCap.filter(p => p !== cb.value);
+  renderPerfilesTags('perfiles-cap-tags', selPerfilesCap, 'rmPerfilCap');
+};
+window.rmPerfilCap = p => {
+  selPerfilesCap = selPerfilesCap.filter(x => x !== p);
+  const cb = document.querySelector(`#perfiles-cap-list input[value="${CSS.escape(p)}"]`);
+  if (cb) cb.checked = false;
+  renderPerfilesTags('perfiles-cap-tags', selPerfilesCap, 'rmPerfilCap');
+};
+
+// Inject tipo-entidad field into plan and cap modals after DOM is ready
+function injectTipoEntidadFields() {
+  // Plan modal: insert after municipios group
+  const planMunGrp = document.querySelector('#modal-plan .fgroup:has(#plan-ips-list), #modal-plan [id="ips-grp"]');
+  const planTipoExists = document.getElementById('tipo-entidad-plan-wrap');
+  if (!planTipoExists) {
+    const planModal = document.getElementById('modal-plan');
+    if (planModal) {
+      const ipsGrp = planModal.querySelector('#ips-grp') || planModal.querySelector('[id*="ips"]');
+      const wrap = document.createElement('div');
+      wrap.id = 'tipo-entidad-plan-wrap';
+      wrap.innerHTML = buildTipoEntidadHTML('').replace("'cap'", "'plan'").replace("'plan'", "'plan'");
+      if (ipsGrp) ipsGrp.parentNode.insertBefore(wrap, ipsGrp);
+    }
+  }
+  // Perfiles fields in cap modal
+  const capTipoExists = document.getElementById('tipo-entidad-cap-wrap');
+  if (!capTipoExists) {
+    const capModal = document.getElementById('modal-cap');
+    if (capModal) {
+      const cipsGrp = capModal.querySelector('#cips-grp');
+      const wrap = document.createElement('div');
+      wrap.id = 'tipo-entidad-cap-wrap';
+      wrap.innerHTML = buildTipoEntidadHTML('');
+      if (cipsGrp) cipsGrp.parentNode.insertBefore(wrap, cipsGrp);
+    }
+  }
+}
+
+// ── 4. MÓDULO DE NOTIFICACIONES ───────────────────────────────────────────────
+let _notifList = [];
+let _lastNotifCheck = Date.now();
+
+function buildNotifFromData() {
+  const notifs = [];
+  const now = Date.now();
+  // Actas pendientes de aprobación
+  allCaps.filter(c => c.actaEstado !== 'Aprobada').forEach(c => {
+    if (canSeeRecord(c)) {
+      notifs.push({
+        id: 'acta_' + c.id,
+        type: 'acta',
+        icon: '📋',
+        title: 'Acta pendiente de aprobación',
+        body: `"${c.nombre}" — ${c.fecha || 'sin fecha'}`,
+        ts: c.createdAt?.toDate?.()?.getTime() || now,
+        new: (c.createdAt?.toDate?.()?.getTime() || 0) > _lastNotifCheck,
+        action: () => { showView('actas'); },
+      });
+    }
+  });
+  // Planeaciones sin ejecutar
+  const planIds = new Set(allCaps.filter(c=>c.planRefId).map(c=>c.planRefId));
+  allPlans.filter(p => !planIds.has(p.id) && canSeeRecord(p)).forEach(p => {
+    notifs.push({
+      id: 'plan_' + p.id,
+      type: 'plan',
+      icon: '📅',
+      title: 'Planeación sin ejecutar',
+      body: `"${p.nombre || p.tema || 'Sin nombre'}" — ${p.fechaProg || p.mes || ''}`,
+      ts: p.createdAt?.toDate?.()?.getTime() || now,
+      new: (p.createdAt?.toDate?.()?.getTime() || 0) > _lastNotifCheck,
+      action: () => { showView('plan'); },
+    });
+  });
+  // Usuarios pendientes (admin/coordinador/gestor)
+  if (['admin','coordinador','gestor'].includes(CUD?.role)) {
+    const pend = allUsers.filter(u => u.status === 'pending').length;
+    if (pend > 0) {
+      notifs.push({
+        id: 'users_pend',
+        type: 'user',
+        icon: '👤',
+        title: `${pend} solicitud(es) de usuario pendiente(s)`,
+        body: 'Revise el módulo de Usuarios para aprobar o rechazar.',
+        ts: now,
+        new: pend > 0,
+        action: () => { showView('usuarios'); },
+      });
+    }
+  }
+  return notifs.sort((a,b) => b.ts - a.ts);
+}
+
+function renderNotifView() {
+  const list = $('notif-list');
+  if (!list) return;
+  const notifs = buildNotifFromData();
+  _notifList = notifs;
+  if (!notifs.length) {
+    list.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted)">
+      <div style="font-size:32px;margin-bottom:8px">🔔</div>
+      <div>No hay notificaciones</div>
+    </div>`;
+    return;
+  }
+  list.innerHTML = notifs.map(n => `<div onclick="${n.action?'('+n.action.toString()+')()':''}" style="display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--white);border-radius:var(--r);border:1px solid ${n.new?'var(--red-l)':'var(--border)'};cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='${n.new?'var(--red-l)':'var(--border)'}'">
+    <div style="font-size:24px;flex-shrink:0">${n.icon}</div>
+    <div style="flex:1">
+      <div style="font-weight:600;font-size:13px;color:var(--text-primary)">${n.title}${n.new?'<span style="margin-left:8px;background:var(--red);color:white;font-size:9px;font-weight:700;padding:2px 6px;border-radius:20px;vertical-align:middle">NUEVO</span>':''}</div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:2px">${esc(n.body)}</div>
+      <div style="font-size:10px;color:var(--text-muted);margin-top:4px">${new Date(n.ts).toLocaleString('es-CO')}</div>
+    </div>
+  </div>`).join('');
+}
+
+function checkNewNotifications() {
+  const notifs = buildNotifFromData();
+  const newCount = notifs.filter(n => n.new).length;
+  const badge = $('badge-notif');
+  if (badge) {
+    badge.textContent = newCount;
+    badge.style.display = newCount > 0 ? 'inline-block' : 'none';
+  }
+}
+
+window.markNotifRead = () => {
+  _lastNotifCheck = Date.now();
+  const badge = $('badge-notif');
+  if (badge) badge.style.display = 'none';
+  renderNotifView();
+};
+
+// ── 5. CALENDARIO OPERATIVO ───────────────────────────────────────────────────
+const DIAS_SEMANA = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+
+window.renderCalendario = () => {
+  const grid = $('calendario-grid');
+  const eventos = $('calendario-eventos');
+  if (!grid) return;
+
+  const mesNombre = $('cal-mes')?.value || MESES[new Date().getMonth()];
+  const mesIdx = MESES.indexOf(mesNombre);
+  const año = new Date().getFullYear();
+  const primerDia = new Date(año, mesIdx, 1).getDay();
+  const diasMes = new Date(año, mesIdx + 1, 0).getDate();
+
+  // Recopilar eventos del mes para el rol actual
+  const evts = [
+    ...allCaps.filter(c => canSeeRecord(c) && c.mes === mesNombre).map(c => ({
+      fecha: c.fecha, tipo: 'cap', nombre: c.nombre, area: AL(c.area), id: c.id,
+    })),
+    ...allPlans.filter(p => canSeeRecord(p) && (p.mes === mesNombre || (p.fechaProg || '').includes(`-${String(mesIdx+1).padStart(2,'0')}-`))).map(p => ({
+      fecha: p.fechaProg || '', tipo: 'plan', nombre: p.nombre || p.tema || 'Planeación', area: AL(p.area), id: p.id,
+    })),
+  ];
+
+  // Build calendar
+  let html = DIAS_SEMANA.map(d => `<div style="text-align:center;font-size:11px;font-weight:700;color:var(--text-secondary);padding:4px 0">${d}</div>`).join('');
+  for (let i = 0; i < primerDia; i++) {
+    html += `<div style="min-height:60px;background:var(--slate-50);border-radius:var(--r-sm);border:1px solid var(--border)"></div>`;
+  }
+  for (let d = 1; d <= diasMes; d++) {
+    const fechaStr = `${año}-${String(mesIdx+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayEvts = evts.filter(e => e.fecha === fechaStr);
+    const isToday = new Date().getDate() === d && new Date().getMonth() === mesIdx && new Date().getFullYear() === año;
+    html += `<div style="min-height:60px;background:var(--white);border-radius:var(--r-sm);border:1.5px solid ${isToday?'var(--red)':'var(--border)'};padding:4px;overflow:hidden">
+      <div style="font-size:11px;font-weight:${isToday?'700':'500'};color:${isToday?'var(--red)':'var(--text-secondary)'};margin-bottom:2px">${d}</div>
+      ${dayEvts.map(e => `<div title="${esc(e.nombre)}" style="background:${e.tipo==='cap'?'var(--blue-l)':'var(--amber-l)'};color:${e.tipo==='cap'?'var(--blue)':'var(--amber)'};font-size:9px;border-radius:3px;padding:1px 4px;margin-bottom:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer" onclick="verActa('${e.id}')">${e.tipo==='cap'?'●':'○'} ${esc(e.nombre)}</div>`).join('')}
+    </div>`;
+  }
+  grid.innerHTML = html;
+
+  // Events list below
+  if (eventos) {
+    const sorted = [...evts].sort((a,b) => (a.fecha||'').localeCompare(b.fecha||''));
+    events.innerHTML = sorted.length
+      ? `<div style="font-weight:600;font-size:13px;margin-bottom:8px;color:var(--text-secondary)">Actividades en ${mesNombre}</div>`
+        + sorted.map(e => `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--white);border-radius:var(--r-sm);border:1px solid var(--border);margin-bottom:4px">
+          <span style="background:${e.tipo==='cap'?'var(--blue-l)':'var(--amber-l)'};color:${e.tipo==='cap'?'var(--blue)':'var(--amber)'};font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px">${e.tipo==='cap'?'Ejecución':'Planeación'}</span>
+          <strong style="font-size:13px;flex:1">${esc(e.nombre)}</strong>
+          <span style="font-size:11px;color:var(--text-muted)">${e.fecha||'Sin fecha'}</span>
+          <span style="font-size:11px;color:var(--text-secondary)">${e.area||''}</span>
+        </div>`).join('')
+      : `<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:13px">No hay actividades en ${mesNombre}</div>`;
+  }
+};
+
+// ── 6. PATCH renderActas CON FILTRO POR ROL ───────────────────────────────────
+const _origRenderActas = window.renderActas || function(){};
+function renderActas() {
+  // Solo mostrar actas que el usuario puede ver
+  const caps = allCaps.filter(c => canSeeRecord(c));
+  const row = (c, showApr) => `<tr>
+    <td><strong>${esc(c.nombre)}</strong></td>
+    <td><span class="area-chip">${AL(c.area)}</span></td>
+    <td>${c.fecha||'—'}</td>
+    <td>${showApr ? esc(c.aprobadaPor||'—') : badge(c.actaEstado||'Pendiente aprobación')}</td>
+    <td style="white-space:nowrap">
+      <button class="btn btn-sm btn-blue" onclick="verActa('${c.id}')">Ver acta</button>
+      ${!showApr && canApprove() ? `<button class="btn btn-sm btn-green" onclick="aprobarActaDirect('${c.id}')">Aprobar</button>` : ''}
+    </td>
+  </tr>`;
+  const pend = caps.filter(c => c.actaEstado !== 'Aprobada');
+  const apro = caps.filter(c => c.actaEstado === 'Aprobada');
+  const tp = $('actas-pend-table'); if(tp) tp.innerHTML = pend.length ? pend.map(c=>row(c,false)).join('') : '<tr class="erow"><td colspan="5">Sin actas pendientes</td></tr>';
+  const ta = $('actas-apro-table'); if(ta) ta.innerHTML = apro.length ? apro.map(c=>row(c,true)).join('')  : '<tr class="erow"><td colspan="5">Sin actas aprobadas</td></tr>';
+  const tt = $('actas-todas-table'); if(tt) tt.innerHTML = caps.length ? caps.map(c => `<tr>
+    <td><strong>${esc(c.nombre)}</strong></td><td><span class="area-chip">${AL(c.area)}</span></td>
+    <td>${c.fecha||'—'}</td><td>${badge(c.actaEstado||'Pendiente aprobación')}</td>
+    <td><button class="btn btn-sm btn-blue" onclick="verActa('${c.id}')">Ver</button></td>
+  </tr>`).join('') : '<tr class="erow"><td colspan="5">Sin actas</td></tr>';
+}
+
+// ── 7. PATCH renderDash CON FILTRO POR ROL ────────────────────────────────────
+// Patch renderDash to ensure only visible data is counted
+const _origRenderDash = window.renderDash;
+window.renderDash = () => {
+  // Apply role-based filter
+  const caps  = allCaps.filter(c  => canSeeRecord(c));
+  const plans = allPlans.filter(p => canSeeRecord(p));
+  // Store filtered versions temporarily
+  const _allCapsBackup = allCaps, _allPlansBackup = allPlans;
+  allCaps = caps; allPlans = plans;
+  if (_origRenderDash) _origRenderDash();
+  allCaps = _allCapsBackup; allPlans = _allPlansBackup;
+};
+
+// ── 8. PATCH renderInformes CON FILTRO POR ROL ───────────────────────────────
+const _origRenderInformes = window.renderInformes;
+window.renderInformes = () => {
+  const caps_backup = allCaps;
+  allCaps = allCaps.filter(c => canSeeRecord(c));
+  if (_origRenderInformes) _origRenderInformes();
+  allCaps = caps_backup;
+};
+
+// ── 9. PATCH showView PARA CALENDARIO Y NOTIFICACIONES ───────────────────────
+const _svPatch2 = window.showView;
+window.showView = v => {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  $('view-'+v)?.classList.add('active');
+  $('nav-'+v)?.classList.add('active');
+  if (v === 'perfil')      renderPerfilView?.();
+  if (v === 'calendario')  { $('cal-mes').value = MESES[new Date().getMonth()]; renderCalendario(); }
+  if (v === 'notif')       renderNotifView();
+  if (v === 'usuarios')    loadUsersAdmin?.();
+};
+
+// ── 10. PATCH setupApp PARA ACTIVAR NUEVAS FUNCIONES ─────────────────────────
+const _origSetupApp = window.setupApp;
+async function setupAppPatched() {
+  if (_origSetupApp) await _origSetupApp();
+  applyRoleFiltersUI();
+  // Re-subscribe with corrected queries
+  subscribeCapsPatched();
+  subscribePlansPatched();
+  subscribeUsersPatched();
+  // Inject tipo-entidad fields after modal is available
+  setTimeout(injectTipoEntidadFields, 500);
+  // Set current month in calendar
+  const calMes = $('cal-mes');
+  if (calMes) calMes.value = MESES[new Date().getMonth()];
+}
+// Override setupApp
+window.setupApp_v3 = setupAppPatched;
+
+// ── 11. CORRECCIÓN: subscribeUsers NO sobreescribe filtros de rol ─────────────
+// El onSnapshot de usuarios ya estaba retornando todos los activos sin filtro de rol
+// para el selector de responsable — lo mantenemos pero la vista de usuarios
+// usa su propia consulta con filtro. Esto ya está correcto en loadUsersAdmin().
+
+// ── 12. INIT PATCH — Se ejecuta después de que Firebase cargue ───────────────
+// Detectamos cuando el usuario inicia sesión y aplicamos los parches
+const _fbAuthOrig = window.onAuthStateChanged;
+// Nos enganchamos al flujo de autenticación que ya existe en setupApp
+// El hook más seguro es sobreescribir postSetupInit
+const _psiOrig = window.postSetupInit;
+window.postSetupInit = async () => {
+  if (_psiOrig) await _psiOrig();
+  applyRoleFiltersUI();
+  setTimeout(injectTipoEntidadFields, 800);
+  // Re-subscribe with patched queries
+  subscribeCapsPatched();
+  subscribePlansPatched();
+  subscribeUsersPatched();
+  // Init calendar month
+  const cm = $('cal-mes');
+  if (cm) { cm.value = MESES[new Date().getMonth()]; renderCalendario(); }
+  checkNewNotifications();
+};
+
+// ── CSS adicional para nuevos módulos ─────────────────────────────────────────
+(function injectCSS() {
+  const style = document.createElement('style');
+  style.textContent = `
+    #view-calendario .cal-day { cursor: default; }
+    #notif-list .notif-card:hover { box-shadow: var(--sh-md); }
+    .tipo-entidad-badge {
+      display:inline-block;padding:2px 8px;border-radius:20px;
+      font-size:10px;font-weight:700;background:var(--purple-l);color:var(--purple);
+    }
+    #calendario-grid { min-height: 300px; }
+  `;
+  document.head.appendChild(style);
+})();
+
+console.log('[IDS v4.0] Parche integral aplicado — roles, notificaciones, calendario, tipo entidad.');
 
 
 // --- Global Exposure ---
 const ADMIN_NAME = "Administrador ODS";
-window.authTab = authTab;
-window.doLogin = doLogin;
-window.doRegister = doRegister;
-window.showView = showView;
-window.switchTab = switchTab;
-window.openPlanModal = openPlanModal;
-window.savePlan = savePlan;
-window.editPlan = editPlan;
-window.deletePlan = deletePlan;
-window.openCapModal = openCapModal;
-window.saveCap = saveCap;
-window.editCap = editCap;
-window.deleteCap = deleteCap;
-window.verActa = verActa;
-window.printActa = printActa;
-window.downloadPDF = downloadPDF;
-window.aprobarActa = aprobarActa;
-</script>
-</body>
-</html>
+try { window.addTipoCap = addTipoCap; } catch(e) {}
+try { window.approveUser = approveUser; } catch(e) {}
+try { window.aprobarActa = aprobarActa; } catch(e) {}
+try { window.aprobarActaDirect = aprobarActaDirect; } catch(e) {}
+try { window.authTab = authTab; } catch(e) {}
+try { window.changePassword = changePassword; } catch(e) {}
+try { window.clearFirma = clearFirma; } catch(e) {}
+try { window.clearFirmaCanvas = clearFirmaCanvas; } catch(e) {}
+try { window.closeModal = closeModal; } catch(e) {}
+try { window.delTipoCap = delTipoCap; } catch(e) {}
+try { window.deleteCap = deleteCap; } catch(e) {}
+try { window.deletePlan = deletePlan; } catch(e) {}
+try { window.doLogin = doLogin; } catch(e) {}
+try { window.doLogout = doLogout; } catch(e) {}
+try { window.doRegister = doRegister; } catch(e) {}
+try { window.downloadPDF = downloadPDF; } catch(e) {}
+try { window.editCap = editCap; } catch(e) {}
+try { window.editPlan = editPlan; } catch(e) {}
+try { window.exportCSV = exportCSV; } catch(e) {}
+try { window.initInfPeriodo = initInfPeriodo; } catch(e) {}
+try { window.loadPrestConfig = loadPrestConfig; } catch(e) {}
+try { window.markNotifRead = markNotifRead; } catch(e) {}
+try { window.onCapNomSelect = onCapNomSelect; } catch(e) {}
+try { window.onDashTipoChange = onDashTipoChange; } catch(e) {}
+try { window.onPlanAreaChange = onPlanAreaChange; } catch(e) {}
+try { window.onPrestExcelChange = onPrestExcelChange; } catch(e) {}
+try { window.onUsersExcelChange = onUsersExcelChange; } catch(e) {}
+try { window.openCapModal = openCapModal; } catch(e) {}
+try { window.openChangePass = openChangePass; } catch(e) {}
+try { window.openCreateUserModal = openCreateUserModal; } catch(e) {}
+try { window.openEditPerfil = openEditPerfil; } catch(e) {}
+try { window.openFirmaCanvas = openFirmaCanvas; } catch(e) {}
+try { window.openModal = openModal; } catch(e) {}
+try { window.openPlanModal = openPlanModal; } catch(e) {}
+try { window.openPrestModal = openPrestModal; } catch(e) {}
+try { window.printActa = printActa; } catch(e) {}
+try { window.rejectUser = rejectUser; } catch(e) {}
+try { window.renderCalendario = renderCalendario; } catch(e) {}
+try { window.renderCaps = renderCaps; } catch(e) {}
+try { window.renderDash = renderDash; } catch(e) {}
+try { window.renderInformes = renderInformes; } catch(e) {}
+try { window.renderPlan = renderPlan; } catch(e) {}
+try { window.saveCap = saveCap; } catch(e) {}
+try { window.saveCreateUser = saveCreateUser; } catch(e) {}
+try { window.saveEditPerfil = saveEditPerfil; } catch(e) {}
+try { window.saveFirmaFromCanvas = saveFirmaFromCanvas; } catch(e) {}
+try { window.saveFooterConfig = saveFooterConfig; } catch(e) {}
+try { window.saveMetas = saveMetas; } catch(e) {}
+try { window.savePlan = savePlan; } catch(e) {}
+try { window.savePrestador = savePrestador; } catch(e) {}
+try { window.seedMunicipios = seedMunicipios; } catch(e) {}
+try { window.seedPrestadores = seedPrestadores; } catch(e) {}
+try { window.seedTiposCap = seedTiposCap; } catch(e) {}
+try { window.showView = showView; } catch(e) {}
+try { window.switchTab = switchTab; } catch(e) {}
+try { window.updateCUAreas = updateCUAreas; } catch(e) {}
+try { window.updateCapAreaFilter = updateCapAreaFilter; } catch(e) {}
+try { window.updateCapModalAreas = updateCapModalAreas; } catch(e) {}
+try { window.updatePlanAreaFilter = updatePlanAreaFilter; } catch(e) {}
+try { window.updateRegAreas = updateRegAreas; } catch(e) {}
+try { window.uploadFirma = uploadFirma; } catch(e) {}
+try { window.uploadProfilePhoto = uploadProfilePhoto; } catch(e) {}
+try { window.verActa = verActa; } catch(e) {}
