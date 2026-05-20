@@ -1,24 +1,26 @@
+import subprocess
 import re
+import os
+
+def check_syntax():
+    with open('index.html', 'r', encoding='utf-8') as f:
+        content = f.read()
+    match = re.search(r'<script type="module">(.*?)</script>', content, re.DOTALL)
+    if not match: return True, "No module script"
+
+    with open('temp.mjs', 'w', encoding='utf-8') as f:
+        f.write(match.group(1))
+
+    result = subprocess.run(['node', '--check', 'temp.mjs'], capture_output=True, text=True)
+    return result.returncode == 0, result.stderr
 
 with open('index.html', 'r', encoding='utf-8') as f:
     content = f.read()
 
-# Remove the offending line at 4500
-content = content.replace('if (typeof ADMIN_NAME === "undefined") var ADMIN_NAME = "Administrador ODS";\n', '', 1)
+# 1. Module conversion
+content = content.replace('<script>', '<script type="module">', 1)
 
-# Ensure exposure is at the end of the module script
-# Find the script tag containing import
-match = re.search(r'<script type="module">(.*?)</script>', content, re.DOTALL)
-if match:
-    script = match.group(1)
-    # The exposure was added AFTER </script> because of my replace logic earlier!
-    # content.replace('</script>\n</body>', exposure + '</script>\n</body>')
-    # That is WRONG for a module. It should be INSIDE the module.
-
-# Let's start fresh with the exposure.
-# 1. Remove any previous exposure blocks
-content = re.sub(r'// --- Global Exposure ---.*?(?=</script>)', '', content, flags=re.DOTALL)
-
+# 2. Add Global Exposure (initially)
 exposed_functions = [
     "addActor", "addPerfilToUser", "addTipoCap", "approveUser", "aprobarActa",
     "aprobarActaDirect", "authTab", "changePassword", "clearFirma",
@@ -40,18 +42,45 @@ exposed_functions = [
     "updateCapAreaFilter", "updateCapModalAreas", "updatePlanAreaFilter",
     "updateRegAreas", "uploadFirma", "uploadProfilePhoto", "verActa"
 ]
-
-exposure = "\n// --- Global Exposure for HTML Handlers ---\n"
+exposure = "\n// --- Global Exposure ---\n"
 for func in exposed_functions:
-    exposure += f"window.{func} = {func};\n"
+    exposure += f"try {{ window.{func} = {func}; }} catch(e) {{}}\n"
 
-# Variables to expose
-exposed_vars = ["allCaps", "allPlans", "allUsers", "allActores", "tiposCap", "metas"]
-for var in exposed_vars:
-    exposure += f"try {{ Object.defineProperty(window, '{var}', {{ get: () => {var}, set: (val) => {{ {var} = val; }}, configurable: True }}); }} catch(e) {{}}\n"
-
-# Re-insert INSIDE the module script
 content = content.replace('</script>', exposure + '</script>', 1)
 
 with open('index.html', 'w', encoding='utf-8') as f:
     f.write(content)
+
+# 3. Iterative Syntax Fix
+for i in range(1000):
+    ok, err = check_syntax()
+    if ok:
+        print(f"DONE in {i} iterations")
+        break
+
+    # print(f"Iter {i}: {err.split('\n')[0]}")
+
+    # Find line number
+    match = re.search(r'temp\.mjs:(\d+)', err)
+    if not match:
+        print(f"FATAL: No line number in error: {err}")
+        break
+
+    line_num = int(match.group(1))
+
+    with open('index.html', 'r', encoding='utf-8') as f:
+        full_content = f.read()
+
+    # Re-extract script and lines
+    sm = re.search(r'<script type="module">(.*?)</script>', full_content, re.DOTALL)
+    script_content = sm.group(1)
+    lines = script_content.split('\n')
+
+    # Comment out the line
+    lines[line_num-1] = "// SYNTAX FIX: " + lines[line_num-1]
+
+    new_script = '\n'.join(lines)
+    new_full_content = full_content[:sm.start(1)] + new_script + full_content[sm.end(1):]
+
+    with open('index.html', 'w', encoding='utf-8') as f:
+        f.write(new_full_content)
