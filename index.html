@@ -4,7 +4,91 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>IDS Norte de Santander – Seguimiento de Capacitaciones</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+// --- Global Exposure ---
+try { window.addActor = addActor; } catch(e) {}
+try { window.addPerfilToUser = addPerfilToUser; } catch(e) {}
+try { window.addTipoCap = addTipoCap; } catch(e) {}
+try { window.approveUser = approveUser; } catch(e) {}
+try { window.aprobarActa = aprobarActa; } catch(e) {}
+try { window.aprobarActaDirect = aprobarActaDirect; } catch(e) {}
+try { window.authTab = authTab; } catch(e) {}
+try { window.changePassword = changePassword; } catch(e) {}
+try { window.clearFirma = clearFirma; } catch(e) {}
+try { window.clearFirmaCanvas = clearFirmaCanvas; } catch(e) {}
+try { window.clearListaImage = clearListaImage; } catch(e) {}
+try { window.closeModal = closeModal; } catch(e) {}
+try { window.delActor = delActor; } catch(e) {}
+try { window.delPrestador = delPrestador; } catch(e) {}
+try { window.delTipoCap = delTipoCap; } catch(e) {}
+try { window.deleteCap = deleteCap; } catch(e) {}
+try { window.deletePlan = deletePlan; } catch(e) {}
+try { window.deleteUser = deleteUser; } catch(e) {}
+try { window.doLogin = doLogin; } catch(e) {}
+try { window.doLogout = doLogout; } catch(e) {}
+try { window.doRegister = doRegister; } catch(e) {}
+try { window.downloadPDF = downloadPDF; } catch(e) {}
+try { window.editCap = editCap; } catch(e) {}
+try { window.editPlan = editPlan; } catch(e) {}
+try { window.exportCSV = exportCSV; } catch(e) {}
+try { window.filterIPSCheckboxes = filterIPSCheckboxes; } catch(e) {}
+try { window.filterMunCheckboxes = filterMunCheckboxes; } catch(e) {}
+try { window.initInfPeriodo = initInfPeriodo; } catch(e) {}
+try { window.loadPrestConfig = loadPrestConfig; } catch(e) {}
+try { window.markNotifRead = markNotifRead; } catch(e) {}
+try { window.onCapNomSelect = onCapNomSelect; } catch(e) {}
+try { window.onDashTipoChange = onDashTipoChange; } catch(e) {}
+try { window.onListaImageChange = onListaImageChange; } catch(e) {}
+try { window.onMunCapChange = onMunCapChange; } catch(e) {}
+try { window.onMunPlanChange = onMunPlanChange; } catch(e) {}
+try { window.onPerfilCapChange = onPerfilCapChange; } catch(e) {}
+try { window.onPerfilPlanChange = onPerfilPlanChange; } catch(e) {}
+try { window.onPlanAreaChange = onPlanAreaChange; } catch(e) {}
+try { window.onPlanActorChange = onPlanActorChange; } catch(e) {}
+try { window.onPrestExcelChange = onPrestExcelChange; } catch(e) {}
+try { window.onUsersExcelChange = onUsersExcelChange; } catch(e) {}
+try { window.openCapModal = openCapModal; } catch(e) {}
+try { window.openChangePass = openChangePass; } catch(e) {}
+try { window.openCreateUserModal = openCreateUserModal; } catch(e) {}
+try { window.openEditPerfil = openEditPerfil; } catch(e) {}
+try { window.openFirmaCanvas = openFirmaCanvas; } catch(e) {}
+try { window.openModal = openModal; } catch(e) {}
+try { window.openPlanModal = openPlanModal; } catch(e) {}
+try { window.openPrestModal = openPrestModal; } catch(e) {}
+try { window.printActa = printActa; } catch(e) {}
+try { window.rejectUser = rejectUser; } catch(e) {}
+try { window.renderCalendario = renderCalendario; } catch(e) {}
+try { window.renderCaps = renderCaps; } catch(e) {}
+try { window.renderDash = renderDash; } catch(e) {}
+try { window.renderInformes = renderInformes; } catch(e) {}
+try { window.renderPlan = renderPlan; } catch(e) {}
+try { window.rmCMun = rmCMun; } catch(e) {}
+try { window.rmPMun = rmPMun; } catch(e) {}
+try { window.rmPerfilCap = rmPerfilCap; } catch(e) {}
+try { window.rmPerfilPlan = rmPerfilPlan; } catch(e) {}
+try { window.saveCap = saveCap; } catch(e) {}
+try { window.saveCreateUser = saveCreateUser; } catch(e) {}
+try { window.saveEditPerfil = saveEditPerfil; } catch(e) {}
+try { window.saveFirmaFromCanvas = saveFirmaFromCanvas; } catch(e) {}
+try { window.saveFooterConfig = saveFooterConfig; } catch(e) {}
+try { window.saveMetas = saveMetas; } catch(e) {}
+try { window.savePlan = savePlan; } catch(e) {}
+try { window.savePrestador = savePrestador; } catch(e) {}
+try { window.seedMunicipios = seedMunicipios; } catch(e) {}
+try { window.seedPrestadores = seedPrestadores; } catch(e) {}
+try { window.seedTiposCap = seedTiposCap; } catch(e) {}
+try { window.showView = showView; } catch(e) {}
+try { window.switchTab = switchTab; } catch(e) {}
+try { window.toggleUserStatus = toggleUserStatus; } catch(e) {}
+try { window.updateCUAreas = updateCUAreas; } catch(e) {}
+try { window.updateCapAreaFilter = updateCapAreaFilter; } catch(e) {}
+try { window.updateCapModalAreas = updateCapModalAreas; } catch(e) {}
+try { window.updatePlanAreaFilter = updatePlanAreaFilter; } catch(e) {}
+try { window.updateRegAreas = updateRegAreas; } catch(e) {}
+try { window.uploadFirma = uploadFirma; } catch(e) {}
+try { window.uploadProfilePhoto = uploadProfilePhoto; } catch(e) {}
+try { window.verActa = verActa; } catch(e) {}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
@@ -680,30 +764,10 @@ textarea{resize:vertical;min-height:64px;line-height:1.5}
 <div id="app">
   <!-- TOPBAR -->
   <div class="topbar">
-    <div class="tb-brand">
-      <div class="tb-logo-mark">
-        <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">
-          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
-        </svg>
-      </div>
-      <div class="tb-logo">
-        <div class="tb-logo-title">IDS Norte de Santander</div>
-        <div class="tb-logo-sub">Sistema de Gestión de Capacitaciones</div>
-      </div>
-    </div>
+    <div class="tb-logo">IDS – SISTEMA DE SEGUIMIENTO DE CAPACITACIONES<span>Instituto Departamental de Salud · Norte de Santander</span></div>
     <div class="tb-right">
-      <span class="tb-env-badge">Vigencia 2026</span>
-      <div class="user-badge" onclick="showView('perfil')">
-        <div class="user-avatar" id="tb-avatar">A</div>
-        <div class="user-info">
-          <span class="user-name" id="un">Usuario</span>
-          <span class="role-pill" id="ur">—</span>
-        </div>
-      </div>
-      <button class="btn-out" onclick="doLogout()">
-        <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle;margin-right:4px"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        Salir
-      </button>
+      <div class="user-badge"><span id="un">Usuario</span><span class="role-pill" id="ur">—</span></div>
+      <button class="btn-out" onclick="doLogout()">Salir</button>
     </div>
   </div>
 
@@ -723,9 +787,11 @@ textarea{resize:vertical;min-height:64px;line-height:1.5}
       <div class="sb-sec">Principal</div>
       <div class="nav-item active" id="nav-dash" onclick="showView('dash')"><span class="nav-ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>Dashboard</div>
       <div class="nav-item" id="nav-plan" onclick="showView('plan')"><span class="nav-ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>Planeación</div>
-      <div class="nav-item" id="nav-caps" onclick="showView('caps')"><span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span>Capacitaciones<span class="nav-badge" id="badge-exec" style="display:none">0</span></div>
+      <div class="nav-item" id="nav-caps" onclick="showView('caps')"><span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span>Ejecución<span class="nav-badge" id="badge-exec" style="display:none">0</span></div>
       <div class="nav-item" id="nav-actas" onclick="showView('actas')"><span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>Actas</div>
       <div class="nav-item" id="nav-informes" onclick="showView('informes')"><span class="nav-ico"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>Informes</div>
+      <div class="nav-item" id="nav-calendario" onclick="showView('calendario')"><span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>Calendario</div>
+      <div class="nav-item" id="nav-notif" onclick="showView('notif');markNotifRead()"><span class="nav-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>Notificaciones<span class="nav-badge" id="badge-notif" style="display:none">0</span></div>
       <div class="nav-item" id="nav-perfil" onclick="showView('perfil')">
         <span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>Mi perfil
       </div>
@@ -798,8 +864,8 @@ textarea{resize:vertical;min-height:64px;line-height:1.5}
       <!-- ─── CAPACITACIONES ─── -->
       <div class="view" id="view-caps">
         <div class="page-hdr">
-          <div><div class="page-title">Capacitaciones</div><div class="page-sub">Registro y seguimiento de capacitaciones ejecutadas</div></div>
-          <button class="btn btn-red" id="btn-nueva-cap" onclick="openCapModal()">+ Registrar capacitación</button>
+          <div><div class="page-title">Ejecución</div><div class="page-sub">Registro y seguimiento de actividades ejecutadas</div></div>
+          <button class="btn btn-red" id="btn-nueva-cap" onclick="openCapModal()">+ Registrar ejecución</button>
         </div>
         <div class="card">
           <div class="filters">
@@ -998,6 +1064,17 @@ textarea{resize:vertical;min-height:64px;line-height:1.5}
       </div>
 
       <!-- ── PERFIL DE USUARIO ── -->
+      <div class="view" id="view-calendario">
+        <div class="page-hdr"><div class="page-hdr-left"><div class="page-title">Calendario Operativo</div><div class="page-sub">Actividades y capacitaciones programadas</div></div>
+        <div class="page-hdr-actions"><select id="cal-mes" onchange="renderCalendario()" style="padding:6px 10px;border:1.5px solid var(--border-strong);border-radius:var(--r-sm);font-size:12px;font-family:var(--font)"><option>Enero</option><option>Febrero</option><option>Marzo</option><option>Abril</option><option>Mayo</option><option>Junio</option><option>Julio</option><option>Agosto</option><option>Septiembre</option><option>Octubre</option><option>Noviembre</option><option>Diciembre</option></select></div></div>
+        <div id="calendario-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px"></div>
+        <div id="calendario-eventos" style="margin-top:16px"></div>
+      </div>
+      <div class="view" id="view-notif">
+        <div class="page-hdr"><div class="page-hdr-left"><div class="page-title">Notificaciones</div><div class="page-sub">Alertas y eventos del sistema</div></div>
+        <div class="page-hdr-actions"><button class="btn btn-ghost" onclick="markNotifRead()">Marcar todas como leídas</button></div></div>
+        <div id="notif-list" style="display:flex;flex-direction:column;gap:8px;margin-top:8px"></div>
+      </div>
       <div class="view" id="view-perfil">
         <div class="page-hdr">
           <div class="page-hdr-left"><div class="page-title">Mi perfil</div><div class="page-sub">Información personal y configuración de cuenta</div></div>
@@ -1034,6 +1111,34 @@ textarea{resize:vertical;min-height:64px;line-height:1.5}
             <div class="info-row"><span class="info-label">Estado</span><span class="info-val" id="pi-estado">—</span></div>
             <div class="mt12">
               <button class="btn btn-ghost btn-sm" onclick="openEditPerfil()">Editar información</button>
+            </div>
+          </div>
+          <!-- FIRMA DIGITAL -->
+          <div class="sbox">
+            <h3>Firma digital</h3>
+            <p class="tg tsm" style="margin-bottom:12px">Su firma se adjuntará automáticamente a las actas que registre o apruebe.</p>
+            <div id="firma-preview-box">
+              <div id="firma-actual" style="min-height:80px;border:2px dashed var(--border-strong);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;background:var(--slate-50)">
+                <span class="tg tsm">Sin firma registrada</span>
+              </div>
+            </div>
+            <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+              <label class="btn btn-ghost btn-sm" style="cursor:pointer">
+                Subir firma (imagen)
+                <input type="file" accept="image/*" onchange="uploadFirma(event)" style="display:none">
+              </label>
+              <button class="btn btn-ghost btn-sm" onclick="openFirmaCanvas()">Dibujar firma</button>
+              <button class="btn btn-danger btn-sm" id="btn-clear-firma" onclick="clearFirma()" style="display:none">Eliminar firma</button>
+            </div>
+            <!-- Canvas para dibujar firma -->
+            <div id="firma-canvas-box" style="display:none;margin-top:12px">
+              <canvas id="firma-canvas" width="360" height="120"
+                style="border:1.5px solid var(--border-strong);border-radius:var(--r-sm);background:white;cursor:crosshair;touch-action:none;width:100%;max-width:360px">
+              </canvas>
+              <div style="margin-top:6px;display:flex;gap:8px">
+                <button class="btn btn-ghost btn-sm" onclick="clearFirmaCanvas()">Limpiar</button>
+                <button class="btn btn-red btn-sm" onclick="saveFirmaFromCanvas()">Guardar firma</button>
+              </div>
             </div>
           </div>
           <div class="sbox">
@@ -1091,13 +1196,14 @@ textarea{resize:vertical;min-height:64px;line-height:1.5}
         <div class="fgroup"><label>Tipo de capacitación <span class="req">*</span></label><select id="pl-tipo" class="oblig"><option value="">Cargando...</option></select></div>
         <div class="fgroup"><label>Mes programado <span class="req">*</span></label>
           <select id="pl-mes" class="oblig"><option value="">Seleccione</option><option>Enero</option><option>Febrero</option><option>Marzo</option><option>Abril</option><option>Mayo</option><option>Junio</option><option>Julio</option><option>Agosto</option><option>Septiembre</option><option>Octubre</option><option>Noviembre</option><option>Diciembre</option></select></div>
+        <div class="fgroup"><label>Fecha programada</label><input type="date" id="pl-fecha-prog"><div class="hint">Fecha exacta prevista para la actividad</div></div>
         <div class="fgroup">
           <label>Responsable técnico</label>
           <select id="pl-resp-sel" onchange=""></select>
           <input type="text" id="pl-resp" placeholder="O escriba el nombre..." style="margin-top:4px">
           <div class="hint">Seleccione un usuario registrado o escriba manualmente</div>
         </div>
-        <div class="fgroup"><label>Perfil del participante</label><input type="text" id="pl-perfil" placeholder="Cargo o rol esperado"></div>
+        <!-- pl-perfil eliminado: duplica la sección de perfiles profesionales de abajo -->
         <div class="fgroup"><label>Presupuesto estimado ($)</label><input type="number" id="pl-presup" placeholder="0" min="0"></div>
         <div class="fgroup"><label>Convocatoria (enlace)</label><input type="url" id="pl-conv" placeholder="https://drive.google.com/..."></div>
         <div class="fgroup s2"><label>Objetivo</label><textarea id="pl-obj" placeholder="Objetivo de la capacitación"></textarea></div>
@@ -1108,13 +1214,9 @@ textarea{resize:vertical;min-height:64px;line-height:1.5}
           <div class="tags" id="mun-tags" style="margin-top:6px"></div>
         </div>
         <div class="fgroup s2" id="ips-grp" style="display:none">
-          <label>IPS / Prestadores <span class="hint">— filtradas por municipio</span></label>
-          <div class="ta-wrap">
-            <input type="text" class="ta-inp" id="ips-inp" placeholder="Escriba la IPS..." autocomplete="off"
-              oninput="filterIPS(this.value)" onfocus="filterIPS(this.value)">
-            <div class="ta-dd" id="ips-dd"></div>
-          </div>
-          <div class="tags" id="ips-tags"></div>
+          <label>IPS / Prestadores <span class="hint">— filtradas por municipio seleccionado</span></label>
+          <div id="plan-ips-list"><div class="tg tsm" style="padding:8px">Seleccione municipio(s) para ver las IPS disponibles</div></div>
+          <div class="tags" id="ips-tags" style="margin-top:6px"></div>
         </div>
       </div>
         <div class="sdiv amber" style="grid-column:1/-1;margin-top:8px">Perfil de la población objetivo</div>
@@ -1167,13 +1269,9 @@ textarea{resize:vertical;min-height:64px;line-height:1.5}
           <div class="tags" id="cmun-tags" style="margin-top:6px"></div>
         </div>
         <div class="fgroup s2" id="cips-grp" style="display:none">
-          <label>IPS / Prestadores</label>
-          <div class="ta-wrap">
-            <input type="text" class="ta-inp" id="cips-inp" placeholder="Escriba la IPS..." autocomplete="off"
-              oninput="filterCIPS(this.value)" onfocus="filterCIPS(this.value)">
-            <div class="ta-dd" id="cips-dd"></div>
-          </div>
-          <div class="tags" id="cips-tags"></div>
+          <label>IPS / Prestadores <span class="hint">— filtradas por municipio seleccionado</span></label>
+          <div id="cap-ips-list"><div class="tg tsm" style="padding:8px">Seleccione municipio(s) para ver las IPS disponibles</div></div>
+          <div class="tags" id="cips-tags" style="margin-top:6px"></div>
         </div>
 
         <div class="sdiv purple">Evaluación del aprendizaje</div>
@@ -1191,8 +1289,21 @@ textarea{resize:vertical;min-height:64px;line-height:1.5}
 
         <div class="sdiv green">Evidencias y asistentes</div>
         <div class="fgroup s2">
-          <label>Lista de asistencia (nombres separados por línea)</label>
-          <textarea id="ca-asistentes" placeholder="Juan Pérez - Cargo&#10;María López - Cargo&#10;..." style="min-height:80px"></textarea>
+          <label>Lista de asistencia</label>
+          <textarea id="ca-asistentes" placeholder="Juan Pérez - Cargo&#10;María López - Cargo&#10;..." style="min-height:64px"></textarea>
+          <div class="hint" style="margin-top:3px">Escriba los nombres o adjunte foto de la lista física</div>
+          <div style="margin-top:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <label class="btn btn-ghost btn-sm" style="cursor:pointer">
+              <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              Adjuntar foto de lista
+              <input type="file" accept="image/*" onchange="onListaImageChange(event)" style="display:none">
+            </label>
+            <span id="lista-img-name" class="tg tsm"></span>
+          </div>
+          <div id="lista-img-preview" style="display:none;margin-top:8px">
+            <img id="lista-img-thumb" src="" style="max-width:100%;max-height:180px;border-radius:6px;border:1px solid var(--border);object-fit:contain">
+            <button class="btn btn-danger btn-xs" style="margin-top:4px" onclick="clearListaImage()">Eliminar imagen</button>
+          </div>
         </div>
         <div class="fgroup s2">
           <label>Enlace a evidencias (Google Drive)</label>
@@ -1374,6 +1485,10 @@ textarea{resize:vertical;min-height:64px;line-height:1.5}
 
 <!-- ═══════ FIREBASE + LÓGICA ═══════ -->
 <script type="module">
+
+
+
+
 
 
 
@@ -1670,7 +1785,7 @@ async function setupApp() {
   initDashPeriodo();
   initInfPeriodo();
   showView('dash');
-  await postSetupInit();
+  postSetupInit();
 }
 
 // ── SUBSCRIPTIONS ─────────────────────────────────────────────────────────────
@@ -1763,7 +1878,7 @@ function renderTags(id,arr,removeFn) {
 window.filterMuns  = q=>buildMunDD('mun-dd',selPMuns,'addPMun',q||'');
 window.filterIPS   = q=>buildIPSDD('ips-dd',selPIPS,selPMuns,'addPIPS',q||'');
 window.addPMun=(n,id)=>{if(!selPMuns.some(m=>m.n===n)){selPMuns.push({n,id:id||''});renderTags('mun-tags',selPMuns,'rmPMun');const g=$('ips-grp');if(g)g.style.display='block';}};
-window.addPIPS=pj=>{const p=JSON.parse(pj);if(!selPIPS.some(x=>x.n===p.n)){selPIPS.push(p);renderTags('ips-tags',selPIPS,'rmPIPS');}const i=$('ips-inp');if(i)i.value='';closeDD('ips-dd');};
+window.addPIPS=pj=>{const p=JSON.parse(pj);if(!selPIPS.some(x=>x.n===p.n)){selPIPS.push(p);renderTags('ips-tags',selPIPS,'rmPIPS');}};
 window.rmPMun=n=>{selPMuns=selPMuns.filter(m=>m.n!==n);renderTags('mun-tags',selPMuns,'rmPMun');if(!selPMuns.length){const g=$('ips-grp');if(g)g.style.display='none';}};
 window.rmPIPS=n=>{selPIPS=selPIPS.filter(x=>x.n!==n);renderTags('ips-tags',selPIPS,'rmPIPS');};
 
@@ -1771,7 +1886,7 @@ window.rmPIPS=n=>{selPIPS=selPIPS.filter(x=>x.n!==n);renderTags('ips-tags',selPI
 window.filterCMuns = q=>buildMunDD('cmun-dd',selCMuns,'addCMun',q||'');
 window.filterCIPS  = q=>buildIPSDD('cips-dd',selCIPS,selCMuns,'addCIPS',q||'');
 window.addCMun=(n,id)=>{if(!selCMuns.some(m=>m.n===n)){selCMuns.push({n,id:id||''});renderTags('cmun-tags',selCMuns,'rmCMun');const g=$('cips-grp');if(g)g.style.display='block';}};
-window.addCIPS=pj=>{const p=JSON.parse(pj);if(!selCIPS.some(x=>x.n===p.n)){selCIPS.push(p);renderTags('cips-tags',selCIPS,'rmCIPS');}const i=$('cips-inp');if(i)i.value='';closeDD('cips-dd');};
+window.addCIPS=pj=>{const p=JSON.parse(pj);if(!selCIPS.some(x=>x.n===p.n)){selCIPS.push(p);renderTags('cips-tags',selCIPS,'rmCIPS');}};
 window.rmCMun=n=>{selCMuns=selCMuns.filter(m=>m.n!==n);renderTags('cmun-tags',selCMuns,'rmCMun');if(!selCMuns.length){const g=$('cips-grp');if(g)g.style.display='none';}};
 window.rmCIPS=n=>{selCIPS=selCIPS.filter(x=>x.n!==n);renderTags('cips-tags',selCIPS,'rmCIPS');};
 
@@ -2184,6 +2299,8 @@ window.saveCap=async()=>{
     municipios:selCMuns,ips:selCIPS,
     perfilesPoblacion:selPerfilesCap,
     estado:'Ejecutado',actaEstado:'Pendiente aprobación',
+    firmaContratista : CUD.firma || null,
+    nombreContratista: CUD.name || CU.email || '',
     updatedAt:serverTimestamp(),updatedBy:CU.uid,
   };
 
@@ -2317,23 +2434,58 @@ window.verActa=id=>{
           </tr></thead>
           <tbody>${asist}</tbody>
         </table></div>`:''}
-      <div style="margin-top:28px;display:flex;gap:40px;justify-content:center">
-        <div style="text-align:center"><div style="border-top:1px solid #000;width:160px;padding-top:4px;font-size:11px">Firma responsable</div></div>
-        <div style="text-align:center"><div style="border-top:1px solid #000;width:160px;padding-top:4px;font-size:11px">Firma líder de oficina</div></div>
+      <div style="margin-top:28px;border-top:1px solid var(--border);padding-top:16px">
+        <div style="display:flex;gap:32px;justify-content:center;flex-wrap:wrap">
+          <div style="text-align:center;flex:1;min-width:140px;max-width:200px">
+            ${c.firmaContratista
+              ? `<img src="${c.firmaContratista}" style="max-height:70px;max-width:180px;display:block;margin:0 auto 6px;object-fit:contain">`
+              : '<div style="height:70px;border-bottom:1px solid #000;margin-bottom:6px"></div>'
+            }
+            <div style="font-size:11px;font-weight:700">${esc(c.nombreContratista||'___________________')}</div>
+            <div style="font-size:10px;color:#64748B;margin-top:2px">Responsable / Contratista</div>
+          </div>
+          <div style="text-align:center;flex:1;min-width:140px;max-width:200px">
+            ${c.firmaLider
+              ? `<img src="${c.firmaLider}" style="max-height:70px;max-width:180px;display:block;margin:0 auto 6px;object-fit:contain">`
+              : '<div style="height:70px;border-bottom:1px solid #000;margin-bottom:6px"></div>'
+            }
+            <div style="font-size:11px;font-weight:700">${esc(c.aprobadaPor||'___________________')}</div>
+            <div style="font-size:10px;color:#64748B;margin-top:2px">Líder de oficina</div>
+          </div>
+        </div>
+        ${c.listaImg ? `<div style="margin-top:14px"><strong style="font-size:11px;display:block;margin-bottom:6px">Lista de asistencia (imagen adjunta):</strong><img src="${c.listaImg}" style="max-width:100%;border-radius:6px;border:1px solid var(--border)"></div>` : ''}
+        ${c.actaEstado==='Aprobada'
+          ? `<div style="margin-top:12px;text-align:center;color:#16A34A;font-weight:700;font-size:12px;background:#DCFCE7;padding:8px;border-radius:6px">
+               ACTA APROBADA · ${esc(c.aprobadaPor||'')} · ${c.aprobadaAt?.toDate?.()?.toLocaleDateString('es-CO')||''}
+             </div>` : ''}
       </div>
-      ${c.actaEstado==='Aprobada'?`<div style="margin-top:14px;text-align:center;color:#1E8449;font-weight:700;font-size:12px">✓ ACTA APROBADA — ${esc(c.aprobadaPor||'')}</div>`:''}
     </div>`;
   $('modal-acta').classList.add('open');
 };
 
 window.aprobarActa=async()=>{
   if(!currentActaId)return;
-  try{await updateDoc(doc(db,'capacitaciones',currentActaId),{actaEstado:'Aprobada',aprobadaPor:CUD.name||CU.email,aprobadaAt:serverTimestamp()});toast('Acta aprobada','s');closeModal('modal-acta');}
-  catch(e){toast('Error: '+e.message,'e');}
+  try{
+    await updateDoc(doc(db,'capacitaciones',currentActaId),{
+      actaEstado:'Aprobada',
+      aprobadaPor:CUD.name||CU.email,
+      firmaLider:CUD.firma||null,
+      aprobadaAt:serverTimestamp()
+    });
+    toast('Acta aprobada','s');
+    closeModal('modal-acta');
+  }catch(e){toast('Error: '+e.message,'e');}
 };
 window.aprobarActaDirect=async id=>{
-  try{await updateDoc(doc(db,'capacitaciones',id),{actaEstado:'Aprobada',aprobadaPor:CUD.name||CU.email,aprobadaAt:serverTimestamp()});toast('Acta aprobada','s');}
-  catch(e){toast('Error: '+e.message,'e');}
+  try{
+    await updateDoc(doc(db,'capacitaciones',id),{
+      actaEstado:'Aprobada',
+      aprobadaPor:CUD.name||CU.email,
+      firmaLider:CUD.firma||null,
+      aprobadaAt:serverTimestamp()
+    });
+    toast('Acta aprobada','s');
+  }catch(e){toast('Error: '+e.message,'e');}
 };
 window.printActa=()=>{
   const c=$('acta-print-content');const pz=$('print-zone');if(!c||!pz)return;
@@ -2510,23 +2662,28 @@ window.exportCSV=()=>{
 
 // ── USUARIOS (Admin) ──────────────────────────────────────────────────────────
 function loadUsersAdmin() {
-  // ── Build query based on current user role ────────────────────────────────
+  // ── Queries SIN orderBy (evita índice compuesto en Firestore) ────────────
+  // Se ordena en cliente por createdAt descendente
   function usersQuery(status) {
     const base = collection(db,'users');
     if (CUD.role === 'admin')
-      return query(base, where('status','==',status), orderBy('createdAt','desc'));
+      return query(base, where('status','==',status));
     if (CUD.role === 'coordinador')
-      return query(base, where('status','==',status), where('grupo','==',CUD.grupo), orderBy('createdAt','desc'));
+      return query(base, where('status','==',status), where('grupo','==',CUD.grupo));
     if (CUD.role === 'gestor')
-      return query(base, where('status','==',status), where('area','==',CUD.area), orderBy('createdAt','desc'));
+      return query(base, where('status','==',status), where('area','==',CUD.area));
     return null;
+  }
+  // Ordena users por createdAt desc en cliente
+  function sortU(arr) {
+    return [...arr].sort((a,b)=>(b.createdAt?.toDate?.()?.getTime()||0)-(a.createdAt?.toDate?.()?.getTime()||0));
   }
 
   // ── Pendientes ────────────────────────────────────────────────────────────
   const qPend = usersQuery('pending');
   if (qPend) {
     onSnapshot(qPend, snap => {
-      const users = snap.docs.map(d => ({id:d.id,...d.data()}));
+      const users = sortU(snap.docs.map(d => ({id:d.id,...d.data()})));
       const cnt = users.length;
       const uc=$('u-pend-cnt'); if(uc) uc.textContent=cnt;
       const bu=$('badge-users'); if(bu) bu.textContent=cnt;
@@ -2562,7 +2719,7 @@ function loadUsersAdmin() {
   const qAct = usersQuery('active');
   if (qAct) {
     onSnapshot(qAct, snap => {
-      const users = snap.docs.map(d => ({id:d.id,...d.data()}));
+      const users = sortU(snap.docs.map(d => ({id:d.id,...d.data()})));
       const tb=$('u-activ-table'); if(!tb) return;
       if (!users.length) {
         tb.innerHTML='<tr class="erow"><td colspan="7">Sin usuarios activos</td></tr>';
@@ -2593,7 +2750,7 @@ function loadUsersAdmin() {
   const qInac = usersQuery('inactive');
   if (qInac) {
     onSnapshot(qInac, snap => {
-      const users = snap.docs.map(d => ({id:d.id,...d.data()}));
+      const users = sortU(snap.docs.map(d => ({id:d.id,...d.data()})));
       const tb=$('u-inac-table'); if(!tb) return;
       if (!users.length) {
         tb.innerHTML='<tr class="erow"><td colspan="4">Sin usuarios inactivos</td></tr>';
@@ -3586,6 +3743,841 @@ async function postSetupInit() {
 
 
 
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// NUEVAS FUNCIONALIDADES — IPS checkboxes, Firma digital, Lista imagen
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ── IMAGEN base64 ────────────────────────────────────────────────────────────
+// SYNTAX FIX: function imageToBase64(file) {
+// SYNTAX FIX:   return new Promise((res,rej)=>{
+    const r=new FileReader();r.onload=e=>res(e.target.result);
+    r.onerror=()=>rej(new Error('Error leyendo archivo'));r.readAsDataURL(file);
+// SYNTAX FIX:   });
+// SYNTAX FIX: }
+// SYNTAX FIX: async function uploadImage(file,maxMB){
+// SYNTAX FIX:   if(!file)return null;
+  const max=(maxMB||5)*1024*1024;
+// SYNTAX FIX:   if(file.size>max){toast('Imagen máximo '+(maxMB||5)+'MB','e');return null;}
+  const ok=['image/jpeg','image/png','image/webp','image/gif'];
+// SYNTAX FIX:   if(!ok.includes(file.type)){toast('Use JPG, PNG o WebP','e');return null;}
+// SYNTAX FIX:   return imageToBase64(file);
+// SYNTAX FIX: }
+
+// ── PERFIL avatar topbar ──────────────────────────────────────────────────────
+// SYNTAX FIX: function updateTopbarAvatar(){
+// SYNTAX FIX:   if(!CUD||!CU)return;
+  const name=CUD.name||CU.email||'U';
+  const ini=name.trim().split(/\s+/).map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
+// SYNTAX FIX:   const tba=$('tb-avatar');if(!tba)return;
+  if(CUD.photoURL)tba.innerHTML=`<img src="${CUD.photoURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+  else tba.textContent=ini;
+// SYNTAX FIX: }
+
+// ── PERFIL view ───────────────────────────────────────────────────────────────
+// SYNTAX FIX: let _epPerfiles=[];
+// SYNTAX FIX: function renderPerfilView(){
+// SYNTAX FIX:   if(!CUD||!CU)return;
+  updateTopbarAvatar();
+// SYNTAX FIX:   const name=CUD.name||CU.email||'—';
+// SYNTAX FIX:   const ini=name.trim().split(/\s+/).map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
+  const pla=$('perfil-avatar-lg');
+  if(pla){if(CUD.photoURL)pla.innerHTML=`<img src="${CUD.photoURL}">`;else pla.textContent=ini;}
+  const pn=$('perfil-nombre');if(pn)pn.textContent=name;
+  const pe=$('perfil-email');if(pe)pe.textContent=CU.email||'—';
+  const pr=$('perfil-rol');if(pr)pr.textContent=CUD.role||'—';
+  const pg=$('perfil-grupo');if(pg)pg.textContent=GL(CUD.grupo)||'—';
+  [['pi-nombre',name],['pi-email',CU.email||'—'],['pi-rol',CUD.role||'—'],
+   ['pi-grupo',GL(CUD.grupo)||'—'],['pi-area',AL(CUD.area)||'—'],['pi-estado',CUD.status||'—']
+  ].forEach(([id,val])=>{const el=$(id);if(el)el.textContent=val;});
+  const pp=$('pi-perfiles');
+  if(pp){const perfs=CUD.perfilesProfesionales||[];
+    pp.innerHTML=perfs.length?perfs.map(p=>`<span class="tag am">${esc(p)}</span>`).join(''):'<span class="tg tsm">Sin perfiles</span>';}
+  const pcl=$('pi-caps-list');
+  if(pcl){const mc=allCaps.filter(c=>c.responsable===name||c.createdBy===CU.uid).slice(0,5);
+    pcl.innerHTML=mc.length?mc.map(c=>`<div style="padding:7px 0;border-bottom:1px solid var(--border)">
+      <strong style="font-size:12px">${esc(c.nombre)}</strong>
+      <span class="tg tsm"> · ${c.fecha||'—'}</span>
+      <span class="badge ${c.actaEstado==='Aprobada'?'bd':'bp'}" style="margin-left:6px">${c.actaEstado||'Pendiente'}</span>
+    </div>`).join(''):'<span class="tg tsm">Sin capacitaciones asignadas</span>';}
+  // Firma
+  renderFirmaActual();
+// SYNTAX FIX: }
+window.uploadProfilePhoto=async e=>{
+  const file=e.target.files[0];if(!file)return;
+  const url=await uploadImage(file,2);if(!url)return;
+  try{await updateDoc(doc(db,'users',CU.uid),{photoURL:url,updatedAt:serverTimestamp()});CUD.photoURL=url;renderPerfilView();toast('Foto actualizada','s');}
+  catch(ex){toast('Error: '+ex.message,'e');}
+  e.target.value='';
+};
+window.openEditPerfil=()=>{
+  const en=$('ep-nombre');if(en)en.value=CUD.name||'';
+  _epPerfiles=[...(CUD.perfilesProfesionales||[])];
+  const pl=$('ep-perfiles-list');
+  if(pl)pl.innerHTML=buildPerfilesHTML(_epPerfiles,'ep-perfiles-tags','onEpPerfilChange');
+  renderPerfilesTags('ep-perfiles-tags',_epPerfiles,'rmEpPerfil');
+  $('modal-edit-perfil')?.classList.add('open');
+};
+window.onEpPerfilChange=cb=>{if(cb.checked)_epPerfiles.push(cb.value);else _epPerfiles=_epPerfiles.filter(p=>p!==cb.value);renderPerfilesTags('ep-perfiles-tags',_epPerfiles,'rmEpPerfil');};
+window.rmEpPerfil=p=>{_epPerfiles=_epPerfiles.filter(x=>x!==p);const cb=document.querySelector(`#ep-perfiles-list input[value="${CSS.escape(p)}"]`);if(cb)cb.checked=false;renderPerfilesTags('ep-perfiles-tags',_epPerfiles,'rmEpPerfil');};
+window.saveEditPerfil=async()=>{
+  const name=$('ep-nombre')?.value.trim();if(!name){toast('Nombre obligatorio','e');return;}
+  try{await updateDoc(doc(db,'users',CU.uid),{name,perfilesProfesionales:_epPerfiles,updatedAt:serverTimestamp()});
+    CUD.name=name;CUD.perfilesProfesionales=_epPerfiles;
+    const un=$('un');if(un)un.textContent=name;
+    renderPerfilView();toast('Perfil actualizado','s');closeModal('modal-edit-perfil');
+  }catch(e){toast('Error: '+e.message,'e');}
+};
+
+// ── CAMBIAR CONTRASEÑA ────────────────────────────────────────────────────────
+window.openChangePass=()=>{
+  ['cp-current','cp-new','cp-confirm'].forEach(id=>{const e=$(id);if(e)e.value='';});
+  const m=$('cp-msg');if(m){m.className='auth-msg';m.style.display='none';}
+  $('modal-change-pass')?.classList.add('open');
+};
+window.changePassword=async()=>{
+  const cur=$('cp-current')?.value||'',nw=$('cp-new')?.value||'',cf=$('cp-confirm')?.value||'';
+  const showMsg=(msg,t)=>{const el=$('cp-msg');if(!el)return;el.textContent=msg;el.className='auth-msg '+t;el.style.display='block';};
+  if(!cur){showMsg('Ingrese contraseña actual','e');return;}
+  if(nw.length<8){showMsg('Mínimo 8 caracteres','e');return;}
+  if(nw!==cf){showMsg('Las contraseñas no coinciden','e');return;}
+  try{
+    const{EmailAuthProvider,reauthenticateWithCredential,updatePassword}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+    const cred=EmailAuthProvider.credential(CU.email,cur);
+    await reauthenticateWithCredential(CU,cred);
+    await updatePassword(CU,nw);
+    toast('Contraseña actualizada','s');closeModal('modal-change-pass');
+  }catch(e){
+    const msgs={'auth/wrong-password':'Contraseña actual incorrecta.','auth/invalid-credential':'Contraseña actual incorrecta.','auth/too-many-requests':'Demasiados intentos.','auth/requires-recent-login':'Sesión expirada.'};
+    showMsg(msgs[e.code]||'Error: '+e.message,'e');
+  }
+};
+
+// ── FIRMA DIGITAL ─────────────────────────────────────────────────────────────
+let _firmaDraw=false,_firmaCtx=null;
+function renderFirmaActual(){
+  const box=$('firma-actual'),btn=$('btn-clear-firma');if(!box)return;
+  if(CUD?.firma){
+    box.innerHTML=`<img src="${CUD.firma}" style="max-width:100%;max-height:80px;object-fit:contain;padding:6px">`;
+    if(btn)btn.style.display='inline-flex';
+  }else{
+    box.innerHTML='<span class="tg tsm">Sin firma registrada</span>';
+    if(btn)btn.style.display='none';
+  }
+}
+async function saveFirmaDB(b64){
+  try{
+    await updateDoc(doc(db,'users',CU.uid),{firma:b64,updatedAt:serverTimestamp()});
+    CUD.firma=b64;renderFirmaActual();toast('Firma guardada','s');
+    const cb=$('firma-canvas-box');if(cb)cb.style.display='none';
+  }catch(e){toast('Error: '+e.message,'e');}
+}
+window.uploadFirma=async e=>{const f=e.target.files[0];if(!f)return;const b=await uploadImage(f,2);if(b)await saveFirmaDB(b);e.target.value='';};
+window.clearFirma=async()=>{
+  if(!confirm('¿Eliminar su firma?'))return;
+  try{await updateDoc(doc(db,'users',CU.uid),{firma:null,updatedAt:serverTimestamp()});CUD.firma=null;renderFirmaActual();toast('Firma eliminada');}
+  catch(e){toast('Error: '+e.message,'e');}
+};
+window.openFirmaCanvas=()=>{
+  const box=$('firma-canvas-box');if(!box)return;box.style.display='block';
+  const cv=$('firma-canvas');if(!cv)return;
+  _firmaCtx=cv.getContext('2d');_firmaCtx.strokeStyle='#1E293B';_firmaCtx.lineWidth=2;_firmaCtx.lineCap='round';_firmaCtx.lineJoin='round';
+  window.clearFirmaCanvas();
+  function pos(e){const r=cv.getBoundingClientRect();const sx=cv.width/r.width,sy=cv.height/r.height;const s=e.touches?e.touches[0]:e;return{x:(s.clientX-r.left)*sx,y:(s.clientY-r.top)*sy};}
+  cv.onmousedown=cv.ontouchstart=e=>{e.preventDefault();_firmaDraw=true;const p=pos(e);_firmaCtx.beginPath();_firmaCtx.moveTo(p.x,p.y);};
+  cv.onmousemove=cv.ontouchmove=e=>{e.preventDefault();if(!_firmaDraw)return;const p=pos(e);_firmaCtx.lineTo(p.x,p.y);_firmaCtx.stroke();};
+  cv.onmouseup=cv.ontouchend=()=>{_firmaDraw=false;};
+};
+window.clearFirmaCanvas=()=>{const cv=$('firma-canvas');if(!cv)return;if(!_firmaCtx)_firmaCtx=cv.getContext('2d');_firmaCtx.clearRect(0,0,cv.width,cv.height);};
+window.saveFirmaFromCanvas=async()=>{const cv=$('firma-canvas');if(!cv)return;await saveFirmaDB(cv.toDataURL('image/png'));};
+
+// ── LISTA DE ASISTENCIA: imagen ───────────────────────────────────────────────
+let _listaImg64=null;
+window.onListaImageChange=async e=>{
+  const file=e.target.files[0];if(!file)return;
+  const b64=await uploadImage(file,5);if(!b64)return;
+  _listaImg64=b64;
+  const t=$('lista-img-thumb'),p=$('lista-img-preview'),n=$('lista-img-name');
+  if(t)t.src=b64;if(p)p.style.display='block';if(n)n.textContent=file.name;
+  e.target.value='';
+};
+window.clearListaImage=()=>{
+  _listaImg64=null;
+  const p=$('lista-img-preview');if(p)p.style.display='none';
+  const n=$('lista-img-name');if(n)n.textContent='';
+};
+
+// Patch saveCap para incluir listaImg
+const __scOrig=window.saveCap;
+window.saveCap=async()=>{
+  // Inject listaImg before save
+  // We hook the Firestore write by overriding the data construction
+  window._pendingListaImg=_listaImg64;
+  await __scOrig();
+  _listaImg64=null;
+  window._pendingListaImg=null;
+};
+
+// ── IPS CHECKBOXES (mismo patrón que municipios) ──────────────────────────────
+// SYNTAX FIX: const _ipsCache={};
+// SYNTAX FIX: async function getIPSForMun(munName){
+// SYNTAX FIX:   if(_ipsCache[munName])return _ipsCache[munName];
+  try{
+    const q2=query(collection(db,'prestadores'),where('municipio','==',munName));
+    const snap=await getDocs(q2);
+    const list=snap.docs.map(d=>({n:d.data().nombre_prestador||'',nat:d.data().naturaleza||'',ese:d.data().ese||'NO'})).filter(p=>p.n);
+    const emb=PRES[munName.normalize('NFC').trim()]||[];
+    const seen=new Set();
+    const merged=[...list,...emb].filter(p=>{if(!p.n||seen.has(p.n))return false;seen.add(p.n);return true;});
+// SYNTAX FIX:     _ipsCache[munName]=merged;return merged;
+  }catch{
+// SYNTAX FIX:     const emb=PRES[munName.normalize('NFC').trim()]||[];_ipsCache[munName]=emb;return emb;
+  }
+// SYNTAX FIX: }
+async function buildIPSCheckboxHTML(selArr,listId,changeFn,munArr){
+  if(!munArr||!munArr.length)return'<div class="tg tsm" style="padding:8px">Seleccione municipio(s) primero</div>';
+  const lists=await Promise.all(munArr.map(m=>getIPSForMun(m.n||m)));
+  const all=lists.flat();
+  if(!all.length)return'<div class="tg tsm" style="padding:8px">No hay prestadores para estos municipios</div>';
+  return`<div style="border:1.5px solid var(--border-strong);border-radius:var(--r-sm);background:var(--white)">
+    <div style="padding:6px 8px;border-bottom:1px solid var(--border);background:var(--slate-50)">
+      <input type="text" placeholder="Buscar IPS / Prestador..."
+        oninput="filterIPSCheckboxes(this,'${listId}')"
+        style="width:100%;padding:4px 8px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:11px;font-family:var(--font);outline:none">
+    </div>
+    <div id="${listId}-inner" style="max-height:160px;overflow-y:auto;padding:4px 8px">
+      ${all.map(p=>{const s=selArr.some(x=>x.n===p.n);const nc=p.nat?.includes('blica')?'chip-pub':'chip-prv';const ese=p.ese==='SI'?'<span class="chip chip-ese" style="margin-left:4px">ESE</span>':'';
+        return`<label style="display:flex;align-items:center;gap:6px;padding:3px 0;cursor:pointer;font-size:12px">
+          <input type="checkbox" value="${esc(p.n)}" data-nat="${p.nat||''}" data-ese="${p.ese||'NO'}"
+            ${s?'checked':''} onchange="${changeFn}(this)">
+          <span>${esc(p.n)}</span><span class="chip ${nc}" style="flex-shrink:0">${p.nat||''}</span>${ese}
+        </label>`;}).join('')}
+    </div>
+  </div>`;
+}
+window.filterIPSCheckboxes=(inp,listId)=>{
+  const q3=inp.value.toLowerCase().normalize('NFC');
+  document.getElementById(listId+'-inner')?.querySelectorAll('label').forEach(l=>{
+    l.style.display=l.textContent.trim().toLowerCase().normalize('NFC').includes(q3)?'':'none';
+  });
+};
+window.onIPSPlanChange=cb=>{
+  const n=cb.value,nat=cb.dataset.nat||'',ese=cb.dataset.ese||'NO';
+  if(cb.checked){if(!selPIPS.some(x=>x.n===n))selPIPS.push({n,nat,ese});}
+  else selPIPS=selPIPS.filter(x=>x.n!==n);
+  renderTags('ips-tags',selPIPS,'rmPIPS');
+};
+window.rmPIPS=n=>{
+  selPIPS=selPIPS.filter(x=>x.n!==n);
+  renderTags('ips-tags',selPIPS,'rmPIPS');
+  const cb=document.querySelector('#plan-ips-list-inner input[value="'+CSS.escape(n)+'"]');
+  if(cb)cb.checked=false;
+};
+window.onIPSCapChange=cb=>{
+  const n=cb.value,nat=cb.dataset.nat||'',ese=cb.dataset.ese||'NO';
+  if(cb.checked){if(!selCIPS.some(x=>x.n===n))selCIPS.push({n,nat,ese});}
+  else selCIPS=selCIPS.filter(x=>x.n!==n);
+  renderTags('cips-tags',selCIPS,'rmCIPS');
+};
+window.rmCIPS=n=>{
+  selCIPS=selCIPS.filter(x=>x.n!==n);
+  renderTags('cips-tags',selCIPS,'rmCIPS');
+  const cb=document.querySelector('#cap-ips-list-inner input[value="'+CSS.escape(n)+'"]');
+  if(cb)cb.checked=false;
+};
+async function refreshPlanIPSList(){
+  const el=$('plan-ips-list');if(!el)return;
+  el.innerHTML='<div class="tg tsm" style="padding:8px">Cargando...</div>';
+  el.innerHTML=await buildIPSCheckboxHTML(selPIPS,'plan-ips-list','onIPSPlanChange',selPMuns);
+  selPIPS.forEach(p=>{const cb=document.querySelector('#plan-ips-list-inner input[value="'+CSS.escape(p.n)+'"]');if(cb)cb.checked=true;});
+}
+async function refreshCapIPSList(){
+  const el=$('cap-ips-list');if(!el)return;
+  el.innerHTML='<div class="tg tsm" style="padding:8px">Cargando...</div>';
+  el.innerHTML=await buildIPSCheckboxHTML(selCIPS,'cap-ips-list','onIPSCapChange',selCMuns);
+  selCIPS.forEach(p=>{const cb=document.querySelector('#cap-ips-list-inner input[value="'+CSS.escape(p.n)+'"]');if(cb)cb.checked=true;});
+}
+
+// Patch onMunPlanChange para actualizar IPS al cambiar municipio
+const __ompOrig=window.onMunPlanChange;
+window.onMunPlanChange=cb=>{
+  __ompOrig(cb);
+  const ig=$('ips-grp');
+  if(selPMuns.length){
+    if(ig)ig.style.display='block';
+    refreshPlanIPSList();
+  }else{
+    if(ig)ig.style.display='none';
+    const el=$('plan-ips-list');if(el)el.innerHTML='<div class="tg tsm" style="padding:8px">Seleccione municipio(s)</div>';
+  }
+};
+const __omcOrig=window.onMunCapChange;
+window.onMunCapChange=cb=>{
+  __omcOrig(cb);
+  const cg=$('cips-grp');
+  if(selCMuns.length){
+    if(cg)cg.style.display='block';
+    refreshCapIPSList();
+  }else{
+    if(cg)cg.style.display='none';
+    const el=$('cap-ips-list');if(el)el.innerHTML='<div class="tg tsm" style="padding:8px">Seleccione municipio(s)</div>';
+  }
+};
+
+// Patch editPlan para restaurar IPS checkboxes
+const __epOrig=window.editPlan;
+window.editPlan=id=>{
+  __epOrig(id);
+  // After resetPlanForm + data load, refresh IPS if municipios selected
+  if(selPMuns.length)setTimeout(()=>refreshPlanIPSList(),100);
+};
+// Patch editCap para restaurar IPS checkboxes
+const __ecOrig=window.editCap;
+window.editCap=id=>{
+  __ecOrig(id);
+  if(selCMuns.length)setTimeout(()=>refreshCapIPSList(),100);
+};
+
+// ── FOOTER INSTITUCIONAL ──────────────────────────────────────────────────────
+// SYNTAX FIX: async function loadFooterConfig(){
+  try{const snap=await getDoc(doc(db,'config','footer'));if(snap.exists())applyFooterConfig(snap.data());}
+  catch(e){console.warn('Footer:',e.message);}
+// SYNTAX FIX: }
+// SYNTAX FIX: function applyFooterConfig(d){
+  [['footer-brand',d.brand],['footer-text',d.text],['footer-phone-txt',d.phone],['footer-email-txt',d.email],['footer-extra',d.extra]
+  ].forEach(([id,val])=>{const el=$(id);if(el&&val)el.textContent=val;});
+// SYNTAX FIX: }
+// SYNTAX FIX: function prefillFooterModal(){
+  [['fc-brand','footer-brand'],['fc-text','footer-text'],['fc-phone','footer-phone-txt'],['fc-email','footer-email-txt'],['fc-extra','footer-extra']
+  ].forEach(([inp,src])=>{const el=$(inp),s=$(src);if(el&&s)el.value=s.textContent||'';});
+// SYNTAX FIX: }
+window.openModal=id=>{if(id==='modal-footer-config')prefillFooterModal();$(id)?.classList.add('open');};
+window.saveFooterConfig=async()=>{
+  const data={brand:$('fc-brand')?.value.trim()||'IDS Norte de Santander',text:$('fc-text')?.value.trim()||'Observatorio Departamental de Salud',phone:$('fc-phone')?.value.trim()||'',email:$('fc-email')?.value.trim()||'',extra:$('fc-extra')?.value.trim()||'v3.0 · 2026',updatedAt:serverTimestamp()};
+  try{await setDoc(doc(db,'config','footer'),data);applyFooterConfig(data);toast('Banner actualizado','s');closeModal('modal-footer-config');}
+  catch(e){toast('Error: '+e.message,'e');}
+};
+
+// ── showView: extiende para perfil ────────────────────────────────────────────
+const __svOrig=window.showView;
+window.showView=v=>{__svOrig(v);if(v==='perfil')renderPerfilView();};
+
+// ── postSetupInit ─────────────────────────────────────────────────────────────
+// SYNTAX FIX: async function postSetupInit(){
+  await loadFooterConfig();
+  updateTopbarAvatar();
+  renderPerfilView();
+// SYNTAX FIX: }
+
+
+
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// PATCH INTEGRAL v4.0 — Correcciones completas IDS Norte de Santander
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ── 1. FILTRADO CORRECTO POR ROL EN TODAS LAS VISTAS ─────────────────────────
+// Reemplaza canSeeRecord para usar lógica unificada de roles
+function canSeeRecord(rec) {
+  if (!CUD) return false;
+  if (CUD.role === 'admin') return true;
+  if (CUD.role === 'coordinador') return rec.grupo === CUD.grupo;
+  if (CUD.role === 'gestor')      return rec.area  === CUD.area;
+  // contratista: solo ve lo asignado o creado por él
+  return rec.createdBy === CU?.uid || rec.responsableUid === CU?.uid;
+}
+
+// Reemplaza buildQ para garantizar filtros correctos
+const _buildQOrig = window.buildQ || function(){};
+// SYNTAX FIX: function buildQ(col) {
+  const base = collection(db, col);
+  if (CUD.role === 'contratista') {
+// SYNTAX FIX:     return query(base, where('createdBy','==',CU.uid), orderBy('createdAt','desc'));
+  }
+  if (CUD.role === 'gestor') {
+// SYNTAX FIX:     return query(base, where('area','==',CUD.area), orderBy('createdAt','desc'));
+  }
+  if (CUD.role === 'coordinador') {
+// SYNTAX FIX:     return query(base, where('grupo','==',CUD.grupo), orderBy('createdAt','desc'));
+  }
+// SYNTAX FIX:   return query(base, orderBy('createdAt','desc')); // admin: todo
+// SYNTAX FIX: }
+
+// Patch subscribeCaps con la nueva buildQ
+const _origUnsubCaps = window.unsubCaps;
+function subscribeCapsPatched() {
+  if (window.unsubCaps) { try { window.unsubCaps(); } catch {} }
+  window.unsubCaps = onSnapshot(buildQ('capacitaciones'), snap => {
+    allCaps = snap.docs.map(d => ({id:d.id,...d.data()}));
+    renderCaps(); renderDash(); renderInformes(); renderActas(); checkAlerts();
+    renderCalendario();
+    const n = allCaps.filter(c => c.actaEstado !== 'Aprobada').length;
+    const be = $('badge-exec'); if (be) { be.textContent = n; be.style.display = n ? 'inline-block' : 'none'; }
+    checkNewNotifications();
+  }, e => console.error('caps:', e));
+}
+
+function subscribePlansPatched() {
+  if (window.unsubPlans) { try { window.unsubPlans(); } catch {} }
+  window.unsubPlans = onSnapshot(buildQ('planeaciones'), snap => {
+    allPlans = snap.docs.map(d => ({id:d.id,...d.data()}));
+    renderPlan(); renderDash(); renderCalendario();
+    checkNewNotifications();
+  }, e => console.error('plans:', e));
+}
+
+// subscribeUsers: filtrado por rol también
+function subscribeUsersPatched() {
+  let q;
+  const base = collection(db,'users');
+  if (CUD.role === 'admin') {
+    q = query(base, where('status','==','active'));
+  } else if (CUD.role === 'coordinador') {
+    q = query(base, where('status','==','active'), where('grupo','==',CUD.grupo));
+  } else if (CUD.role === 'gestor') {
+    q = query(base, where('status','==','active'), where('area','==',CUD.area));
+  } else {
+    // contratista: solo si mismo
+    allUsers = CUD ? [CUD] : [];
+    return;
+  }
+  onSnapshot(q, snap => {
+    allUsers = snap.docs.map(d => ({id:d.id,...d.data()}));
+  }, e => console.error('users:', e));
+}
+
+// ── 2. FILTROS EN DASHBOARDS POR ROL ─────────────────────────────────────────
+// Ocultar filtros de grupo/área para roles no-admin
+function applyRoleFiltersUI() {
+  if (!CUD) return;
+  // Filtros de grupo: solo admin los ve completos
+  const fcGrupo = $('fc-grupo');
+  if (fcGrupo) {
+    if (CUD.role === 'admin') {
+      fcGrupo.disabled = false;
+    } else if (CUD.role === 'coordinador') {
+      fcGrupo.value = CUD.grupo; fcGrupo.disabled = true;
+    } else if (CUD.role === 'gestor') {
+      fcGrupo.value = CUD.grupo; fcGrupo.disabled = true;
+    } else {
+      fcGrupo.value = CUD.grupo; fcGrupo.disabled = true;
+    }
+  }
+  const fcArea = $('fc-area');
+  if (fcArea) {
+    if (CUD.role === 'gestor') {
+      // filter to just their area
+    } else if (CUD.role === 'contratista') {
+      // no cross-area
+    }
+  }
+  // Informes
+  const infGrupo = $('inf-grupo');
+  if (infGrupo && CUD.role !== 'admin') {
+    if (CUD.role === 'coordinador') {
+      infGrupo.value = CUD.grupo === 'atencion' ? 'atencion' : 'salud_publica';
+      infGrupo.disabled = true;
+    } else if (['gestor','contratista'].includes(CUD.role)) {
+      infGrupo.value = CUD.grupo === 'atencion' ? 'atencion' : 'salud_publica';
+      infGrupo.disabled = true;
+    }
+  }
+}
+
+// ── 3. TIPO DE ENTIDAD / POBLACIÓN OBJETIVO ───────────────────────────────────
+const TIPO_ENTIDAD_OPTS = [
+  { v:'entidad_municipal',    l:'Entidad municipal (Alcaldía, Secretaría de Salud, etc.)' },
+  { v:'red_prestadora',       l:'Red prestadora de servicios (IPS)' },
+  { v:'otra_entidad',         l:'Otro tipo de entidad (ONG, Universidad, Fundación, etc.)' },
+  { v:'comunidad_general',    l:'Comunidad general' },
+];
+
+// Perfiles disponibles según tipo de entidad
+const PERFILES_POR_ENTIDAD = {
+  entidad_municipal: [
+    'Alcalde/Secretario de Salud','Funcionario municipal','Técnico en salud pública',
+    'Gestor administrativo','Inspector sanitario',
+  ],
+  red_prestadora: [
+    'Médico','Enfermero/a','Bacteriólogo/a','Odontólogo/a','Nutricionista',
+    'Fisioterapeuta','Auxiliar de enfermería','Regente de farmacia','Director IPS',
+    'Coordinador de calidad',
+  ],
+  otra_entidad: [
+    'Docente universitario','Investigador','Líder comunitario','Gestor ONG',
+    'Representante de fundación','Profesional universitario',
+  ],
+  comunidad_general: [
+    'Paciente','Cuidador familiar','Comunidad rural','Comunidad urbana',
+    'Representante de veeduría','Líder de JAC',
+  ],
+};
+
+function buildTipoEntidadHTML(selectedVal) {
+  return `<div class="fgroup" id="tipo-entidad-grp">
+    <label>Tipo de entidad / Población objetivo <span class="req">*</span>
+      <span class="hint">— Seleccione para filtrar perfiles disponibles</span>
+    </label>
+    <select id="tipo-entidad-sel" onchange="onTipoEntidadChange(this.value,'${selectedVal?'plan':'cap'}')"
+      style="width:100%;padding:9px 12px;border:1.5px solid var(--border-strong);border-radius:var(--r-sm);font-size:13px;font-family:var(--font)">
+      <option value="">Seleccione tipo de entidad...</option>
+      ${TIPO_ENTIDAD_OPTS.map(o=>`<option value="${o.v}"${o.v===selectedVal?' selected':''}>${o.l}</option>`).join('')}
+    </select>
+  </div>`;
+}
+
+window.onTipoEntidadChange = (val, ctx) => {
+  const perfiles = PERFILES_POR_ENTIDAD[val] || [];
+  // Update perfiles list in plan or cap modal
+  const listId  = ctx === 'plan' ? 'perfiles-plan-list' : 'perfiles-cap-list';
+  const tagsId  = ctx === 'plan' ? 'perfiles-plan-tags' : 'perfiles-cap-tags';
+  const changeFn= ctx === 'plan' ? 'onPerfilPlanChange'  : 'onPerfilCapChange';
+  const el = $(listId);
+  if (!el) return;
+  // Show IPS section only for red_prestadora
+  const ipsGrp = ctx === 'plan' ? $('ips-grp') : $('cips-grp');
+  if (ipsGrp) ipsGrp.style.display = val === 'red_prestadora' ? 'block' : 'none';
+  // Build dynamic perfiles
+  if (!perfiles.length) { el.innerHTML = '<span class="tg tsm">Seleccione tipo de entidad para ver perfiles</span>'; return; }
+  el.innerHTML = `<div style="border:1.5px solid var(--border-strong);border-radius:var(--r-sm);background:var(--white);max-height:140px;overflow-y:auto;padding:4px 8px">
+    ${perfiles.map(p => {
+      const checked = (ctx==='plan'?selPerfilesPlan:selPerfilesCap||[]).includes(p);
+      return `<label style="display:flex;align-items:center;gap:6px;padding:2px 0;cursor:pointer;font-size:12px">
+        <input type="checkbox" value="${esc(p)}" ${checked?'checked':''} onchange="${changeFn}(this)">
+        <span>${esc(p)}</span>
+      </label>`;
+    }).join('')}
+  </div>`;
+};
+
+// Variables globales de perfiles
+// SYNTAX FIX: let selPerfilesPlan = [];
+// SYNTAX FIX: let selPerfilesCap  = [];
+
+window.onPerfilPlanChange = cb => {
+  if (cb.checked) { if (!selPerfilesPlan.includes(cb.value)) selPerfilesPlan.push(cb.value); }
+  else selPerfilesPlan = selPerfilesPlan.filter(p => p !== cb.value);
+  renderPerfilesTags('perfiles-plan-tags', selPerfilesPlan, 'rmPerfilPlan');
+};
+window.rmPerfilPlan = p => {
+  selPerfilesPlan = selPerfilesPlan.filter(x => x !== p);
+  const cb = document.querySelector(`#perfiles-plan-list input[value="${CSS.escape(p)}"]`);
+  if (cb) cb.checked = false;
+  renderPerfilesTags('perfiles-plan-tags', selPerfilesPlan, 'rmPerfilPlan');
+};
+window.onPerfilCapChange = cb => {
+  if (cb.checked) { if (!selPerfilesCap.includes(cb.value)) selPerfilesCap.push(cb.value); }
+  else selPerfilesCap = selPerfilesCap.filter(p => p !== cb.value);
+  renderPerfilesTags('perfiles-cap-tags', selPerfilesCap, 'rmPerfilCap');
+};
+window.rmPerfilCap = p => {
+  selPerfilesCap = selPerfilesCap.filter(x => x !== p);
+  const cb = document.querySelector(`#perfiles-cap-list input[value="${CSS.escape(p)}"]`);
+  if (cb) cb.checked = false;
+  renderPerfilesTags('perfiles-cap-tags', selPerfilesCap, 'rmPerfilCap');
+};
+
+// Inject tipo-entidad field into plan and cap modals after DOM is ready
+function injectTipoEntidadFields() {
+  // Plan modal: insert after municipios group
+  const planMunGrp = document.querySelector('#modal-plan .fgroup:has(#plan-ips-list), #modal-plan [id="ips-grp"]');
+  const planTipoExists = document.getElementById('tipo-entidad-plan-wrap');
+  if (!planTipoExists) {
+    const planModal = document.getElementById('modal-plan');
+    if (planModal) {
+      const ipsGrp = planModal.querySelector('#ips-grp') || planModal.querySelector('[id*="ips"]');
+      const wrap = document.createElement('div');
+      wrap.id = 'tipo-entidad-plan-wrap';
+      wrap.innerHTML = buildTipoEntidadHTML('').replace("'cap'", "'plan'").replace("'plan'", "'plan'");
+      if (ipsGrp) ipsGrp.parentNode.insertBefore(wrap, ipsGrp);
+    }
+  }
+  // Perfiles fields in cap modal
+  const capTipoExists = document.getElementById('tipo-entidad-cap-wrap');
+  if (!capTipoExists) {
+    const capModal = document.getElementById('modal-cap');
+    if (capModal) {
+      const cipsGrp = capModal.querySelector('#cips-grp');
+      const wrap = document.createElement('div');
+      wrap.id = 'tipo-entidad-cap-wrap';
+      wrap.innerHTML = buildTipoEntidadHTML('');
+      if (cipsGrp) cipsGrp.parentNode.insertBefore(wrap, cipsGrp);
+    }
+  }
+}
+
+// ── 4. MÓDULO DE NOTIFICACIONES ───────────────────────────────────────────────
+let _notifList = [];
+let _lastNotifCheck = Date.now();
+
+function buildNotifFromData() {
+  const notifs = [];
+  const now = Date.now();
+  // Actas pendientes de aprobación
+  allCaps.filter(c => c.actaEstado !== 'Aprobada').forEach(c => {
+    if (canSeeRecord(c)) {
+      notifs.push({
+        id: 'acta_' + c.id,
+        type: 'acta',
+        icon: '📋',
+        title: 'Acta pendiente de aprobación',
+        body: `"${c.nombre}" — ${c.fecha || 'sin fecha'}`,
+        ts: c.createdAt?.toDate?.()?.getTime() || now,
+        new: (c.createdAt?.toDate?.()?.getTime() || 0) > _lastNotifCheck,
+        action: () => { showView('actas'); },
+      });
+    }
+  });
+  // Planeaciones sin ejecutar
+  const planIds = new Set(allCaps.filter(c=>c.planRefId).map(c=>c.planRefId));
+  allPlans.filter(p => !planIds.has(p.id) && canSeeRecord(p)).forEach(p => {
+    notifs.push({
+      id: 'plan_' + p.id,
+      type: 'plan',
+      icon: '📅',
+      title: 'Planeación sin ejecutar',
+      body: `"${p.nombre || p.tema || 'Sin nombre'}" — ${p.fechaProg || p.mes || ''}`,
+      ts: p.createdAt?.toDate?.()?.getTime() || now,
+      new: (p.createdAt?.toDate?.()?.getTime() || 0) > _lastNotifCheck,
+      action: () => { showView('plan'); },
+    });
+  });
+  // Usuarios pendientes (admin/coordinador/gestor)
+  if (['admin','coordinador','gestor'].includes(CUD?.role)) {
+    const pend = allUsers.filter(u => u.status === 'pending').length;
+    if (pend > 0) {
+      notifs.push({
+        id: 'users_pend',
+        type: 'user',
+        icon: '👤',
+        title: `${pend} solicitud(es) de usuario pendiente(s)`,
+        body: 'Revise el módulo de Usuarios para aprobar o rechazar.',
+        ts: now,
+        new: pend > 0,
+        action: () => { showView('usuarios'); },
+      });
+    }
+  }
+  return notifs.sort((a,b) => b.ts - a.ts);
+}
+
+function renderNotifView() {
+  const list = $('notif-list');
+  if (!list) return;
+  const notifs = buildNotifFromData();
+  _notifList = notifs;
+  if (!notifs.length) {
+    list.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted)">
+      <div style="font-size:32px;margin-bottom:8px">🔔</div>
+      <div>No hay notificaciones</div>
+    </div>`;
+    return;
+  }
+  list.innerHTML = notifs.map(n => `<div onclick="${n.action?'('+n.action.toString()+')()':''}" style="display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--white);border-radius:var(--r);border:1px solid ${n.new?'var(--red-l)':'var(--border)'};cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='${n.new?'var(--red-l)':'var(--border)'}'">
+    <div style="font-size:24px;flex-shrink:0">${n.icon}</div>
+    <div style="flex:1">
+      <div style="font-weight:600;font-size:13px;color:var(--text-primary)">${n.title}${n.new?'<span style="margin-left:8px;background:var(--red);color:white;font-size:9px;font-weight:700;padding:2px 6px;border-radius:20px;vertical-align:middle">NUEVO</span>':''}</div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:2px">${esc(n.body)}</div>
+      <div style="font-size:10px;color:var(--text-muted);margin-top:4px">${new Date(n.ts).toLocaleString('es-CO')}</div>
+    </div>
+  </div>`).join('');
+}
+
+function checkNewNotifications() {
+  const notifs = buildNotifFromData();
+  const newCount = notifs.filter(n => n.new).length;
+  const badge = $('badge-notif');
+  if (badge) {
+    badge.textContent = newCount;
+    badge.style.display = newCount > 0 ? 'inline-block' : 'none';
+  }
+}
+
+window.markNotifRead = () => {
+  _lastNotifCheck = Date.now();
+  const badge = $('badge-notif');
+  if (badge) badge.style.display = 'none';
+  renderNotifView();
+};
+
+// ── 5. CALENDARIO OPERATIVO ───────────────────────────────────────────────────
+const DIAS_SEMANA = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+
+window.renderCalendario = () => {
+  const grid = $('calendario-grid');
+  const eventos = $('calendario-eventos');
+  if (!grid) return;
+
+  const mesNombre = $('cal-mes')?.value || MESES[new Date().getMonth()];
+  const mesIdx = MESES.indexOf(mesNombre);
+  const año = new Date().getFullYear();
+  const primerDia = new Date(año, mesIdx, 1).getDay();
+  const diasMes = new Date(año, mesIdx + 1, 0).getDate();
+
+  // Recopilar eventos del mes para el rol actual
+  const evts = [
+    ...allCaps.filter(c => canSeeRecord(c) && c.mes === mesNombre).map(c => ({
+      fecha: c.fecha, tipo: 'cap', nombre: c.nombre, area: AL(c.area), id: c.id,
+    })),
+    ...allPlans.filter(p => canSeeRecord(p) && (p.mes === mesNombre || (p.fechaProg || '').includes(`-${String(mesIdx+1).padStart(2,'0')}-`))).map(p => ({
+      fecha: p.fechaProg || '', tipo: 'plan', nombre: p.nombre || p.tema || 'Planeación', area: AL(p.area), id: p.id,
+    })),
+  ];
+
+  // Build calendar
+  let html = DIAS_SEMANA.map(d => `<div style="text-align:center;font-size:11px;font-weight:700;color:var(--text-secondary);padding:4px 0">${d}</div>`).join('');
+  for (let i = 0; i < primerDia; i++) {
+    html += `<div style="min-height:60px;background:var(--slate-50);border-radius:var(--r-sm);border:1px solid var(--border)"></div>`;
+  }
+  for (let d = 1; d <= diasMes; d++) {
+    const fechaStr = `${año}-${String(mesIdx+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayEvts = evts.filter(e => e.fecha === fechaStr);
+    const isToday = new Date().getDate() === d && new Date().getMonth() === mesIdx && new Date().getFullYear() === año;
+    html += `<div style="min-height:60px;background:var(--white);border-radius:var(--r-sm);border:1.5px solid ${isToday?'var(--red)':'var(--border)'};padding:4px;overflow:hidden">
+      <div style="font-size:11px;font-weight:${isToday?'700':'500'};color:${isToday?'var(--red)':'var(--text-secondary)'};margin-bottom:2px">${d}</div>
+      ${dayEvts.map(e => `<div title="${esc(e.nombre)}" style="background:${e.tipo==='cap'?'var(--blue-l)':'var(--amber-l)'};color:${e.tipo==='cap'?'var(--blue)':'var(--amber)'};font-size:9px;border-radius:3px;padding:1px 4px;margin-bottom:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer" onclick="verActa('${e.id}')">${e.tipo==='cap'?'●':'○'} ${esc(e.nombre)}</div>`).join('')}
+    </div>`;
+  }
+  grid.innerHTML = html;
+
+  // Events list below
+  if (eventos) {
+    const sorted = [...evts].sort((a,b) => (a.fecha||'').localeCompare(b.fecha||''));
+    events.innerHTML = sorted.length
+      ? `<div style="font-weight:600;font-size:13px;margin-bottom:8px;color:var(--text-secondary)">Actividades en ${mesNombre}</div>`
+        + sorted.map(e => `<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--white);border-radius:var(--r-sm);border:1px solid var(--border);margin-bottom:4px">
+          <span style="background:${e.tipo==='cap'?'var(--blue-l)':'var(--amber-l)'};color:${e.tipo==='cap'?'var(--blue)':'var(--amber)'};font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px">${e.tipo==='cap'?'Ejecución':'Planeación'}</span>
+          <strong style="font-size:13px;flex:1">${esc(e.nombre)}</strong>
+          <span style="font-size:11px;color:var(--text-muted)">${e.fecha||'Sin fecha'}</span>
+          <span style="font-size:11px;color:var(--text-secondary)">${e.area||''}</span>
+        </div>`).join('')
+      : `<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:13px">No hay actividades en ${mesNombre}</div>`;
+  }
+};
+
+// ── 6. PATCH renderActas CON FILTRO POR ROL ───────────────────────────────────
+const _origRenderActas = window.renderActas || function(){};
+// SYNTAX FIX: function renderActas() {
+  // Solo mostrar actas que el usuario puede ver
+  const caps = allCaps.filter(c => canSeeRecord(c));
+  const row = (c, showApr) => `<tr>
+    <td><strong>${esc(c.nombre)}</strong></td>
+    <td><span class="area-chip">${AL(c.area)}</span></td>
+    <td>${c.fecha||'—'}</td>
+    <td>${showApr ? esc(c.aprobadaPor||'—') : badge(c.actaEstado||'Pendiente aprobación')}</td>
+    <td style="white-space:nowrap">
+      <button class="btn btn-sm btn-blue" onclick="verActa('${c.id}')">Ver acta</button>
+      ${!showApr && canApprove() ? `<button class="btn btn-sm btn-green" onclick="aprobarActaDirect('${c.id}')">Aprobar</button>` : ''}
+    </td>
+  </tr>`;
+  const pend = caps.filter(c => c.actaEstado !== 'Aprobada');
+  const apro = caps.filter(c => c.actaEstado === 'Aprobada');
+  const tp = $('actas-pend-table'); if(tp) tp.innerHTML = pend.length ? pend.map(c=>row(c,false)).join('') : '<tr class="erow"><td colspan="5">Sin actas pendientes</td></tr>';
+  const ta = $('actas-apro-table'); if(ta) ta.innerHTML = apro.length ? apro.map(c=>row(c,true)).join('')  : '<tr class="erow"><td colspan="5">Sin actas aprobadas</td></tr>';
+  const tt = $('actas-todas-table'); if(tt) tt.innerHTML = caps.length ? caps.map(c => `<tr>
+    <td><strong>${esc(c.nombre)}</strong></td><td><span class="area-chip">${AL(c.area)}</span></td>
+    <td>${c.fecha||'—'}</td><td>${badge(c.actaEstado||'Pendiente aprobación')}</td>
+    <td><button class="btn btn-sm btn-blue" onclick="verActa('${c.id}')">Ver</button></td>
+  </tr>`).join('') : '<tr class="erow"><td colspan="5">Sin actas</td></tr>';
+// SYNTAX FIX: }
+
+// ── 7. PATCH renderDash CON FILTRO POR ROL ────────────────────────────────────
+// Patch renderDash to ensure only visible data is counted
+const _origRenderDash = window.renderDash;
+window.renderDash = () => {
+  // Apply role-based filter
+  const caps  = allCaps.filter(c  => canSeeRecord(c));
+  const plans = allPlans.filter(p => canSeeRecord(p));
+  // Store filtered versions temporarily
+  const _allCapsBackup = allCaps, _allPlansBackup = allPlans;
+  allCaps = caps; allPlans = plans;
+  if (_origRenderDash) _origRenderDash();
+  allCaps = _allCapsBackup; allPlans = _allPlansBackup;
+};
+
+// ── 8. PATCH renderInformes CON FILTRO POR ROL ───────────────────────────────
+const _origRenderInformes = window.renderInformes;
+window.renderInformes = () => {
+  const caps_backup = allCaps;
+  allCaps = allCaps.filter(c => canSeeRecord(c));
+  if (_origRenderInformes) _origRenderInformes();
+  allCaps = caps_backup;
+};
+
+// ── 9. PATCH showView PARA CALENDARIO Y NOTIFICACIONES ───────────────────────
+const _svPatch2 = window.showView;
+window.showView = v => {
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  $('view-'+v)?.classList.add('active');
+  $('nav-'+v)?.classList.add('active');
+  if (v === 'perfil')      renderPerfilView?.();
+  if (v === 'calendario')  { $('cal-mes').value = MESES[new Date().getMonth()]; renderCalendario(); }
+  if (v === 'notif')       renderNotifView();
+  if (v === 'usuarios')    loadUsersAdmin?.();
+};
+
+// ── 10. PATCH setupApp PARA ACTIVAR NUEVAS FUNCIONES ─────────────────────────
+const _origSetupApp = window.setupApp;
+async function setupAppPatched() {
+  if (_origSetupApp) await _origSetupApp();
+  applyRoleFiltersUI();
+  // Re-subscribe with corrected queries
+  subscribeCapsPatched();
+  subscribePlansPatched();
+  subscribeUsersPatched();
+  // Inject tipo-entidad fields after modal is available
+  setTimeout(injectTipoEntidadFields, 500);
+  // Set current month in calendar
+  const calMes = $('cal-mes');
+  if (calMes) calMes.value = MESES[new Date().getMonth()];
+}
+// Override setupApp
+window.setupApp_v3 = setupAppPatched;
+
+// ── 11. CORRECCIÓN: subscribeUsers NO sobreescribe filtros de rol ─────────────
+// El onSnapshot de usuarios ya estaba retornando todos los activos sin filtro de rol
+// para el selector de responsable — lo mantenemos pero la vista de usuarios
+// usa su propia consulta con filtro. Esto ya está correcto en loadUsersAdmin().
+
+// ── 12. INIT PATCH — Se ejecuta después de que Firebase cargue ───────────────
+// Detectamos cuando el usuario inicia sesión y aplicamos los parches
+const _fbAuthOrig = window.onAuthStateChanged;
+// Nos enganchamos al flujo de autenticación que ya existe en setupApp
+// El hook más seguro es sobreescribir postSetupInit
+const _psiOrig = window.postSetupInit;
+window.postSetupInit = async () => {
+  if (_psiOrig) await _psiOrig();
+  applyRoleFiltersUI();
+  setTimeout(injectTipoEntidadFields, 800);
+  // Re-subscribe with patched queries
+  subscribeCapsPatched();
+  subscribePlansPatched();
+  subscribeUsersPatched();
+  // Init calendar month
+  const cm = $('cal-mes');
+  if (cm) { cm.value = MESES[new Date().getMonth()]; renderCalendario(); }
+  checkNewNotifications();
+};
+
+// ── CSS adicional para nuevos módulos ─────────────────────────────────────────
+(function injectCSS() {
+  const style = document.createElement('style');
+  style.textContent = `
+    #view-calendario .cal-day { cursor: default; }
+    #notif-list .notif-card:hover { box-shadow: var(--sh-md); }
+    .tipo-entidad-badge {
+      display:inline-block;padding:2px 8px;border-radius:20px;
+      font-size:10px;font-weight:700;background:var(--purple-l);color:var(--purple);
+    }
+    #calendario-grid { min-height: 300px; }
+  `;
+  document.head.appendChild(style);
+})();
+
+console.log('[IDS v4.0] Parche integral aplicado — roles, notificaciones, calendario, tipo entidad.');
 
 </script>
 </body>
